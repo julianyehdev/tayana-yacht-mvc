@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Claude Code / AI 工具設定
+.claude/
+.agent/
+.agents/
+skills-lock.json
