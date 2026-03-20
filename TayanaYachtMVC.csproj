@@ -134,6 +134,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603201200293_InitialCreate.cs" />
+    <Compile Include="Migrations\202603201200293_InitialCreate.Designer.cs">
+      <DependentUpon>202603201200293_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Domain\Country.cs" />
+    <Compile Include="Models\Domain\Dealer.cs" />
+    <Compile Include="Models\Domain\NewsArticle.cs" />
+    <Compile Include="Models\Domain\Region.cs" />
+    <Compile Include="Models\Domain\Yacht.cs" />
+    <Compile Include="Models\Domain\YachtAlbum.cs" />
+    <Compile Include="Models\Domain\YachtDocument.cs" />
+    <Compile Include="Models\Domain\YachtLayoutPhoto.cs" />
+    <Compile Include="Models\Domain\YachtPhoto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -190,7 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -218,6 +231,11 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
+      <DependentUpon>202603201200293_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
