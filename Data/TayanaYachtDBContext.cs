@@ -17,6 +17,11 @@ namespace TayanaYachtMVC.Data
         public DbSet<Dealer> Dealers { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Yacht> Yachts { get; set; }
+        public DbSet<YachtAlbum> YachtAlbums { get; set; }
+        public DbSet<YachtPhoto> YachtPhotos { get; set; }
+        public DbSet<YachtLayoutPhoto> YachtLayoutPhotos { get; set; }
+        public DbSet<YachtDocument> YachtDocuments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
