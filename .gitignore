@@ -367,3 +367,5 @@ FodyWeavers.xsd
 .agent/
 .agents/
 skills-lock.json
+# 個人規劃文件
+plan/
