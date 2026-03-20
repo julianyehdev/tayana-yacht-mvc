@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Mvc;
@@ -74,7 +75,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             {
                 var bytes = Encoding.UTF8.GetBytes(password);
                 var hash = sha256.ComputeHash(bytes);
-                return Convert.ToHexString(hash).ToLowerInvariant(); // e.g. "5e884898..."
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant(); // e.g. "5e884898..."
             }
         }
     }
