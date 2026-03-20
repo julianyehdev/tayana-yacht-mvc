@@ -1,0 +1,96 @@
+@model TayanaYachtMVC.Areas.Admin.Models.LoginViewModel
+
+@{
+    Layout = null; // 登入頁不套用後台 Layout，獨立一頁
+    ViewBag.Title = "後台登入";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title — Tayana Yacht</title>
+    @Styles.Render("~/Content/css")
+    <style>
+        body {
+            background-color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 40px 36px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 1.6rem;
+            color: #1a1a2e;
+        }
+
+        .login-card .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-login:hover {
+            background: #16213e;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>⚓ Tayana Yacht</h2>
+        <p class="subtitle">後台管理系統</p>
+
+        @* 顯示整體錯誤（例如「帳號或密碼錯誤」） *@
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        @using (Html.BeginForm("Index", "Login", new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group mb-3">
+                @Html.LabelFor(m => m.Username, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "請輸入帳號", autocomplete = "username" })
+                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger small" })
+            </div>
+
+            <div class="form-group mb-4">
+                @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "請輸入密碼", autocomplete = "current-password" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+            </div>
+
+            <button type="submit" class="btn-login">登入</button>
+        }
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>
