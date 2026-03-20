@@ -22,6 +22,7 @@ namespace TayanaYachtMVC.Data
         public DbSet<YachtPhoto> YachtPhotos { get; set; }
         public DbSet<YachtLayoutPhoto> YachtLayoutPhotos { get; set; }
         public DbSet<YachtDocument> YachtDocuments { get; set; }
+        public DbSet<AdminUser> AdminUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
