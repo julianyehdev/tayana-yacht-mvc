@@ -1,58 +1,48 @@
 ﻿@model TayanaYachtMVC.Models.Domain.Yacht
 
 @{
-    Layout = null;
+    ViewBag.Title = "遊艇詳細資訊";
 }
 
-<!DOCTYPE html>
+<div>
+    <h4>Yacht</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.YachtName)
+        </dt>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>Yacht</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.YachtName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.YachtName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsLatest)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsLatest)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CreatedAt)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.UpdatedAt)
-            </dd>
-    
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.YachtID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+        <dd>
+            @Html.DisplayFor(model => model.YachtName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsLatest)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsLatest)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.YachtID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

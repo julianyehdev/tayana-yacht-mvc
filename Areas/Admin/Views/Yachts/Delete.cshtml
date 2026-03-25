@@ -1,64 +1,54 @@
 ﻿@model TayanaYachtMVC.Models.Domain.Yacht
 
 @{
-    Layout = null;
+    ViewBag.Title = "刪除遊艇";
 }
 
-<!DOCTYPE html>
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Yacht</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.YachtName)
+        </dt>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
-    <h3>Are you sure you want to delete this?</h3>
-    <div>
-        <h4>Yacht</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.YachtName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.YachtName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsLatest)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsLatest)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CreatedAt)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.UpdatedAt)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
-            @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
-            </div>
-        }
-    </div>
-</body>
-</html>
+        <dd>
+            @Html.DisplayFor(model => model.YachtName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsLatest)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsLatest)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
