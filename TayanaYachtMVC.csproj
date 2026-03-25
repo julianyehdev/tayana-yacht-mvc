@@ -132,6 +132,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\YachtsController.cs" />
     <Compile Include="Areas\Admin\Models\LoginViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
@@ -1870,6 +1871,11 @@
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\vendor\bootstrap\js\bootstrap.bundle.js.map" />
     <Content Include="Scripts\vendor\bootstrap\js\bootstrap.bundle.min.js.map" />
