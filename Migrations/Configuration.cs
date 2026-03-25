@@ -4,6 +4,8 @@
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
     using TayanaYachtMVC.Models.Domain;
 
     internal sealed class Configuration : DbMigrationsConfiguration<TayanaYachtMVC.Data.TayanaYachtDBContext>
@@ -84,7 +86,29 @@
                 new Dealer { RegionId = northTaiwan.Id, IsPublished = true, SortOrder = 2 }
             );
 
+            // AdminUsers
+            context.AdminUsers.AddOrUpdate(
+                u => u.Username,
+                new AdminUser
+                {
+                    Username = "Admin1234",
+                    PasswordHash = HashPassword("Admin1234"),
+                    DisplayName = "大boss",
+                    IsActive = true
+                }
+            );
+
             context.SaveChanges();
+        }
+
+        private static string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password);
+                var hash = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
         }
     }
 }
