@@ -4,7 +4,7 @@
     ViewBag.Title = "新增遊艇";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Yachts", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -43,6 +43,21 @@
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Dimensions, new { @class = "form-control", id = "Dimensions", rows = "6" })
                 @Html.ValidationMessageFor(model => model.Dimensions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DimensionsImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="dimensionsImg" id="dimensionsImg"
+                       accept=".jpg,.jpeg,.png,.gif,.webp"
+                       class="form-control" />
+                <small class="text-muted">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
+                <div id="previewContainer" style="display:none; margin-top:10px;">
+                    <p class="text-muted" style="font-size:0.9em;">圖片預覽：</p>
+                    <img id="imagePreview" src="#" alt="預覽圖"
+                         style="max-width:100%; max-height:300px; border-radius:4px; box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
+                </div>
             </div>
         </div>
 
