@@ -151,6 +151,10 @@
     <Compile Include="Migrations\202603260618483_AddYachtOverview.Designer.cs">
       <DependentUpon>202603260618483_AddYachtOverview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603260701438_AddYachtDimensions.cs" />
+    <Compile Include="Migrations\202603260701438_AddYachtDimensions.Designer.cs">
+      <DependentUpon>202603260701438_AddYachtDimensions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -2040,6 +2044,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603260618483_AddYachtOverview.resx">
       <DependentUpon>202603260618483_AddYachtOverview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603260701438_AddYachtDimensions.resx">
+      <DependentUpon>202603260701438_AddYachtDimensions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
