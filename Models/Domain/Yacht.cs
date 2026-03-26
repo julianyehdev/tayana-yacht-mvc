@@ -24,6 +24,9 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "最新款")]
         public bool IsLatest { get; set; }
 
+        [Display(Name = "船型簡介")]
+        public string Overview { get; set; }
+
         [Display(Name = "建立時間")]
         public DateTime CreatedAt { get; set; }
 
