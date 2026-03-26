@@ -79,10 +79,11 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,CreatedAt,UpdatedAt")] Yacht yacht)
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht)
         {
             if (ModelState.IsValid)
             {
+                yacht.UpdatedAt = DateTime.Now;
                 db.Entry(yacht).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
