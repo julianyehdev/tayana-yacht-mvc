@@ -47,7 +47,8 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht)
+        [ValidateInput(false)]
+        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview")] Yacht yacht)
         {
             if (ModelState.IsValid)
             {
