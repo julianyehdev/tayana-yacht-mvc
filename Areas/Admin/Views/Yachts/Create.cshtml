@@ -98,6 +98,9 @@
                 @* 表單送出前，JS 會動態產生 hidden inputs 傳遞排序後的照片順序 *@
                 <div id="photo-sort-order-inputs"></div>
 
+                @* 隱藏的 file input，JS 用 DataTransfer 把 photoFiles 同步進來，讓表單正常送出 *@
+                <input type="file" name="photos" multiple id="actual-photos-input" style="display:none;" />
+
                 <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序，第 1 張為輪播封面</small>
             </div>
         </div>
@@ -130,7 +133,10 @@
     // 初始化 SortableJS，讓預覽列表可以拖曳排序
     const sortable = new Sortable(document.getElementById('photo-preview-list'), {
         animation: 150,
-        onEnd: updatePhotoIndexes  // 拖曳結束後更新順序編號
+        onEnd: function () {
+            updatePhotoIndexes();
+            syncPhotosToInput(); // 拖曳排序後同步檔案順序
+        }
     });
 
     // 點擊拖曳區 → 觸發隱藏的 file input
@@ -202,6 +208,7 @@
 
                 document.getElementById('photo-preview-list').appendChild(item);
                 updatePhotoIndexes();
+                syncPhotosToInput(); // 新增照片後同步 file input
             };
             reader.readAsDataURL(file);
         });
@@ -222,49 +229,44 @@
         photoFiles = photoFiles.filter(function (f) { return f.id !== id; });
         btn.closest('.photo-item').remove();
         updatePhotoIndexes();
+        syncPhotosToInput(); // 刪除後同步 file input
     });
 
-    // 表單送出前：動態建立 hidden file input 並依照排序順序附加檔案
-    // 因為原生 <form> 無法動態改變 file input 的檔案，
-    // 所以改用 FormData 攔截送出，手動加入照片後再送出
-    document.querySelector('form').addEventListener('submit', function (e) {
-        // 如果沒有照片，直接送出（照片為選填）
-        if (photoFiles.length === 0) return;
-
-        e.preventDefault(); // 先攔截預設送出
-
-        const form = this;
-        const formData = new FormData(form);
-
-        // 依照目前排序（DOM 順序）加入每張照片與對應的排序索引
-        const items = document.querySelectorAll('#photo-preview-list .photo-item');
-        items.forEach(function (item, sortIndex) {
+    // 將 photoFiles 依照目前 DOM 排序同步到隱藏的 file input
+    // 這樣表單正常 submit 時，Controller 就能收到照片檔案
+    function syncPhotosToInput() {
+        const dt = new DataTransfer();
+        document.querySelectorAll('#photo-preview-list .photo-item').forEach(function (item) {
             const id = parseInt(item.dataset.id);
             const fileObj = photoFiles.find(function (f) { return f.id === id; });
-            if (fileObj) {
-                // 'photos' 對應 Controller 的 IEnumerable<HttpPostedFileBase> photos 參數
-                formData.append('photos', fileObj.file, fileObj.file.name);
-                // 'photoSortOrders' 對應 Controller 的 int[] photoSortOrders 參數
-                formData.append('photoSortOrders', sortIndex);
+            if (fileObj) dt.items.add(fileObj.file);
+        });
+        document.getElementById('actual-photos-input').files = dt.files;
+    }
+
+    // 表單送出前：同步 CKEditor 內容 + 產生 photoSortOrders hidden inputs
+    // 不攔截送出，讓表單正常 POST，Controller 直接從 Request.Files 取得照片
+    document.querySelector('form').addEventListener('submit', function () {
+        // 同步 CKEditor 內容回 textarea，避免送出時內容為空
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
             }
+        }
+
+        // 依 DOM 順序產生 photoSortOrders hidden inputs
+        var container = document.getElementById('photo-sort-order-inputs');
+        container.innerHTML = '';
+        document.querySelectorAll('#photo-preview-list .photo-item').forEach(function (item, sortIndex) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'photoSortOrders';
+            input.value = sortIndex;
+            container.appendChild(input);
         });
 
-        // 用 fetch 送出（XMLHttpRequest 也可以，但 fetch 較現代）
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        }).then(function (res) {
-            // 送出成功後依伺服器回傳的 URL 跳轉
-            if (res.redirected) {
-                window.location.href = res.url;
-            } else {
-                return res.text().then(function (html) {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                });
-            }
-        });
+        // 確保最新順序同步到 file input
+        syncPhotosToInput();
     });
 
     // ==================== 規格示意圖預覽模組 ====================
