@@ -210,8 +210,9 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DimensionsImgUrl")] Yacht yacht,
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DimensionsImgUrl,SpecSheetUrl,SpecSheetFileName")] Yacht yacht,
             HttpPostedFileBase dimensionsImg,
+            HttpPostedFileBase specSheet,
             int[] deletePhotoIds,
             int[] existingPhotoOrder,
             int[] existingPhotoSortOrder,
@@ -243,6 +244,37 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                                         .FirstOrDefault(y => y.YachtID == yacht.YachtID);
                 if (existing != null)
                     yacht.DimensionsImgUrl = existing.DimensionsImgUrl;
+            }
+
+            if (specSheet != null && specSheet.ContentLength > 0)
+            {
+                var allowedTypes = new[] { "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+                if (!allowedTypes.Contains(specSheet.ContentType))
+                    ModelState.AddModelError("SpecSheetUrl", "不支援的檔案格式。");
+                else if (specSheet.ContentLength > 10 * 1024 * 1024)
+                    ModelState.AddModelError("SpecSheetUrl", "檔案大小不能超過 10MB。");
+                else
+                {
+                    var ext = System.IO.Path.GetExtension(specSheet.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var savePath = Server.MapPath("~/Content/uploads/yachts/specs/");
+                    if (!System.IO.Directory.Exists(savePath))
+                        System.IO.Directory.CreateDirectory(savePath);
+                    specSheet.SaveAs(System.IO.Path.Combine(savePath, fileName));
+                    yacht.SpecSheetUrl = "/Content/uploads/yachts/specs/" + fileName;
+                    yacht.SpecSheetFileName = specSheet.FileName;
+                }
+            }
+            else
+            {
+                // 沒有上傳新檔案，保留原本的 URL 和檔名
+                var existing = db.Yachts.AsNoTracking().Select(y => new { y.YachtID, y.SpecSheetUrl, y.SpecSheetFileName })
+                                        .FirstOrDefault(y => y.YachtID == yacht.YachtID);
+                if (existing != null)
+                {
+                    yacht.SpecSheetUrl = existing.SpecSheetUrl;
+                    yacht.SpecSheetFileName = existing.SpecSheetFileName;
+                }
             }
 
             if (ModelState.IsValid)

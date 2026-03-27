@@ -123,6 +123,33 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpecSheetUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    @if (!string.IsNullOrEmpty(Model.SpecSheetUrl))
+                    {
+                        <div style="margin-bottom:10px;">
+                            <span class="text-muted" style="font-size:0.85em;">目前檔案：</span>
+                            <a href="@Url.Content(Model.SpecSheetUrl)" target="_blank">@(Model.SpecSheetFileName ?? System.IO.Path.GetFileName(Model.SpecSheetUrl))</a>
+                        </div>
+                    }
+                    <input type="file" name="specSheet" id="specSheet"
+                           accept=".pdf,.doc,.docx"
+                           style="display:none;" />
+                    <input type="hidden" name="SpecSheetFileName" id="specSheetFileName" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('specSheet').click()">選擇檔案</button>
+                        </span>
+                        <input type="text" id="specSheetLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：PDF, DOC, DOCX（限制 10MB）</small>
+                </div>
+            </div>
+        </div>
+
         <hr style="margin:32px 0;" />
 
         <div class="form-group">
@@ -304,6 +331,13 @@
                 newPhotoIndex++;
             }
         });
+    });
+
+    // ==================== 規格說明書檔名同步 ====================
+    document.getElementById('specSheet').addEventListener('change', function () {
+        var name = this.files[0] ? this.files[0].name : '';
+        document.getElementById('specSheetLabel').value = name || '未選擇任何檔案';
+        document.getElementById('specSheetFileName').value = name;
     });
 
     // ==================== 規格示意圖預覽 ====================
