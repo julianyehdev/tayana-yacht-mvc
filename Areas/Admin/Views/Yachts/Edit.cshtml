@@ -37,38 +37,36 @@
             <div class="col-md-10">
                 <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
 
-                    @* 現有圖片預覽（從 DB 撈出，可標記刪除） *@
-                    @if (Model.YachtPhotos != null && Model.YachtPhotos.Any())
-                    {
-                        <div id="existing-photo-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; margin-bottom:15px;">
-                            @foreach (var photo in Model.YachtPhotos.OrderBy(p => p.SortOrder))
-                            {
-                                <div class="existing-photo-card" data-photo-id="@photo.PhotoID"
-                                     style="position:relative; border:2px solid #ddd; border-radius:6px; overflow:hidden; background:#fff;">
-                                    <img src="@Url.Content(photo.PhotoUrl)" style="width:100%; height:120px; object-fit:cover;" />
-                                    @* 刪除按鈕，點擊後標記該張，POST 時送出要刪的 ID *@
-                                    <button type="button" class="btn btn-danger btn-xs"
-                                            onclick="markDeletePhoto(this, @photo.PhotoID)"
-                                            style="position:absolute; top:4px; right:4px;">✕</button>
-                                    @* 隱藏 input，預設不送出；標記刪除後才啟用 name *@
-                                    <input type="hidden" class="delete-photo-input" value="@photo.PhotoID" disabled />
-                                </div>
-                            }
-                        </div>
-                        <small class="text-muted" style="display:block; margin-bottom:12px;">點擊 ✕ 標記刪除（儲存後生效）</small>
-                    }
-
-                    @* 新圖上傳區 *@
+                    @* 上傳區（點擊或拖曳） *@
                     <div id="drop-zone" style="border:2px dashed #007bff; border-radius:8px; padding:40px; text-align:center; background:#f8fbff; cursor:pointer; margin-bottom:15px;">
                         <p style="margin:0; color:#007bff; font-weight:bold;">＋ 點擊或拖曳圖片至此上傳</p>
                         <p style="font-size:0.8em; color:#666; margin-top:8px;">支援 JPG, PNG, WEBP（單檔最大 5MB）</p>
                         <input type="file" id="photo-file-input" multiple accept="image/jpeg,image/png,image/webp" style="display:none;" />
                     </div>
 
-                    <div id="photo-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;"></div>
+                    @* 統一 grid：現有圖片 + 新上傳圖片都在這裡 *@
+                    <div id="photo-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;">
+                        @* 現有圖片由 Razor 直接渲染進 grid *@
+                        @if (Model.YachtPhotos != null)
+                        {
+                            foreach (var photo in Model.YachtPhotos.OrderBy(p => p.SortOrder))
+                            {
+                                <div class="existing-photo-card" data-photo-id="@photo.PhotoID"
+                                     style="position:relative; border:2px solid #ddd; border-radius:6px; overflow:hidden; background:#fff; cursor:grab;">
+                                    <img src="@Url.Content(photo.PhotoUrl)" style="width:100%; height:120px; object-fit:cover;" />
+                                    <div class="sort-num" style="position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.5);color:#fff;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;font-size:12px;"></div>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            onclick="markDeletePhoto(this, @photo.PhotoID)"
+                                            style="position:absolute; top:4px; right:4px;">✕</button>
+                                    <input type="hidden" class="delete-photo-input" value="@photo.PhotoID" disabled />
+                                </div>
+                            }
+                        }
+                    </div>
+
                     <div id="photo-sort-order-inputs"></div>
                     <input type="file" name="photos" multiple id="actual-photos-input" style="display:none;" />
-                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序，第 1 張為輪播封面</small>
+                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序，第 1 張為輪播封面｜點擊 ✕ 標記刪除（儲存後生效）</small>
                 </div>
             </div>
         </div>
@@ -177,9 +175,13 @@
     }
 
     function updateSortNumbers() {
-        var cards = previewList.querySelectorAll('.photo-card');
+        // 涵蓋現有圖片（.existing-photo-card）和新上傳（.photo-card），依 DOM 順序編號
+        var cards = previewList.querySelectorAll('.existing-photo-card, .photo-card');
         cards.forEach(function (card, i) { card.querySelector('.sort-num').textContent = i + 1; });
     }
+
+    // 頁面載入時，對現有圖片初始化排序數字
+    updateSortNumbers();
 
     function syncActualInput() {
         var dt = new DataTransfer();
