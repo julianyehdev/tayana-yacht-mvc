@@ -435,7 +435,46 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Yacht yacht = db.Yachts.Find(id);
+            Yacht yacht = db.Yachts
+                .Include(y => y.YachtPhotos)
+                .Include(y => y.YachtLayoutPhotos)
+                .SingleOrDefault(y => y.YachtID == id);
+
+            if (yacht == null)
+                return HttpNotFound();
+
+            // 刪除相簿照片實體檔案
+            foreach (var photo in yacht.YachtPhotos.ToList())
+            {
+                var filePath = Server.MapPath("~" + photo.PhotoUrl);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
+            // 刪除 Layout 照片實體檔案
+            foreach (var lp in yacht.YachtLayoutPhotos.ToList())
+            {
+                var filePath = Server.MapPath("~" + lp.LayoutImgUrl);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
+            // 刪除規格圖
+            if (!string.IsNullOrEmpty(yacht.DimensionsImgUrl))
+            {
+                var filePath = Server.MapPath("~" + yacht.DimensionsImgUrl);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
+            // 刪除規格說明書
+            if (!string.IsNullOrEmpty(yacht.SpecSheetUrl))
+            {
+                var filePath = Server.MapPath("~" + yacht.SpecSheetUrl);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
             db.Yachts.Remove(yacht);
             db.SaveChanges();
             return RedirectToAction("Index");
