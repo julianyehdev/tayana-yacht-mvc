@@ -163,6 +163,10 @@
     <Compile Include="Migrations\202603270245282_AddYachtSpecSheet.Designer.cs">
       <DependentUpon>202603270245282_AddYachtSpecSheet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603270515545_AddYachtPhotos.cs" />
+    <Compile Include="Migrations\202603270515545_AddYachtPhotos.Designer.cs">
+      <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -170,7 +174,6 @@
     <Compile Include="Models\Domain\NewsArticle.cs" />
     <Compile Include="Models\Domain\Region.cs" />
     <Compile Include="Models\Domain\Yacht.cs" />
-    <Compile Include="Models\Domain\YachtAlbum.cs" />
     <Compile Include="Models\Domain\YachtDocument.cs" />
     <Compile Include="Models\Domain\YachtLayoutPhoto.cs" />
     <Compile Include="Models\Domain\YachtPhoto.cs" />
@@ -2062,6 +2065,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603270245282_AddYachtSpecSheet.resx">
       <DependentUpon>202603270245282_AddYachtSpecSheet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270515545_AddYachtPhotos.resx">
+      <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
