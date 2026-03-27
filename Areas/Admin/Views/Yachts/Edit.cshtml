@@ -31,6 +31,48 @@
         </div>
 
 
+        @* ── 輪播圖相簿 ── *@
+        <div class="form-group">
+            <label class="control-label col-md-2">輪播圖相簿</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+
+                    @* 現有圖片預覽（從 DB 撈出，可標記刪除） *@
+                    @if (Model.YachtPhotos != null && Model.YachtPhotos.Any())
+                    {
+                        <div id="existing-photo-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; margin-bottom:15px;">
+                            @foreach (var photo in Model.YachtPhotos.OrderBy(p => p.SortOrder))
+                            {
+                                <div class="existing-photo-card" data-photo-id="@photo.PhotoID"
+                                     style="position:relative; border:2px solid #ddd; border-radius:6px; overflow:hidden; background:#fff;">
+                                    <img src="@Url.Content(photo.PhotoUrl)" style="width:100%; height:120px; object-fit:cover;" />
+                                    @* 刪除按鈕，點擊後標記該張，POST 時送出要刪的 ID *@
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            onclick="markDeletePhoto(this, @photo.PhotoID)"
+                                            style="position:absolute; top:4px; right:4px;">✕</button>
+                                    @* 隱藏 input，預設不送出；標記刪除後才啟用 name *@
+                                    <input type="hidden" class="delete-photo-input" value="@photo.PhotoID" disabled />
+                                </div>
+                            }
+                        </div>
+                        <small class="text-muted" style="display:block; margin-bottom:12px;">點擊 ✕ 標記刪除（儲存後生效）</small>
+                    }
+
+                    @* 新圖上傳區 *@
+                    <div id="drop-zone" style="border:2px dashed #007bff; border-radius:8px; padding:40px; text-align:center; background:#f8fbff; cursor:pointer; margin-bottom:15px;">
+                        <p style="margin:0; color:#007bff; font-weight:bold;">＋ 點擊或拖曳圖片至此上傳</p>
+                        <p style="font-size:0.8em; color:#666; margin-top:8px;">支援 JPG, PNG, WEBP（單檔最大 5MB）</p>
+                        <input type="file" id="photo-file-input" multiple accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                    </div>
+
+                    <div id="photo-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;"></div>
+                    <div id="photo-sort-order-inputs"></div>
+                    <input type="file" name="photos" multiple id="actual-photos-input" style="display:none;" />
+                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序，第 1 張為輪播封面</small>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="儲存" class="btn btn-default" />
@@ -42,3 +84,137 @@
 <div>
     @Html.ActionLink("回列表", "Index")
 </div>
+
+@* SortableJS：讓新上傳預覽列表支援拖曳排序 *@
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    // ==================== 標記刪除現有照片 ====================
+    // 點擊 ✕ 後，將卡片半透明標示，並啟用隱藏 input 讓表單送出該 PhotoID
+    function markDeletePhoto(btn, photoId) {
+        var card = btn.closest('.existing-photo-card');
+        var input = card.querySelector('.delete-photo-input');
+        if (input.disabled) {
+            // 標記刪除
+            input.disabled = false;
+            input.name = 'deletePhotoIds';
+            card.style.opacity = '0.35';
+            btn.textContent = '↩';
+            btn.classList.remove('btn-danger');
+            btn.classList.add('btn-secondary');
+        } else {
+            // 取消標記
+            input.disabled = true;
+            input.name = '';
+            card.style.opacity = '1';
+            btn.textContent = '✕';
+            btn.classList.remove('btn-secondary');
+            btn.classList.add('btn-danger');
+        }
+    }
+
+    // ==================== 新圖上傳模組 ====================
+    var photoFiles = [];
+
+    var dropZone = document.getElementById('drop-zone');
+    var fileInput = document.getElementById('photo-file-input');
+    var previewList = document.getElementById('photo-preview-list');
+    var actualInput = document.getElementById('actual-photos-input');
+
+    dropZone.addEventListener('click', function () { fileInput.click(); });
+
+    dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropZone.style.background = '#e8f4ff';
+    });
+    dropZone.addEventListener('dragleave', function () {
+        dropZone.style.background = '#f8fbff';
+    });
+    dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropZone.style.background = '#f8fbff';
+        addFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        addFiles(this.files);
+        this.value = '';
+    });
+
+    function addFiles(files) {
+        Array.from(files).forEach(function (file) {
+            if (!file.type.match('image/(jpeg|png|webp)')) return;
+            if (file.size > 5 * 1024 * 1024) { alert(file.name + ' 超過 5MB，已略過'); return; }
+            photoFiles.push(file);
+            renderPreview(file, photoFiles.length - 1);
+        });
+        syncActualInput();
+    }
+
+    function renderPreview(file, index) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var card = document.createElement('div');
+            card.className = 'photo-card';
+            card.dataset.index = index;
+            card.style.cssText = 'position:relative; border:2px solid #ddd; border-radius:6px; overflow:hidden; background:#fff; cursor:grab;';
+            card.innerHTML =
+                '<img src="' + e.target.result + '" style="width:100%; height:120px; object-fit:cover;" />' +
+                '<div style="position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.5);color:#fff;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;font-size:12px;" class="sort-num"></div>' +
+                '<button type="button" onclick="removePhoto(this)" style="position:absolute;top:4px;right:4px;" class="btn btn-danger btn-xs">✕</button>';
+            previewList.appendChild(card);
+            updateSortNumbers();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removePhoto(btn) {
+        var card = btn.closest('.photo-card');
+        var idx = parseInt(card.dataset.index);
+        photoFiles[idx] = null;
+        card.remove();
+        updateSortNumbers();
+        syncActualInput();
+    }
+
+    function updateSortNumbers() {
+        var cards = previewList.querySelectorAll('.photo-card');
+        cards.forEach(function (card, i) { card.querySelector('.sort-num').textContent = i + 1; });
+    }
+
+    function syncActualInput() {
+        var dt = new DataTransfer();
+        photoFiles.filter(Boolean).forEach(function (f) { dt.items.add(f); });
+        actualInput.files = dt.files;
+    }
+
+    // SortableJS 拖曳排序
+    Sortable.create(previewList, {
+        animation: 150,
+        onEnd: function () {
+            var cards = previewList.querySelectorAll('.photo-card');
+            var reordered = [];
+            cards.forEach(function (card) {
+                var idx = parseInt(card.dataset.index);
+                reordered.push(photoFiles[idx]);
+            });
+            photoFiles = reordered;
+            cards.forEach(function (card, i) { card.dataset.index = i; });
+            updateSortNumbers();
+            syncActualInput();
+        }
+    });
+
+    // 表單送出前，產生 sort order hidden inputs
+    document.querySelector('form').addEventListener('submit', function () {
+        var container = document.getElementById('photo-sort-order-inputs');
+        container.innerHTML = '';
+        var cards = previewList.querySelectorAll('.photo-card');
+        cards.forEach(function (card, i) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'photoSortOrders';
+            input.value = i + 1;
+            container.appendChild(input);
+        });
+    });
+</script>
