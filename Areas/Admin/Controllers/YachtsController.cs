@@ -197,6 +197,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             // 使用 Include 預先載入相簿圖片，避免 View 中 lazy load 失敗
             Yacht yacht = db.Yachts
                 .Include(y => y.YachtPhotos)
+                .Include(y => y.YachtLayoutPhotos)
                 .SingleOrDefault(y => y.YachtID == id);
 
             if (yacht == null)
@@ -217,7 +218,12 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             int[] existingPhotoOrder,
             int[] existingPhotoSortOrder,
             IEnumerable<HttpPostedFileBase> photos,
-            int[] photoSortOrders)
+            int[] photoSortOrders,
+            int[] deleteLayoutIds,
+            int[] existingLayoutOrder,
+            int[] existingLayoutSortOrder,
+            IEnumerable<HttpPostedFileBase> layoutPhotos,
+            int[] layoutSortOrders)
         {
             if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
             {
@@ -338,6 +344,63 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                         {
                             YachtID = yacht.YachtID,
                             PhotoUrl = "/Content/uploads/yachts/photos/" + fileName,
+                            SortOrder = sortOrder
+                        });
+                    }
+                }
+
+                // ④ 更新 Layout 照片排序
+                if (existingLayoutOrder != null && existingLayoutSortOrder != null)
+                {
+                    for (int i = 0; i < existingLayoutOrder.Length; i++)
+                    {
+                        var lp = db.YachtLayoutPhotos.Find(existingLayoutOrder[i]);
+                        if (lp == null || lp.YachtId != yacht.YachtID) continue;
+                        lp.SortOrder = existingLayoutSortOrder[i];
+                    }
+                }
+
+                // ⑤ 刪除標記的 Layout 照片
+                if (deleteLayoutIds != null && deleteLayoutIds.Length > 0)
+                {
+                    foreach (var lpId in deleteLayoutIds)
+                    {
+                        var lp = db.YachtLayoutPhotos.Find(lpId);
+                        if (lp == null || lp.YachtId != yacht.YachtID) continue;
+                        var filePath = Server.MapPath("~" + lp.LayoutImgUrl);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+                        db.YachtLayoutPhotos.Remove(lp);
+                    }
+                }
+
+                // ⑥ 新增新上傳的 Layout 照片
+                if (layoutPhotos != null)
+                {
+                    var allowedLayoutTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+                    var layoutSaveDir = Server.MapPath("~/Content/uploads/yachts/layouts/");
+                    if (!System.IO.Directory.Exists(layoutSaveDir))
+                        System.IO.Directory.CreateDirectory(layoutSaveDir);
+
+                    var layoutList = layoutPhotos.Where(p => p != null && p.ContentLength > 0).ToList();
+                    for (int i = 0; i < layoutList.Count; i++)
+                    {
+                        var lp = layoutList[i];
+                        if (!allowedLayoutTypes.Contains(lp.ContentType)) continue;
+                        if (lp.ContentLength > 5 * 1024 * 1024) continue;
+
+                        var ext = System.IO.Path.GetExtension(lp.FileName);
+                        var fileName = Guid.NewGuid().ToString() + ext;
+                        lp.SaveAs(System.IO.Path.Combine(layoutSaveDir, fileName));
+
+                        int sortOrder = (layoutSortOrders != null && i < layoutSortOrders.Length)
+                            ? layoutSortOrders[i]
+                            : i + 1;
+
+                        db.YachtLayoutPhotos.Add(new YachtLayoutPhoto
+                        {
+                            YachtId = yacht.YachtID,
+                            LayoutImgUrl = "/Content/uploads/yachts/layouts/" + fileName,
                             SortOrder = sortOrder
                         });
                     }
