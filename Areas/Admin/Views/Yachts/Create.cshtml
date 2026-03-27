@@ -79,10 +79,9 @@
                        accept=".jpg,.jpeg,.png,.gif,.webp"
                        class="form-control" />
                 <small class="text-muted">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
-                <div id="previewContainer" style="display:none; margin-top:10px;">
-                    <p class="text-muted" style="font-size:0.9em;">圖片預覽：</p>
-                    <img id="imagePreview" src="#" alt="預覽圖"
-                         style="max-width:100%; max-height:300px; border-radius:4px; box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
+                <div id="previewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
+                    <span id="previewPlaceholder" class="text-muted" style="font-size:0.9em;">尚未選擇圖片</span>
+                    <img id="imagePreview" src="#" alt="預覽圖" style="display:none; max-width:100%; max-height:300px;" />
                 </div>
             </div>
         </div>
@@ -273,25 +272,28 @@
 
     document.getElementById('dimensionsImg').addEventListener('change', function (e) {
         const file = e.target.files[0];
-        const previewContainer = document.getElementById('previewContainer');
         const previewImage = document.getElementById('imagePreview');
+        const placeholder = document.getElementById('previewPlaceholder');
 
         if (file) {
             const maxSize = 5 * 1024 * 1024;
             if (file.size > maxSize) {
                 alert('檔案太大！請選擇小於 5MB 的圖片。');
                 this.value = '';
-                previewContainer.style.display = 'none';
+                previewImage.style.display = 'none';
+                placeholder.style.display = 'inline';
                 return;
             }
             const reader = new FileReader();
             reader.onload = function (event) {
                 previewImage.src = event.target.result;
-                previewContainer.style.display = 'block';
+                previewImage.style.display = 'block';
+                placeholder.style.display = 'none';
             };
             reader.readAsDataURL(file);
         } else {
-            previewContainer.style.display = 'none';
+            previewImage.style.display = 'none';
+            placeholder.style.display = 'inline';
         }
     });
 </script>
