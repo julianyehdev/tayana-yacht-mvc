@@ -30,7 +30,7 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "Dimensions (規格尺寸)")]
         public string Dimensions { get; set; }
 
-        [Display(Name = "詳細規格")]
+        [Display(Name = "Detail Specification (詳細規格)")]
         public string DetailSpecification { get; set; }
 
         [Display(Name = "DimensionsPic (規格圖)")]
