@@ -48,7 +48,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet, IEnumerable<HttpPostedFileBase> photos, int[] photoSortOrders, IEnumerable<HttpPostedFileBase> layoutPhotos, int[] layoutSortOrders)
+        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DetailSpecification,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet, IEnumerable<HttpPostedFileBase> photos, int[] photoSortOrders, IEnumerable<HttpPostedFileBase> layoutPhotos, int[] layoutSortOrders)
         {
             if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
             {
