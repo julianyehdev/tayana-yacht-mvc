@@ -193,7 +193,12 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Yacht yacht = db.Yachts.Find(id);
+
+            // 使用 Include 預先載入相簿圖片，避免 View 中 lazy load 失敗
+            Yacht yacht = db.Yachts
+                .Include(y => y.YachtPhotos)
+                .SingleOrDefault(y => y.YachtID == id);
+
             if (yacht == null)
             {
                 return HttpNotFound();
