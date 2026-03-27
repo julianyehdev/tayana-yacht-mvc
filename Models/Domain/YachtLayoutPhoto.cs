@@ -14,10 +14,6 @@ namespace TayanaYachtMVC.Models.Domain
         public virtual Yacht Yacht { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string LayoutTitle { get; set; }
-
-        [Required]
         [StringLength(500)]
         public string LayoutImgUrl { get; set; }
 

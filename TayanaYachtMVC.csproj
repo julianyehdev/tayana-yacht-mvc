@@ -167,6 +167,10 @@
     <Compile Include="Migrations\202603270515545_AddYachtPhotos.Designer.cs">
       <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603270856498_RemoveLayoutTitle.cs" />
+    <Compile Include="Migrations\202603270856498_RemoveLayoutTitle.Designer.cs">
+      <DependentUpon>202603270856498_RemoveLayoutTitle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -2068,6 +2072,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603270515545_AddYachtPhotos.resx">
       <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270856498_RemoveLayoutTitle.resx">
+      <DependentUpon>202603270856498_RemoveLayoutTitle.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
