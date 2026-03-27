@@ -48,7 +48,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions")] Yacht yacht, HttpPostedFileBase dimensionsImg)
+        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet)
         {
             if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
             {
@@ -70,6 +70,29 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                         System.IO.Directory.CreateDirectory(savePath);
                     dimensionsImg.SaveAs(System.IO.Path.Combine(savePath, fileName));
                     yacht.DimensionsImgUrl = "/Content/uploads/yachts/dimensions/" + fileName;
+                }
+            }
+
+            if (specSheet != null && specSheet.ContentLength > 0)
+            {
+                var allowedTypes = new[] { "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+                if (!allowedTypes.Contains(specSheet.ContentType))
+                {
+                    ModelState.AddModelError("SpecSheetUrl", "不支援的檔案格式。");
+                }
+                else if (specSheet.ContentLength > 10 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("SpecSheetUrl", "檔案大小不能超過 10MB。");
+                }
+                else
+                {
+                    var ext = System.IO.Path.GetExtension(specSheet.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var savePath = Server.MapPath("~/Content/uploads/yachts/specs/");
+                    if (!System.IO.Directory.Exists(savePath))
+                        System.IO.Directory.CreateDirectory(savePath);
+                    specSheet.SaveAs(System.IO.Path.Combine(savePath, fileName));
+                    yacht.SpecSheetUrl = "/Content/uploads/yachts/specs/" + fileName;
                 }
             }
 
