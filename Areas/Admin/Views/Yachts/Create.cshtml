@@ -83,7 +83,8 @@
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-primary" onclick="document.getElementById('dimensionsImg').click()">選擇圖片</button>
                         </span>
-                        <input type="text" id="dimensionsImgLabel" class="form-control" readonly placeholder="未選擇任何檔案" />
+                        <input type="text" id="dimensionsImgLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
                     </div>
                     <small class="text-muted" style="margin-top:4px; display:block;">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
                     <div id="previewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
@@ -95,20 +96,22 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SpecSheetFileName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SpecSheetFileName, new { htmlAttributes = new { @class = "form-control", placeholder = "例：TAYANA37-STANDARD SPECIFICATIONS" } })
-                @Html.ValidationMessageFor(model => model.SpecSheetFileName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.SpecSheetUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="file" name="specSheet" id="specSheet"
-                       accept=".pdf,.doc,.docx"
-                       class="form-control" />
-                <small class="text-muted">支援格式：PDF, DOC, DOCX（限制 10MB）</small>
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="specSheet" id="specSheet"
+                           accept=".pdf,.doc,.docx"
+                           style="display:none;" />
+                    <input type="hidden" name="SpecSheetFileName" id="specSheetFileName" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('specSheet').click()">選擇檔案</button>
+                        </span>
+                        <input type="text" id="specSheetLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：PDF, DOC, DOCX（限制 10MB）</small>
+                </div>
             </div>
         </div>
 
@@ -274,6 +277,14 @@
 
         // 確保最新順序同步到 file input
         syncPhotosToInput();
+    });
+
+    // ==================== 規格說明書檔名同步 ====================
+
+    document.getElementById('specSheet').addEventListener('change', function () {
+        const name = this.files[0] ? this.files[0].name : '';
+        document.getElementById('specSheetLabel').value = name || '未選擇任何檔案';
+        document.getElementById('specSheetFileName').value = name;
     });
 
     // ==================== 規格示意圖預覽模組 ====================
