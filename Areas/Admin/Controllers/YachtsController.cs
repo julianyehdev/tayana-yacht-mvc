@@ -207,19 +207,80 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         }
 
         // POST: Admin/Yachts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht)
+        [ValidateInput(false)]
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht,
+            int[] deletePhotoIds,
+            IEnumerable<HttpPostedFileBase> photos,
+            int[] photoSortOrders)
         {
             if (ModelState.IsValid)
             {
                 yacht.UpdatedAt = DateTime.Now;
                 db.Entry(yacht).State = EntityState.Modified;
+
+                // ① 刪除標記的舊照片（檔案 + DB 記錄）
+                if (deletePhotoIds != null && deletePhotoIds.Length > 0)
+                {
+                    foreach (var photoId in deletePhotoIds)
+                    {
+                        var photo = db.YachtPhotos.Find(photoId);
+                        if (photo == null || photo.YachtID != yacht.YachtID) continue;
+
+                        // 刪除實體檔案
+                        var filePath = Server.MapPath("~" + photo.PhotoUrl);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+
+                        db.YachtPhotos.Remove(photo);
+                    }
+                }
+
+                // ② 新增新上傳的照片
+                if (photos != null)
+                {
+                    var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+                    var saveDir = Server.MapPath("~/Content/uploads/yachts/photos/");
+                    if (!System.IO.Directory.Exists(saveDir))
+                        System.IO.Directory.CreateDirectory(saveDir);
+
+                    // 計算現有最大 SortOrder，新圖接在後面
+                    int existingMax = db.YachtPhotos
+                        .Where(p => p.YachtID == yacht.YachtID)
+                        .Select(p => (int?)p.SortOrder)
+                        .Max() ?? 0;
+
+                    var photoList = photos.Where(p => p != null && p.ContentLength > 0).ToList();
+                    for (int i = 0; i < photoList.Count; i++)
+                    {
+                        var photo = photoList[i];
+                        if (!allowedTypes.Contains(photo.ContentType)) continue;
+                        if (photo.ContentLength > 5 * 1024 * 1024) continue;
+
+                        var ext = System.IO.Path.GetExtension(photo.FileName);
+                        var fileName = Guid.NewGuid().ToString() + ext;
+                        photo.SaveAs(System.IO.Path.Combine(saveDir, fileName));
+
+                        int sortOrder = (photoSortOrders != null && i < photoSortOrders.Length)
+                            ? existingMax + photoSortOrders[i]
+                            : existingMax + i + 1;
+
+                        db.YachtPhotos.Add(new YachtPhoto
+                        {
+                            YachtID = yacht.YachtID,
+                            PhotoUrl = "/Content/uploads/yachts/photos/" + fileName,
+                            SortOrder = sortOrder
+                        });
+                    }
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            // 驗證失敗時重新載入相簿圖片
+            yacht.YachtPhotos = db.YachtPhotos.Where(p => p.YachtID == yacht.YachtID).ToList();
             return View(yacht);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -47,5 +48,9 @@ namespace TayanaYachtMVC.Models.Domain
 
         [Display(Name = "更新時間")]
         public DateTime UpdatedAt { get; set; }
+
+        // Navigation properties（EF 關聯用）
+        public virtual ICollection<YachtPhoto> YachtPhotos { get; set; }
+        public virtual ICollection<YachtLayoutPhoto> YachtLayoutPhotos { get; set; }
     }
 }

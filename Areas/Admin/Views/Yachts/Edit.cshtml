@@ -4,7 +4,7 @@
     ViewBag.Title = "編輯遊艇";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Yachts", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
