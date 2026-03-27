@@ -115,6 +115,28 @@
             </div>
         </div>
 
+        @* Layout & Deck Plan 上傳區塊 *@
+        <div class="form-group">
+            <label class="control-label col-md-2">Layout & Deck Plan</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+
+                    <div id="layout-drop-zone" style="border:2px dashed #007bff; border-radius:8px; padding:40px; text-align:center; background:#f8fbff; cursor:pointer; margin-bottom:15px;">
+                        <p style="margin:0; color:#007bff; font-weight:bold;">＋ 點擊或拖曳圖片至此上傳</p>
+                        <p style="font-size:0.8em; color:#666; margin-top:8px;">支援 JPG, PNG, WEBP（單檔最大 5MB）</p>
+                        <input type="file" id="layout-file-input" multiple accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                    </div>
+
+                    <div id="layout-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;"></div>
+
+                    <div id="layout-sort-order-inputs"></div>
+                    <input type="file" name="layoutPhotos" multiple id="actual-layout-input" style="display:none;" />
+
+                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序</small>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="新增" class="btn btn-default" />
@@ -277,7 +299,122 @@
 
         // 確保最新順序同步到 file input
         syncPhotosToInput();
+
+        // 同步 layout sort orders
+        var layoutContainer = document.getElementById('layout-sort-order-inputs');
+        layoutContainer.innerHTML = '';
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item, sortIndex) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'layoutSortOrders';
+            input.value = sortIndex;
+            layoutContainer.appendChild(input);
+        });
+        syncLayoutToInput();
     });
+
+    // ==================== Layout & Deck Plan 上傳模組 ====================
+
+    let layoutFiles = [];
+    let nextLayoutId = 0;
+
+    const layoutSortable = new Sortable(document.getElementById('layout-preview-list'), {
+        animation: 150,
+        onEnd: function () {
+            updateLayoutIndexes();
+            syncLayoutToInput();
+        }
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('click', function () {
+        document.getElementById('layout-file-input').click();
+    });
+
+    document.getElementById('layout-file-input').addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.style.background = '#e2efff';
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('dragleave', function () {
+        this.style.background = '#f8fbff';
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.style.background = '#f8fbff';
+        handleLayoutFiles(e.dataTransfer.files);
+    });
+
+    document.getElementById('layout-file-input').addEventListener('change', function (e) {
+        handleLayoutFiles(e.target.files);
+        this.value = '';
+    });
+
+    function handleLayoutFiles(files) {
+        Array.from(files).forEach(function (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert(file.name + ' 超過 5MB，已略過。');
+                return;
+            }
+            const id = nextLayoutId++;
+            layoutFiles.push({ id: id, file: file });
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const item = document.createElement('div');
+                item.className = 'layout-item';
+                item.dataset.id = id;
+                item.style.cssText = 'position:relative; border:1px solid #ddd; border-radius:4px; overflow:hidden; cursor:grab;';
+                item.innerHTML = `
+                    <span class="layout-index-badge" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.7); color:#fff; padding:2px 8px; font-size:12px; border-radius:10px;"></span>
+                    <button type="button" class="btn-delete-layout" data-id="${id}" style="position:absolute; top:5px; right:5px; background:#ff4d4d; color:white; border:none; border-radius:50%; width:24px; height:24px; font-size:14px; cursor:pointer; display:none;">&times;</button>
+                    <img src="${e.target.result}" style="width:100%; height:120px; object-fit:cover; display:block;" />
+                `;
+
+                item.addEventListener('mouseenter', function () {
+                    this.querySelector('.btn-delete-layout').style.display = 'flex';
+                });
+                item.addEventListener('mouseleave', function () {
+                    this.querySelector('.btn-delete-layout').style.display = 'none';
+                });
+
+                document.getElementById('layout-preview-list').appendChild(item);
+                updateLayoutIndexes();
+                syncLayoutToInput();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function updateLayoutIndexes() {
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item, idx) {
+            item.querySelector('.layout-index-badge').textContent = idx + 1;
+        });
+    }
+
+    document.getElementById('layout-preview-list').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-delete-layout');
+        if (!btn) return;
+        const id = parseInt(btn.dataset.id);
+        layoutFiles = layoutFiles.filter(function (f) { return f.id !== id; });
+        btn.closest('.layout-item').remove();
+        updateLayoutIndexes();
+        syncLayoutToInput();
+    });
+
+    function syncLayoutToInput() {
+        const dt = new DataTransfer();
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item) {
+            const id = parseInt(item.dataset.id);
+            const fileObj = layoutFiles.find(function (f) { return f.id === id; });
+            if (fileObj) dt.items.add(fileObj.file);
+        });
+        document.getElementById('actual-layout-input').files = dt.files;
+    }
 
     // ==================== 規格說明書檔名同步 ====================
 

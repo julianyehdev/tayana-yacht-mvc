@@ -48,7 +48,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet, IEnumerable<HttpPostedFileBase> photos, int[] photoSortOrders)
+        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet, IEnumerable<HttpPostedFileBase> photos, int[] photoSortOrders, IEnumerable<HttpPostedFileBase> layoutPhotos, int[] layoutSortOrders)
         {
             if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
             {
@@ -137,6 +137,42 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                         {
                             YachtID = yacht.YachtID,
                             PhotoUrl = "/Content/uploads/yachts/photos/" + fileName,
+                            SortOrder = sortOrder
+                        });
+                    }
+
+                    db.SaveChanges();
+                }
+
+                // 第三段寫入：Layout & Deck Plan 照片
+                if (layoutPhotos != null)
+                {
+                    var allowedLayoutTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+                    var layoutSaveDir = Server.MapPath("~/Content/uploads/yachts/layouts/");
+
+                    if (!System.IO.Directory.Exists(layoutSaveDir))
+                        System.IO.Directory.CreateDirectory(layoutSaveDir);
+
+                    var layoutList = layoutPhotos.Where(p => p != null && p.ContentLength > 0).ToList();
+                    for (int i = 0; i < layoutList.Count; i++)
+                    {
+                        var photo = layoutList[i];
+
+                        if (!allowedLayoutTypes.Contains(photo.ContentType)) continue;
+                        if (photo.ContentLength > 5 * 1024 * 1024) continue;
+
+                        var ext = System.IO.Path.GetExtension(photo.FileName);
+                        var fileName = Guid.NewGuid().ToString() + ext;
+                        photo.SaveAs(System.IO.Path.Combine(layoutSaveDir, fileName));
+
+                        int sortOrder = (layoutSortOrders != null && i < layoutSortOrders.Length)
+                            ? layoutSortOrders[i]
+                            : i;
+
+                        db.YachtLayoutPhotos.Add(new YachtLayoutPhoto
+                        {
+                            YachtId = yacht.YachtID,
+                            LayoutImgUrl = "/Content/uploads/yachts/layouts/" + fileName,
                             SortOrder = sortOrder
                         });
                     }
