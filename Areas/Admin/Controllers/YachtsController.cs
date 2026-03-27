@@ -211,7 +211,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DimensionsImgUrl,SpecSheetUrl,SpecSheetFileName")] Yacht yacht,
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DimensionsImgUrl,SpecSheetUrl,SpecSheetFileName,DetailSpecification")] Yacht yacht,
             HttpPostedFileBase dimensionsImg,
             HttpPostedFileBase specSheet,
             int[] deletePhotoIds,

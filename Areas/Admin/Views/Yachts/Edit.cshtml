@@ -193,6 +193,19 @@
 
         <hr style="margin:32px 0;" />
 
+        @* ── ④ 詳細規格 ── *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">④ 詳細規格</h5>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DetailSpecification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.DetailSpecification, new { @class = "form-control", id = "DetailSpecification", rows = "6" })
+                @Html.ValidationMessageFor(model => model.DetailSpecification, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="儲存" class="btn btn-primary btn-lg" style="padding-left:40px; padding-right:40px;" />
@@ -211,6 +224,7 @@
 <script>
     CKEDITOR.replace('Overview');
     CKEDITOR.replace('Dimensions');
+    CKEDITOR.replace('DetailSpecification');
     // ==================== 標記刪除現有照片 ====================
     // 點擊 ✕ 後，將卡片半透明標示，並啟用隱藏 input 讓表單送出該 PhotoID
     function markDeletePhoto(btn, photoId) {
