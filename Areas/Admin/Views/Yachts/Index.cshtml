@@ -4,10 +4,13 @@
     ViewBag.Title = "遊艇列表";
 }
 
-<p>
-    @Html.ActionLink("新增遊艇", "Create")
-</p>
-<table class="table">
+<div class="mb-3">
+    @Html.ActionLink("新增遊艇", "Create", null, new { @class = "btn btn-primary" })
+</div>
+<style>
+    #yachts-table td { vertical-align: middle; }
+</style>
+<table class="table" id="yachts-table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.YachtName)
@@ -27,7 +30,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.YachtName)
+            @Html.ActionLink(item.YachtName, "Edit", new { id = item.YachtID })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.IsLatest)
@@ -39,9 +42,8 @@
             @Html.DisplayFor(modelItem => item.UpdatedAt)
         </td>
         <td>
-            @Html.ActionLink("編輯", "Edit", new { id=item.YachtID }) |
-            @Html.ActionLink("詳細", "Details", new { id=item.YachtID }) |
-            @Html.ActionLink("刪除", "Delete", new { id=item.YachtID })
+            @Html.ActionLink("編輯", "Edit", new { id = item.YachtID }, new { @class = "btn btn-outline-primary" })
+            @Html.ActionLink("刪除", "Delete", new { id = item.YachtID }, new { @class = "btn btn-outline-danger" })
         </td>
     </tr>
 }
