@@ -210,7 +210,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht,
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview")] Yacht yacht,
             int[] deletePhotoIds,
             int[] existingPhotoOrder,
             int[] existingPhotoSortOrder,

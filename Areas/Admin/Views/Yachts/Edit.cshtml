@@ -71,9 +71,24 @@
             </div>
         </div>
 
+        <hr style="margin:32px 0;" />
+
+        @* ── ② 船型規格 ── *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">② 船型規格</h5>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Overview, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Overview, new { @class = "form-control", id = "Overview", rows = "6" })
+                @Html.ValidationMessageFor(model => model.Overview, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="儲存" class="btn btn-default" />
+                <input type="submit" value="儲存" class="btn btn-primary btn-lg" style="padding-left:40px; padding-right:40px;" />
             </div>
         </div>
     </div>
@@ -85,7 +100,9 @@
 
 @* SortableJS：讓新上傳預覽列表支援拖曳排序 *@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
+    CKEDITOR.replace('Overview');
     // ==================== 標記刪除現有照片 ====================
     // 點擊 ✕ 後，將卡片半透明標示，並啟用隱藏 input 讓表單送出該 PhotoID
     function markDeletePhoto(btn, photoId) {
@@ -208,6 +225,12 @@
 
     // 表單送出前，依 DOM 順序產生所有排序 hidden inputs
     document.getElementById('edit-yacht-form').addEventListener('submit', function () {
+        // 同步 CKEditor 內容回 textarea
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
+            }
+        }
         var container = document.getElementById('photo-sort-order-inputs');
         container.innerHTML = '';
 
