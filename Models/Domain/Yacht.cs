@@ -24,16 +24,16 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "最新款")]
         public bool IsLatest { get; set; }
 
-        [Display(Name = "船型簡介")]
+        [Display(Name = "Overview (船型簡介)")]
         public string Overview { get; set; }
 
-        [Display(Name = "尺寸規格")]
+        [Display(Name = "Dimensions (規格尺寸)")]
         public string Dimensions { get; set; }
 
         [Display(Name = "詳細規格")]
         public string DetailSpecification { get; set; }
 
-        [Display(Name = "規格示意圖")]
+        [Display(Name = "DimensionsPic (規格圖)")]
         public string DimensionsImgUrl { get; set; }
 
         [Display(Name = "規格說明書")]
