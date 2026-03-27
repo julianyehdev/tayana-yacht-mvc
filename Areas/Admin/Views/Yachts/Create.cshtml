@@ -62,6 +62,24 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.SpecSheetFileName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SpecSheetFileName, new { htmlAttributes = new { @class = "form-control", placeholder = "例：TAYANA37-STANDARD SPECIFICATIONS" } })
+                @Html.ValidationMessageFor(model => model.SpecSheetFileName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpecSheetUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="specSheet" id="specSheet"
+                       accept=".pdf,.doc,.docx"
+                       class="form-control" />
+                <small class="text-muted">支援格式：PDF, DOC, DOCX（限制 10MB）</small>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="新增" class="btn btn-default" />
             </div>
