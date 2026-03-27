@@ -4,7 +4,7 @@
     ViewBag.Title = "編輯遊艇";
 }
 
-@using (Html.BeginForm("Edit", "Yachts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Edit", "Yachts", FormMethod.Post, new { enctype = "multipart/form-data", id = "edit-yacht-form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -206,17 +206,40 @@
         }
     });
 
-    // 表單送出前，產生 sort order hidden inputs
-    document.querySelector('form').addEventListener('submit', function () {
+    // 表單送出前，依 DOM 順序產生所有排序 hidden inputs
+    document.getElementById('edit-yacht-form').addEventListener('submit', function () {
         var container = document.getElementById('photo-sort-order-inputs');
         container.innerHTML = '';
-        var cards = previewList.querySelectorAll('.photo-card');
-        cards.forEach(function (card, i) {
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'photoSortOrders';
-            input.value = i + 1;
-            container.appendChild(input);
+
+        // 取得 grid 中所有卡片（含現有圖片和新上傳），依視覺順序編號
+        var allCards = previewList.querySelectorAll('.existing-photo-card, .photo-card');
+        var newPhotoIndex = 0;
+
+        allCards.forEach(function (card, i) {
+            var sortOrder = i + 1;
+            if (card.classList.contains('existing-photo-card')) {
+                // 現有圖片：送出 photoId 對應新的 SortOrder
+                var photoId = card.dataset.photoId;
+                var idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'existingPhotoOrder';
+                idInput.value = photoId;
+                container.appendChild(idInput);
+
+                var orderInput = document.createElement('input');
+                orderInput.type = 'hidden';
+                orderInput.name = 'existingPhotoSortOrder';
+                orderInput.value = sortOrder;
+                container.appendChild(orderInput);
+            } else {
+                // 新上傳圖片：送出該張的新 SortOrder
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'photoSortOrders';
+                input.value = sortOrder;
+                container.appendChild(input);
+                newPhotoIndex++;
+            }
         });
     });
 </script>

@@ -212,6 +212,8 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest")] Yacht yacht,
             int[] deletePhotoIds,
+            int[] existingPhotoOrder,
+            int[] existingPhotoSortOrder,
             IEnumerable<HttpPostedFileBase> photos,
             int[] photoSortOrders)
         {
@@ -220,7 +222,18 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 yacht.UpdatedAt = DateTime.Now;
                 db.Entry(yacht).State = EntityState.Modified;
 
-                // ① 刪除標記的舊照片（檔案 + DB 記錄）
+                // ① 更新現有照片的排序
+                if (existingPhotoOrder != null && existingPhotoSortOrder != null)
+                {
+                    for (int i = 0; i < existingPhotoOrder.Length; i++)
+                    {
+                        var photo = db.YachtPhotos.Find(existingPhotoOrder[i]);
+                        if (photo == null || photo.YachtID != yacht.YachtID) continue;
+                        photo.SortOrder = existingPhotoSortOrder[i];
+                    }
+                }
+
+                // ② 刪除標記的舊照片（檔案 + DB 記錄）
                 if (deletePhotoIds != null && deletePhotoIds.Length > 0)
                 {
                     foreach (var photoId in deletePhotoIds)
@@ -237,19 +250,13 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                     }
                 }
 
-                // ② 新增新上傳的照片
+                // ③ 新增新上傳的照片
                 if (photos != null)
                 {
                     var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
                     var saveDir = Server.MapPath("~/Content/uploads/yachts/photos/");
                     if (!System.IO.Directory.Exists(saveDir))
                         System.IO.Directory.CreateDirectory(saveDir);
-
-                    // 計算現有最大 SortOrder，新圖接在後面
-                    int existingMax = db.YachtPhotos
-                        .Where(p => p.YachtID == yacht.YachtID)
-                        .Select(p => (int?)p.SortOrder)
-                        .Max() ?? 0;
 
                     var photoList = photos.Where(p => p != null && p.ContentLength > 0).ToList();
                     for (int i = 0; i < photoList.Count; i++)
@@ -262,9 +269,10 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                         var fileName = Guid.NewGuid().ToString() + ext;
                         photo.SaveAs(System.IO.Path.Combine(saveDir, fileName));
 
+                        // 直接用前端送來的 SortOrder（已包含全局位置）
                         int sortOrder = (photoSortOrders != null && i < photoSortOrders.Length)
-                            ? existingMax + photoSortOrders[i]
-                            : existingMax + i + 1;
+                            ? photoSortOrders[i]
+                            : i + 1;
 
                         db.YachtPhotos.Add(new YachtPhoto
                         {
