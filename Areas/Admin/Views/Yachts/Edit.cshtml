@@ -23,12 +23,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsLatest, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsLatest)
-                    @Html.ValidationMessageFor(model => model.IsLatest, "", new { @class = "text-danger" })
-                </div>
+            <div class="col-md-offset-2 col-md-10">
+                <label style="font-weight:normal;">
+                    是否為最新款 @Html.CheckBoxFor(model => model.IsLatest)
+                </label>
             </div>
         </div>
 
