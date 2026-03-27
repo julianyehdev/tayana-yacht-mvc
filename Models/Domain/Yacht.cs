@@ -33,6 +33,12 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "規格示意圖")]
         public string DimensionsImgUrl { get; set; }
 
+        [Display(Name = "規格說明書")]
+        public string SpecSheetUrl { get; set; }
+
+        [Display(Name = "規格說明書名稱")]
+        public string SpecSheetFileName { get; set; }
+
         [Display(Name = "建立時間")]
         public DateTime CreatedAt { get; set; }
 
