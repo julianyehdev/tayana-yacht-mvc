@@ -210,13 +210,41 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions")] Yacht yacht,
+        public ActionResult Edit([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,DimensionsImgUrl")] Yacht yacht,
+            HttpPostedFileBase dimensionsImg,
             int[] deletePhotoIds,
             int[] existingPhotoOrder,
             int[] existingPhotoSortOrder,
             IEnumerable<HttpPostedFileBase> photos,
             int[] photoSortOrders)
         {
+            if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+                if (!allowedTypes.Contains(dimensionsImg.ContentType))
+                    ModelState.AddModelError("DimensionsImgUrl", "不支援的檔案格式。");
+                else if (dimensionsImg.ContentLength > 5 * 1024 * 1024)
+                    ModelState.AddModelError("DimensionsImgUrl", "檔案大小不能超過 5MB。");
+                else
+                {
+                    var ext = System.IO.Path.GetExtension(dimensionsImg.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var savePath = Server.MapPath("~/Content/uploads/yachts/dimensions/");
+                    if (!System.IO.Directory.Exists(savePath))
+                        System.IO.Directory.CreateDirectory(savePath);
+                    dimensionsImg.SaveAs(System.IO.Path.Combine(savePath, fileName));
+                    yacht.DimensionsImgUrl = "/Content/uploads/yachts/dimensions/" + fileName;
+                }
+            }
+            else
+            {
+                // 沒有上傳新圖片，保留原本的 URL
+                var existing = db.Yachts.AsNoTracking().Select(y => new { y.YachtID, y.DimensionsImgUrl })
+                                        .FirstOrDefault(y => y.YachtID == yacht.YachtID);
+                if (existing != null)
+                    yacht.DimensionsImgUrl = existing.DimensionsImgUrl;
+            }
+
             if (ModelState.IsValid)
             {
                 yacht.UpdatedAt = DateTime.Now;
