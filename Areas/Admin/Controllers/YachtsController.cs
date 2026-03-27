@@ -48,7 +48,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet)
+        public ActionResult Create([Bind(Include = "YachtID,YachtName,IsLatest,Overview,Dimensions,SpecSheetFileName")] Yacht yacht, HttpPostedFileBase dimensionsImg, HttpPostedFileBase specSheet, IEnumerable<HttpPostedFileBase> photos, int[] photoSortOrders)
         {
             if (dimensionsImg != null && dimensionsImg.ContentLength > 0)
             {
@@ -98,8 +98,52 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                // 第一段寫入：先存 Yacht，取得新產生的 YachtID
                 db.Yachts.Add(yacht);
                 db.SaveChanges();
+
+                // 第二段寫入：依排序順序存相簿照片，關聯到剛建立的 YachtID
+                if (photos != null)
+                {
+                    var allowedPhotoTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+                    var photoSaveDir = Server.MapPath("~/Content/uploads/yachts/photos/");
+
+                    // 確保目錄存在
+                    if (!System.IO.Directory.Exists(photoSaveDir))
+                        System.IO.Directory.CreateDirectory(photoSaveDir);
+
+                    var photoList = photos.Where(p => p != null && p.ContentLength > 0).ToList();
+                    for (int i = 0; i < photoList.Count; i++)
+                    {
+                        var photo = photoList[i];
+
+                        // 略過不支援的格式
+                        if (!allowedPhotoTypes.Contains(photo.ContentType)) continue;
+
+                        // 略過超過 5MB 的圖片
+                        if (photo.ContentLength > 5 * 1024 * 1024) continue;
+
+                        // 用 GUID 產生唯一檔名，避免重複
+                        var ext = System.IO.Path.GetExtension(photo.FileName);
+                        var fileName = Guid.NewGuid().ToString() + ext;
+                        photo.SaveAs(System.IO.Path.Combine(photoSaveDir, fileName));
+
+                        // 取得前端傳來的排序值，若無則以索引代替
+                        int sortOrder = (photoSortOrders != null && i < photoSortOrders.Length)
+                            ? photoSortOrders[i]
+                            : i;
+
+                        db.YachtPhotos.Add(new YachtPhoto
+                        {
+                            YachtID = yacht.YachtID,
+                            PhotoUrl = "/Content/uploads/yachts/photos/" + fileName,
+                            SortOrder = sortOrder
+                        });
+                    }
+
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
 
