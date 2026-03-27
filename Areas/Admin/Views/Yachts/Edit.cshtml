@@ -84,6 +84,14 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.Dimensions, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Dimensions, new { @class = "form-control", id = "Dimensions", rows = "6" })
+                @Html.ValidationMessageFor(model => model.Dimensions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <hr style="margin:32px 0;" />
 
         <div class="form-group">
@@ -103,6 +111,7 @@
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('Overview');
+    CKEDITOR.replace('Dimensions');
     // ==================== 標記刪除現有照片 ====================
     // 點擊 ✕ 後，將卡片半透明標示，並啟用隱藏 input 讓表單送出該 PhotoID
     function markDeletePhoto(btn, photoId) {
