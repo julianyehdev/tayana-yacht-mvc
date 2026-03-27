@@ -9,9 +9,11 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Yacht</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @* ① 基本資料 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">① 基本資料</h5>
+
         <div class="form-group">
             @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -55,6 +57,11 @@
                 </div>
             </div>
         </div>
+
+        <hr style="margin:32px 0;" />
+
+        @* ② 船型規格 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">② 船型規格</h5>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Overview, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -115,6 +122,11 @@
             </div>
         </div>
 
+        <hr style="margin:32px 0;" />
+
+        @* ③ 配置圖與甲板圖 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">③ 配置圖與甲板圖</h5>
+
         @* Layout & Deck Plan 上傳區塊 *@
         <div class="form-group">
             <label class="control-label col-md-2">Layout & Deck Plan (配置圖與甲板圖)</label>
@@ -137,6 +149,11 @@
             </div>
         </div>
 
+        <hr style="margin:32px 0;" />
+
+        @* ④ 詳細規格 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">④ 詳細規格</h5>
+
         <div class="form-group">
             @Html.LabelFor(model => model.DetailSpecification, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -144,6 +161,8 @@
                 @Html.ValidationMessageFor(model => model.DetailSpecification, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <hr style="margin:32px 0;" />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
