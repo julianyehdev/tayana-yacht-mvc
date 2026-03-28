@@ -12,6 +12,7 @@
         <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="搜尋標題..." />
         @Html.DropDownList("categoryId", (SelectList)ViewBag.CategoryId, "全部類別", new { @class = "form-select" })
         <button type="submit" class="btn btn-outline-secondary">搜尋</button>
+        @Html.ActionLink("清空", "Index", null, new { @class = "btn btn-outline-danger" })
     }
 </div>
 
