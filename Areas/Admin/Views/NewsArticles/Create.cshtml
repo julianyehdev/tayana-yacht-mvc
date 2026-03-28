@@ -4,7 +4,7 @@
     ViewBag.Title = "新增新聞";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "NewsArticles", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -32,8 +32,23 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CoverImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CoverImageUrl, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CoverImageUrl, "", new { @class = "text-danger" })
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="coverImage" id="coverImage"
+                           accept=".jpg,.jpeg,.png,.gif,.webp"
+                           style="display:none;" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('coverImage').click()">選擇圖片</button>
+                        </span>
+                        <input type="text" id="coverImageLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
+                    <div id="coverPreviewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
+                        <span id="coverPreviewPlaceholder" class="text-muted" style="font-size:0.9em;">尚未選擇圖片</span>
+                        <img id="coverImagePreview" src="#" alt="預覽圖" style="display:none; max-width:100%; max-height:300px;" />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -74,3 +89,32 @@
         </div>
     </div>
 }
+
+<script>
+    document.getElementById('coverImage').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const previewImage = document.getElementById('coverImagePreview');
+        const placeholder = document.getElementById('coverPreviewPlaceholder');
+        document.getElementById('coverImageLabel').value = file ? file.name : '未選擇任何檔案';
+
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('檔案太大！請選擇小於 5MB 的圖片。');
+                this.value = '';
+                previewImage.style.display = 'none';
+                placeholder.style.display = 'inline';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                previewImage.src = evt.target.result;
+                previewImage.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.style.display = 'none';
+            placeholder.style.display = 'inline';
+        }
+    });
+</script>

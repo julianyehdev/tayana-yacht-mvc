@@ -66,8 +66,23 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle)
+        public ActionResult Create([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
         {
+            if (coverImage != null && coverImage.ContentLength > 0)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/gif" };
+                if (Array.Exists(allowedTypes, t => t == coverImage.ContentType))
+                {
+                    var ext = System.IO.Path.GetExtension(coverImage.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var saveDir = Server.MapPath("~/Content/uploads/news/");
+                    if (!System.IO.Directory.Exists(saveDir))
+                        System.IO.Directory.CreateDirectory(saveDir);
+                    coverImage.SaveAs(System.IO.Path.Combine(saveDir, fileName));
+                    newsArticle.CoverImageUrl = "/Content/uploads/news/" + fileName;
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 db.NewsArticles.Add(newsArticle);
@@ -100,8 +115,31 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle)
+        public ActionResult Edit([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
         {
+            if (coverImage != null && coverImage.ContentLength > 0)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/gif" };
+                if (Array.Exists(allowedTypes, t => t == coverImage.ContentType))
+                {
+                    // 刪除舊圖
+                    if (!string.IsNullOrEmpty(newsArticle.CoverImageUrl))
+                    {
+                        var oldPath = Server.MapPath("~" + newsArticle.CoverImageUrl);
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
+                    }
+
+                    var ext = System.IO.Path.GetExtension(coverImage.FileName);
+                    var fileName = Guid.NewGuid().ToString() + ext;
+                    var saveDir = Server.MapPath("~/Content/uploads/news/");
+                    if (!System.IO.Directory.Exists(saveDir))
+                        System.IO.Directory.CreateDirectory(saveDir);
+                    coverImage.SaveAs(System.IO.Path.Combine(saveDir, fileName));
+                    newsArticle.CoverImageUrl = "/Content/uploads/news/" + fileName;
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(newsArticle).State = EntityState.Modified;
