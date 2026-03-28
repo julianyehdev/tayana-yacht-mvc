@@ -1,82 +1,36 @@
-﻿@model TayanaYachtMVC.Models.Domain.NewsArticle
+@model TayanaYachtMVC.Models.Domain.NewsArticle
 
 @{
-    Layout = null;
+    ViewBag.Title = "新聞詳細";
 }
 
-<!DOCTYPE html>
+<div>
+    <h4>新聞資料</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Category.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.Category.Name)</dd>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>NewsArticle</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Category.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Category.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CoverImageUrl)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CoverImageUrl)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Content)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Content)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.PublishDate)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.PublishDate)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsPublished)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsPublished)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsPinned)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsPinned)
-            </dd>
-    
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd>@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.CoverImageUrl)</dt>
+        <dd>@Html.DisplayFor(model => model.CoverImageUrl)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Content)</dt>
+        <dd>@Html.DisplayFor(model => model.Content)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.PublishDate)</dt>
+        <dd>@Html.DisplayFor(model => model.PublishDate)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.IsPublished)</dt>
+        <dd>@Html.DisplayFor(model => model.IsPublished)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.IsPinned)</dt>
+        <dd>@Html.DisplayFor(model => model.IsPinned)</dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("編輯", "Edit", new { id = Model.Id }, new { @class = "btn btn-outline-primary" })
+    @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
+</p>

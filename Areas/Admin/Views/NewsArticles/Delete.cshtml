@@ -1,88 +1,33 @@
-﻿@model TayanaYachtMVC.Models.Domain.NewsArticle
+@model TayanaYachtMVC.Models.Domain.NewsArticle
 
 @{
-    Layout = null;
+    ViewBag.Title = "刪除新聞";
 }
 
-<!DOCTYPE html>
+<h3>確定要刪除這篇新聞嗎？</h3>
+<div>
+    <h4>新聞資料</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Category.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.Category.Name)</dd>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
-    <h3>Are you sure you want to delete this?</h3>
-    <div>
-        <h4>NewsArticle</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Category.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Category.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CoverImageUrl)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CoverImageUrl)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Content)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Content)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.PublishDate)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.PublishDate)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsPublished)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsPublished)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.IsPinned)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.IsPinned)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
-            @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
-            </div>
-        }
-    </div>
-</body>
-</html>
+        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd>@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.PublishDate)</dt>
+        <dd>@Html.DisplayFor(model => model.PublishDate)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.IsPublished)</dt>
+        <dd>@Html.DisplayFor(model => model.IsPublished)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.IsPinned)</dt>
+        <dd>@Html.DisplayFor(model => model.IsPinned)</dd>
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="確認刪除" class="btn btn-danger" />
+        @Html.ActionLink("取消", "Index", null, new { @class = "btn btn-secondary ms-2" })
+    }
+</div>
