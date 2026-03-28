@@ -53,7 +53,6 @@
                 new NewsArticle
                 {
                     Title = "Tayana 48 正式發表",
-                    Summary = "全新 Tayana 48 於台北國際遊艇展正式亮相。",
                     Content = "詳細內容...",
                     PublishDate = new DateTime(2026, 1, 10),
                     IsPublished = true,
@@ -62,7 +61,6 @@
                 new NewsArticle
                 {
                     Title = "2026 遊艇展參展公告",
-                    Summary = "大洋遊艇將於 3 月參加高雄遊艇展。",
                     Content = "詳細內容...",
                     PublishDate = new DateTime(2026, 2, 1),
                     IsPublished = true,
@@ -71,7 +69,6 @@
                 new NewsArticle
                 {
                     Title = "春季保養優惠活動",
-                    Summary = "即日起享春季保養 8 折優惠。",
                     Content = "詳細內容...",
                     PublishDate = new DateTime(2026, 3, 1),
                     IsPublished = false,
