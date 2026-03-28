@@ -9,8 +9,9 @@
 
     @using (Html.BeginForm("Index", "NewsArticles", FormMethod.Get, new { @class = "d-flex gap-2" }))
     {
+        <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="搜尋標題..." />
         @Html.DropDownList("categoryId", (SelectList)ViewBag.CategoryId, "全部類別", new { @class = "form-select" })
-        <button type="submit" class="btn btn-outline-secondary">篩選</button>
+        <button type="submit" class="btn btn-outline-secondary">搜尋</button>
     }
 </div>
 

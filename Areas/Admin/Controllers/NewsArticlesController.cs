@@ -16,15 +16,17 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         private TayanaYachtDBContext db = new TayanaYachtDBContext();
 
         // GET: Admin/NewsArticles
-        public ActionResult Index(int? categoryId)
+        public ActionResult Index(int? categoryId, string keyword)
         {
             ViewBag.CategoryId = new SelectList(db.NewsCategories.OrderBy(c => c.SortOrder), "Id", "Name", categoryId);
+            ViewBag.Keyword = keyword;
 
             var newsArticles = db.NewsArticles.Include(n => n.Category);
             if (categoryId.HasValue)
-            {
                 newsArticles = newsArticles.Where(n => n.CategoryId == categoryId);
-            }
+            if (!string.IsNullOrWhiteSpace(keyword))
+                newsArticles = newsArticles.Where(n => n.Title.Contains(keyword));
+
             return View(newsArticles.OrderByDescending(n => n.PublishDate).ToList());
         }
 
