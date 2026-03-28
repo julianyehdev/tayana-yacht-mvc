@@ -1,0 +1,484 @@
+﻿@model TayanaYachtMVC.Models.Domain.Yacht
+
+@{
+    ViewBag.Title = "新增遊艇";
+}
+
+@using (Html.BeginForm("Create", "Yachts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @* ① 基本資料 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">① 基本資料</h5>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.YachtName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.YachtName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <label style="font-weight:normal;">
+                    是否為最新款 @Html.CheckBoxFor(model => model.IsLatest)
+                </label>
+            </div>
+        </div>
+
+        @* 相簿上傳區塊 *@
+        <div class="form-group">
+            <label class="control-label col-md-2">輪播圖相簿</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+
+                    @* 拖曳上傳區，點擊後觸發隱藏的 file input *@
+                    <div id="drop-zone" style="border:2px dashed #007bff; border-radius:8px; padding:40px; text-align:center; background:#f8fbff; cursor:pointer; margin-bottom:15px;">
+                        <p style="margin:0; color:#007bff; font-weight:bold;">＋ 點擊或拖曳圖片至此上傳</p>
+                        <p style="font-size:0.8em; color:#666; margin-top:8px;">支援 JPG, PNG, WEBP（單檔最大 5MB）</p>
+                        @* 隱藏的 file input，由 drop-zone 的點擊事件觸發 *@
+                        <input type="file" id="photo-file-input" multiple accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                    </div>
+
+                    @* 預覽列表，使用 SortableJS 拖曳排序 *@
+                    <div id="photo-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;"></div>
+
+                    @* 表單送出前，JS 會動態產生 hidden inputs 傳遞排序後的照片順序 *@
+                    <div id="photo-sort-order-inputs"></div>
+
+                    @* 隱藏的 file input，JS 用 DataTransfer 把 photoFiles 同步進來，讓表單正常送出 *@
+                    <input type="file" name="photos" multiple id="actual-photos-input" style="display:none;" />
+
+                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序，第 1 張為輪播封面</small>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
+        @* ② 船型規格 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">② 船型規格</h5>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Overview, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Overview, new { @class = "form-control", id = "Overview", rows = "6" })
+                @Html.ValidationMessageFor(model => model.Overview, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Dimensions, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Dimensions, new { @class = "form-control", id = "Dimensions", rows = "6" })
+                @Html.ValidationMessageFor(model => model.Dimensions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DimensionsImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="dimensionsImg" id="dimensionsImg"
+                           accept=".jpg,.jpeg,.png,.gif,.webp"
+                           style="display:none;" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('dimensionsImg').click()">選擇圖片</button>
+                        </span>
+                        <input type="text" id="dimensionsImgLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
+                    <div id="previewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
+                        <span id="previewPlaceholder" class="text-muted" style="font-size:0.9em;">尚未選擇圖片</span>
+                        <img id="imagePreview" src="#" alt="預覽圖" style="display:none; max-width:100%; max-height:300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpecSheetUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="specSheet" id="specSheet"
+                           accept=".pdf,.doc,.docx"
+                           style="display:none;" />
+                    <input type="hidden" name="SpecSheetFileName" id="specSheetFileName" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('specSheet').click()">選擇檔案</button>
+                        </span>
+                        <input type="text" id="specSheetLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：PDF, DOC, DOCX（限制 10MB）</small>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
+        @* ③ 配置圖與甲板圖 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">③ 配置圖與甲板圖</h5>
+
+        @* Layout & Deck Plan 上傳區塊 *@
+        <div class="form-group">
+            <label class="control-label col-md-2">Layout & Deck Plan (配置圖與甲板圖)</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+
+                    <div id="layout-drop-zone" style="border:2px dashed #007bff; border-radius:8px; padding:40px; text-align:center; background:#f8fbff; cursor:pointer; margin-bottom:15px;">
+                        <p style="margin:0; color:#007bff; font-weight:bold;">＋ 點擊或拖曳圖片至此上傳</p>
+                        <p style="font-size:0.8em; color:#666; margin-top:8px;">支援 JPG, PNG, WEBP（單檔最大 5MB）</p>
+                        <input type="file" id="layout-file-input" multiple accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                    </div>
+
+                    <div id="layout-preview-list" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; min-height:80px; padding:12px; border:2px dashed #ccc; border-radius:6px; background:#f5f5f5;"></div>
+
+                    <div id="layout-sort-order-inputs"></div>
+                    <input type="file" name="layoutPhotos" multiple id="actual-layout-input" style="display:none;" />
+
+                    <small class="text-muted" style="margin-top:8px; display:block;">可拖曳調整順序</small>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
+        @* ④ 詳細規格 *@
+        <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">④ 詳細規格</h5>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DetailSpecification, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.DetailSpecification, new { @class = "form-control", id = "DetailSpecification", rows = "6" })
+                @Html.ValidationMessageFor(model => model.DetailSpecification, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr style="margin:32px 0;" />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="新增遊艇" class="btn btn-primary btn-lg" style="padding-left:40px; padding-right:40px;" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("回列表", "Index")
+</div>
+
+@* SortableJS：讓相簿預覽列表支援拖曳排序 *@
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Overview');
+    CKEDITOR.replace('Dimensions');
+    CKEDITOR.replace('DetailSpecification');
+
+    // ==================== 相簿上傳模組 ====================
+
+    // 儲存所有待上傳的 File 物件（含順序資訊）
+    let photoFiles = [];
+    let nextPhotoId = 0;
+
+    // 初始化 SortableJS，讓預覽列表可以拖曳排序
+    const sortable = new Sortable(document.getElementById('photo-preview-list'), {
+        animation: 150,
+        onEnd: function () {
+            updatePhotoIndexes();
+            syncPhotosToInput(); // 拖曳排序後同步檔案順序
+        }
+    });
+
+    // 點擊拖曳區 → 觸發隱藏的 file input
+    document.getElementById('drop-zone').addEventListener('click', function () {
+        document.getElementById('photo-file-input').click();
+    });
+
+    // 防止點擊 file input 時事件冒泡到 drop-zone（避免重複觸發）
+    document.getElementById('photo-file-input').addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    // 拖曳進入：高亮顯示
+    document.getElementById('drop-zone').addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.style.background = '#e2efff';
+    });
+
+    // 拖曳離開：恢復原樣
+    document.getElementById('drop-zone').addEventListener('dragleave', function () {
+        this.style.background = '#f8fbff';
+    });
+
+    // 放下檔案：處理拖曳上傳
+    document.getElementById('drop-zone').addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.style.background = '#f8fbff';
+        handlePhotoFiles(e.dataTransfer.files);
+    });
+
+    // 點選選取檔案：處理 file input 選取
+    document.getElementById('photo-file-input').addEventListener('change', function (e) {
+        handlePhotoFiles(e.target.files);
+        this.value = ''; // 清空 input，讓同一檔案可以重複選取
+    });
+
+    // 處理選取/拖入的圖片檔案
+    function handlePhotoFiles(files) {
+        Array.from(files).forEach(function (file) {
+            // 驗證檔案大小（5MB 上限）
+            if (file.size > 5 * 1024 * 1024) {
+                alert(file.name + ' 超過 5MB，已略過。');
+                return;
+            }
+
+            const id = nextPhotoId++;
+            photoFiles.push({ id: id, file: file });
+
+            // 用 FileReader 讀取圖片並顯示預覽（不上傳，只在瀏覽器端顯示）
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                item.dataset.id = id;
+                item.style.cssText = 'position:relative; border:1px solid #ddd; border-radius:4px; overflow:hidden; cursor:grab;';
+                item.innerHTML = `
+                    <span class="index-badge" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.7); color:#fff; padding:2px 8px; font-size:12px; border-radius:10px;"></span>
+                    <button type="button" class="btn-delete-photo" data-id="${id}" style="position:absolute; top:5px; right:5px; background:#ff4d4d; color:white; border:none; border-radius:50%; width:24px; height:24px; font-size:14px; cursor:pointer; display:none;">&times;</button>
+                    <img src="${e.target.result}" style="width:100%; height:120px; object-fit:cover; display:block;" />
+                `;
+
+                // Hover 時顯示刪除按鈕
+                item.addEventListener('mouseenter', function () {
+                    this.querySelector('.btn-delete-photo').style.display = 'flex';
+                });
+                item.addEventListener('mouseleave', function () {
+                    this.querySelector('.btn-delete-photo').style.display = 'none';
+                });
+
+                document.getElementById('photo-preview-list').appendChild(item);
+                updatePhotoIndexes();
+                syncPhotosToInput(); // 新增照片後同步 file input
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // 更新每張照片的順序編號（拖曳後重新計算）
+    function updatePhotoIndexes() {
+        document.querySelectorAll('#photo-preview-list .photo-item').forEach(function (item, idx) {
+            item.querySelector('.index-badge').textContent = idx + 1;
+        });
+    }
+
+    // 刪除照片（事件委派到父容器）
+    document.getElementById('photo-preview-list').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-delete-photo');
+        if (!btn) return;
+        const id = parseInt(btn.dataset.id);
+        photoFiles = photoFiles.filter(function (f) { return f.id !== id; });
+        btn.closest('.photo-item').remove();
+        updatePhotoIndexes();
+        syncPhotosToInput(); // 刪除後同步 file input
+    });
+
+    // 將 photoFiles 依照目前 DOM 排序同步到隱藏的 file input
+    // 這樣表單正常 submit 時，Controller 就能收到照片檔案
+    function syncPhotosToInput() {
+        const dt = new DataTransfer();
+        document.querySelectorAll('#photo-preview-list .photo-item').forEach(function (item) {
+            const id = parseInt(item.dataset.id);
+            const fileObj = photoFiles.find(function (f) { return f.id === id; });
+            if (fileObj) dt.items.add(fileObj.file);
+        });
+        document.getElementById('actual-photos-input').files = dt.files;
+    }
+
+    // 表單送出前：同步 CKEditor 內容 + 產生 photoSortOrders hidden inputs
+    // 不攔截送出，讓表單正常 POST，Controller 直接從 Request.Files 取得照片
+    document.querySelector('form').addEventListener('submit', function () {
+        // 同步 CKEditor 內容回 textarea，避免送出時內容為空
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
+            }
+        }
+
+        // 依 DOM 順序產生 photoSortOrders hidden inputs
+        var container = document.getElementById('photo-sort-order-inputs');
+        container.innerHTML = '';
+        document.querySelectorAll('#photo-preview-list .photo-item').forEach(function (item, sortIndex) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'photoSortOrders';
+            input.value = sortIndex;
+            container.appendChild(input);
+        });
+
+        // 確保最新順序同步到 file input
+        syncPhotosToInput();
+
+        // 同步 layout sort orders
+        var layoutContainer = document.getElementById('layout-sort-order-inputs');
+        layoutContainer.innerHTML = '';
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item, sortIndex) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'layoutSortOrders';
+            input.value = sortIndex;
+            layoutContainer.appendChild(input);
+        });
+        syncLayoutToInput();
+    });
+
+    // ==================== Layout & Deck Plan 上傳模組 ====================
+
+    let layoutFiles = [];
+    let nextLayoutId = 0;
+
+    const layoutSortable = new Sortable(document.getElementById('layout-preview-list'), {
+        animation: 150,
+        onEnd: function () {
+            updateLayoutIndexes();
+            syncLayoutToInput();
+        }
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('click', function () {
+        document.getElementById('layout-file-input').click();
+    });
+
+    document.getElementById('layout-file-input').addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.style.background = '#e2efff';
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('dragleave', function () {
+        this.style.background = '#f8fbff';
+    });
+
+    document.getElementById('layout-drop-zone').addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.style.background = '#f8fbff';
+        handleLayoutFiles(e.dataTransfer.files);
+    });
+
+    document.getElementById('layout-file-input').addEventListener('change', function (e) {
+        handleLayoutFiles(e.target.files);
+        this.value = '';
+    });
+
+    function handleLayoutFiles(files) {
+        Array.from(files).forEach(function (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert(file.name + ' 超過 5MB，已略過。');
+                return;
+            }
+            const id = nextLayoutId++;
+            layoutFiles.push({ id: id, file: file });
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const item = document.createElement('div');
+                item.className = 'layout-item';
+                item.dataset.id = id;
+                item.style.cssText = 'position:relative; border:1px solid #ddd; border-radius:4px; overflow:hidden; cursor:grab;';
+                item.innerHTML = `
+                    <span class="layout-index-badge" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.7); color:#fff; padding:2px 8px; font-size:12px; border-radius:10px;"></span>
+                    <button type="button" class="btn-delete-layout" data-id="${id}" style="position:absolute; top:5px; right:5px; background:#ff4d4d; color:white; border:none; border-radius:50%; width:24px; height:24px; font-size:14px; cursor:pointer; display:none;">&times;</button>
+                    <img src="${e.target.result}" style="width:100%; height:120px; object-fit:cover; display:block;" />
+                `;
+
+                item.addEventListener('mouseenter', function () {
+                    this.querySelector('.btn-delete-layout').style.display = 'flex';
+                });
+                item.addEventListener('mouseleave', function () {
+                    this.querySelector('.btn-delete-layout').style.display = 'none';
+                });
+
+                document.getElementById('layout-preview-list').appendChild(item);
+                updateLayoutIndexes();
+                syncLayoutToInput();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function updateLayoutIndexes() {
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item, idx) {
+            item.querySelector('.layout-index-badge').textContent = idx + 1;
+        });
+    }
+
+    document.getElementById('layout-preview-list').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-delete-layout');
+        if (!btn) return;
+        const id = parseInt(btn.dataset.id);
+        layoutFiles = layoutFiles.filter(function (f) { return f.id !== id; });
+        btn.closest('.layout-item').remove();
+        updateLayoutIndexes();
+        syncLayoutToInput();
+    });
+
+    function syncLayoutToInput() {
+        const dt = new DataTransfer();
+        document.querySelectorAll('#layout-preview-list .layout-item').forEach(function (item) {
+            const id = parseInt(item.dataset.id);
+            const fileObj = layoutFiles.find(function (f) { return f.id === id; });
+            if (fileObj) dt.items.add(fileObj.file);
+        });
+        document.getElementById('actual-layout-input').files = dt.files;
+    }
+
+    // ==================== 規格說明書檔名同步 ====================
+
+    document.getElementById('specSheet').addEventListener('change', function () {
+        const name = this.files[0] ? this.files[0].name : '';
+        document.getElementById('specSheetLabel').value = name || '未選擇任何檔案';
+        document.getElementById('specSheetFileName').value = name;
+    });
+
+    // ==================== 規格示意圖預覽模組 ====================
+
+    document.getElementById('dimensionsImg').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const previewImage = document.getElementById('imagePreview');
+        const placeholder = document.getElementById('previewPlaceholder');
+        document.getElementById('dimensionsImgLabel').value = file ? file.name : '未選擇任何檔案';
+
+        if (file) {
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('檔案太大！請選擇小於 5MB 的圖片。');
+                this.value = '';
+                previewImage.style.display = 'none';
+                placeholder.style.display = 'inline';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                previewImage.src = event.target.result;
+                previewImage.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.style.display = 'none';
+            placeholder.style.display = 'inline';
+        }
+    });
+</script>

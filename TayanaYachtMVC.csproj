@@ -132,6 +132,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\YachtsController.cs" />
     <Compile Include="Areas\Admin\Models\LoginViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
@@ -146,6 +147,34 @@
     <Compile Include="Migrations\202603201320572_AddAdminUsers.Designer.cs">
       <DependentUpon>202603201320572_AddAdminUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603260618483_AddYachtOverview.cs" />
+    <Compile Include="Migrations\202603260618483_AddYachtOverview.Designer.cs">
+      <DependentUpon>202603260618483_AddYachtOverview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603260701438_AddYachtDimensions.cs" />
+    <Compile Include="Migrations\202603260701438_AddYachtDimensions.Designer.cs">
+      <DependentUpon>202603260701438_AddYachtDimensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603260750452_AddYachtDimensionsImgUrl.cs" />
+    <Compile Include="Migrations\202603260750452_AddYachtDimensionsImgUrl.Designer.cs">
+      <DependentUpon>202603260750452_AddYachtDimensionsImgUrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603270245282_AddYachtSpecSheet.cs" />
+    <Compile Include="Migrations\202603270245282_AddYachtSpecSheet.Designer.cs">
+      <DependentUpon>202603270245282_AddYachtSpecSheet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603270515545_AddYachtPhotos.cs" />
+    <Compile Include="Migrations\202603270515545_AddYachtPhotos.Designer.cs">
+      <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603270856498_RemoveLayoutTitle.cs" />
+    <Compile Include="Migrations\202603270856498_RemoveLayoutTitle.Designer.cs">
+      <DependentUpon>202603270856498_RemoveLayoutTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603270921188_AddYachtDetailSpecification.cs" />
+    <Compile Include="Migrations\202603270921188_AddYachtDetailSpecification.Designer.cs">
+      <DependentUpon>202603270921188_AddYachtDetailSpecification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -153,7 +182,6 @@
     <Compile Include="Models\Domain\NewsArticle.cs" />
     <Compile Include="Models\Domain\Region.cs" />
     <Compile Include="Models\Domain\Yacht.cs" />
-    <Compile Include="Models\Domain\YachtAlbum.cs" />
     <Compile Include="Models\Domain\YachtDocument.cs" />
     <Compile Include="Models\Domain\YachtLayoutPhoto.cs" />
     <Compile Include="Models\Domain\YachtPhoto.cs" />
@@ -1865,11 +1893,17 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Content\uploads\dimensions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Yachts\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\vendor\bootstrap\js\bootstrap.bundle.js.map" />
     <Content Include="Scripts\vendor\bootstrap\js\bootstrap.bundle.min.js.map" />
@@ -2027,6 +2061,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603201320572_AddAdminUsers.resx">
       <DependentUpon>202603201320572_AddAdminUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603260618483_AddYachtOverview.resx">
+      <DependentUpon>202603260618483_AddYachtOverview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603260701438_AddYachtDimensions.resx">
+      <DependentUpon>202603260701438_AddYachtDimensions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603260750452_AddYachtDimensionsImgUrl.resx">
+      <DependentUpon>202603260750452_AddYachtDimensionsImgUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270245282_AddYachtSpecSheet.resx">
+      <DependentUpon>202603270245282_AddYachtSpecSheet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270515545_AddYachtPhotos.resx">
+      <DependentUpon>202603270515545_AddYachtPhotos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270856498_RemoveLayoutTitle.resx">
+      <DependentUpon>202603270856498_RemoveLayoutTitle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603270921188_AddYachtDetailSpecification.resx">
+      <DependentUpon>202603270921188_AddYachtDetailSpecification.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
