@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using TayanaYachtMVC.Data;
 using TayanaYachtMVC.Models.Domain;
 
@@ -16,10 +17,17 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         private TayanaYachtDBContext db = new TayanaYachtDBContext();
 
         // GET: Admin/NewsArticles
-        public ActionResult Index(int? categoryId, string keyword)
+        public ActionResult Index(int? categoryId, string keyword, int? page, int? pageSize)
         {
             ViewBag.CategoryId = new SelectList(db.NewsCategories.OrderBy(c => c.SortOrder), "Id", "Name", categoryId);
             ViewBag.Keyword = keyword;
+            ViewBag.CategoryIdValue = categoryId;
+
+            int size = pageSize.GetValueOrDefault(10);
+            if (size < 1) size = 1;
+            if (size > 100) size = 100;
+            int pageNumber = page.GetValueOrDefault(1);
+            if (pageNumber < 1) pageNumber = 1;
 
             var newsArticles = db.NewsArticles.Include(n => n.Category);
             if (categoryId.HasValue)
@@ -27,7 +35,8 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 newsArticles = newsArticles.Where(n => n.Title.Contains(keyword));
 
-            return View(newsArticles.OrderByDescending(n => n.IsPinned).ThenByDescending(n => n.PublishDate).ToList());
+            var sorted = newsArticles.OrderByDescending(n => n.IsPinned).ThenByDescending(n => n.PublishDate);
+            return View(sorted.ToPagedList(pageNumber, size));
         }
 
         // GET: Admin/NewsArticles/Details/5

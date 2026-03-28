@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TayanaYachtMVC.Models.Domain.NewsArticle>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<TayanaYachtMVC.Models.Domain.NewsArticle>
 
 @{
     ViewBag.Title = "新聞列表";
@@ -18,11 +19,11 @@
 
 <table class="table">
     <tr>
-        <th>@Html.DisplayNameFor(model => model.Title)</th>
-        <th>@Html.DisplayNameFor(model => model.Category.Name)</th>
-        <th>@Html.DisplayNameFor(model => model.PublishDate)</th>
-        <th>@Html.DisplayNameFor(model => model.IsPublished)</th>
-        <th>@Html.DisplayNameFor(model => model.IsPinned)</th>
+        <th>標題</th>
+        <th>類別名稱</th>
+        <th>發布日期</th>
+        <th>已發布</th>
+        <th>置頂</th>
         <th></th>
     </tr>
 
@@ -41,3 +42,55 @@
 }
 
 </table>
+
+<div class="d-flex align-items-center gap-2 mt-3">
+    每頁
+    <select onchange="changePageSize(this.value)" class="form-select form-select-sm d-inline-block w-auto">
+        @foreach (var s in new[] { 5, 10, 25, 50, 100 })
+        {
+            <option value="@s" @((Request.QueryString["pageSize"] ?? "10") == s.ToString() ? "selected" : "")>@s</option>
+        }
+    </select>
+    筆，第 @Model.PageNumber / @Model.PageCount 頁，共 @Model.TotalItemCount 筆 &nbsp;|&nbsp;
+
+    @if (Model.HasPreviousPage)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PageNumber - 1, pageSize = Request.QueryString["pageSize"] ?? "10", keyword = ViewBag.Keyword, categoryId = ViewBag.CategoryIdValue })" class="btn btn-sm btn-outline-secondary">上一頁</a>
+    }
+    else
+    {
+        <button class="btn btn-sm btn-outline-secondary" disabled>上一頁</button>
+    }
+
+    &nbsp;| 跳至第
+    <select onchange="jumpToPage(this.value)" class="form-select form-select-sm d-inline-block w-auto">
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <option value="@i" @(Model.PageNumber == i ? "selected" : "")>@i</option>
+        }
+    </select>
+    頁 |&nbsp;
+
+    @if (Model.HasNextPage)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PageNumber + 1, pageSize = Request.QueryString["pageSize"] ?? "10", keyword = ViewBag.Keyword, categoryId = ViewBag.CategoryIdValue })" class="btn btn-sm btn-outline-secondary">下一頁</a>
+    }
+    else
+    {
+        <button class="btn btn-sm btn-outline-secondary" disabled>下一頁</button>
+    }
+</div>
+
+<script>
+    function changePageSize(size) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('pageSize', size);
+        url.searchParams.set('page', 1);
+        window.location.href = url.toString();
+    }
+    function jumpToPage(p) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('page', p);
+        window.location.href = url.toString();
+    }
+</script>
