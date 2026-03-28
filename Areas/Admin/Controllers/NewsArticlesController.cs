@@ -66,6 +66,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Create([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
         {
             if (coverImage != null && coverImage.ContentLength > 0)
@@ -115,6 +116,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Edit([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
         {
             if (coverImage != null && coverImage.ContentLength > 0)

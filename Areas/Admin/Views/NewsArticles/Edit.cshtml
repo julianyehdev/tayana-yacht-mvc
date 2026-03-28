@@ -100,7 +100,18 @@
     </div>
 }
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
+    CKEDITOR.replace('Content');
+
+    document.querySelector('form').addEventListener('submit', function () {
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
+            }
+        }
+    });
+
     document.getElementById('coverImage').addEventListener('change', function (e) {
         const file = e.target.files[0];
         const previewImage = document.getElementById('coverImagePreview');
