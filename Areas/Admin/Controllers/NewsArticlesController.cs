@@ -27,7 +27,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 newsArticles = newsArticles.Where(n => n.Title.Contains(keyword));
 
-            return View(newsArticles.OrderByDescending(n => n.PublishDate).ToList());
+            return View(newsArticles.OrderByDescending(n => n.IsPinned).ThenByDescending(n => n.PublishDate).ToList());
         }
 
         // GET: Admin/NewsArticles/Details/5
