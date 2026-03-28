@@ -4,8 +4,14 @@
     ViewBag.Title = "新聞列表";
 }
 
-<div class="mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
     @Html.ActionLink("新增新聞", "Create", null, new { @class = "btn btn-primary" })
+
+    @using (Html.BeginForm("Index", "NewsArticles", FormMethod.Get, new { @class = "d-flex gap-2" }))
+    {
+        @Html.DropDownList("categoryId", (SelectList)ViewBag.CategoryId, "全部類別", new { @class = "form-select" })
+        <button type="submit" class="btn btn-outline-secondary">篩選</button>
+    }
 </div>
 
 <table class="table">

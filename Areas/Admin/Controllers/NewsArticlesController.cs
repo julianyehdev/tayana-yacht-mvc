@@ -16,10 +16,16 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         private TayanaYachtDBContext db = new TayanaYachtDBContext();
 
         // GET: Admin/NewsArticles
-        public ActionResult Index()
+        public ActionResult Index(int? categoryId)
         {
+            ViewBag.CategoryId = new SelectList(db.NewsCategories.OrderBy(c => c.SortOrder), "Id", "Name", categoryId);
+
             var newsArticles = db.NewsArticles.Include(n => n.Category);
-            return View(newsArticles.ToList());
+            if (categoryId.HasValue)
+            {
+                newsArticles = newsArticles.Where(n => n.CategoryId == categoryId);
+            }
+            return View(newsArticles.OrderByDescending(n => n.PublishDate).ToList());
         }
 
         // GET: Admin/NewsArticles/Details/5
