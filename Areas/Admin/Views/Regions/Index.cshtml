@@ -14,7 +14,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">國家列表</h6>
-                <button class="btn btn-sm btn-primary" onclick="openCountryModal(0, '', 0)">
+                <button class="btn btn-sm btn-primary" onclick="openCountryModal(0, '')">
                     <i class="fas fa-plus mr-1"></i> 新增國家
                 </button>
             </div>
@@ -62,10 +62,6 @@
                 <div class="form-group">
                     <label>國家名稱 <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="countryName" maxlength="100" />
-                </div>
-                <div class="form-group">
-                    <label>排序</label>
-                    <input type="number" class="form-control" id="countrySortOrder" value="0" />
                 </div>
             </div>
             <div class="modal-footer">
@@ -158,7 +154,7 @@
                           + 'data-id="' + c.Id + '" onclick="selectCountry(' + c.Id + ', \'' + escapeJs(c.CountryName) + '\')">'
                           + '<span>' + escapeHtml(c.CountryName) + '</span>'
                           + '<div class="btn-group country-actions" onclick="event.stopPropagation()">'
-                          + '<button class="btn btn-sm btn-outline-secondary" onclick="openCountryModal(' + c.Id + ', \'' + escapeJs(c.CountryName) + '\', ' + c.SortOrder + ')"><i class="fas fa-edit"></i></button>'
+                          + '<button class="btn btn-sm btn-outline-secondary" onclick="openCountryModal(' + c.Id + ', \'' + escapeJs(c.CountryName) + '\')"><i class="fas fa-edit"></i></button>'
                           + '<button class="btn btn-sm btn-outline-danger ml-1" onclick="confirmDelete(\'country\',' + c.Id + ',\'' + escapeJs(c.CountryName) + '\')"><i class="fas fa-trash"></i></button>'
                           + '</div></div>';
                 });
@@ -198,10 +194,9 @@
         loadRegions(id);
     }
 
-    function openCountryModal(id, name, sortOrder) {
+    function openCountryModal(id, name) {
         $('#countryId').val(id);
         $('#countryName').val(name);
-        $('#countrySortOrder').val(sortOrder);
         $('#countryModalTitle').text(id === 0 ? '新增國家' : '編輯國家');
         $('#countryModal').modal('show');
     }
@@ -209,12 +204,11 @@
     function saveCountry() {
         var id = parseInt($('#countryId').val());
         var name = $.trim($('#countryName').val());
-        var sortOrder = parseInt($('#countrySortOrder').val()) || 0;
         if (!name) { alert('請輸入國家名稱'); return; }
 
         $.post(urls.saveCountry, {
             __RequestVerificationToken: token,
-            id: id, countryName: name, sortOrder: sortOrder
+            id: id, countryName: name
         }, function (res) {
             if (res.success) {
                 $('#countryModal').modal('hide');

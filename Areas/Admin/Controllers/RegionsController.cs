@@ -34,14 +34,15 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         // 新增或編輯國家（id=0 代表新增）
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult SaveCountry(int id, string countryName, int sortOrder)
+        public JsonResult SaveCountry(int id, string countryName)
         {
             if (string.IsNullOrWhiteSpace(countryName))
                 return Json(new { success = false, message = "國家名稱不能為空" });
 
             if (id == 0)
             {
-                var country = new Country { CountryName = countryName, SortOrder = sortOrder };
+                var maxSort = db.Countries.Any() ? db.Countries.Max(c => c.SortOrder) : 0;
+                var country = new Country { CountryName = countryName, SortOrder = maxSort + 1 };
                 db.Countries.Add(country);
             }
             else
@@ -49,7 +50,6 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 var country = db.Countries.Find(id);
                 if (country == null) return Json(new { success = false, message = "找不到此國家" });
                 country.CountryName = countryName;
-                country.SortOrder = sortOrder;
             }
 
             db.SaveChanges();
