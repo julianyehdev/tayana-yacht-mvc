@@ -34,8 +34,8 @@ namespace TayanaYachtMVC.Controllers
         public ActionResult DeckPlan(string yachtName, string modelNumber = null)
         {
             var yacht = string.IsNullOrEmpty(yachtName)
-                ? _context.Yachts.Include(y => y.YachtPhotos).FirstOrDefault()
-                : _context.Yachts.Include(y => y.YachtPhotos)
+                ? _context.Yachts.Include(y => y.YachtPhotos).Include(y => y.YachtLayoutPhotos).FirstOrDefault()
+                : _context.Yachts.Include(y => y.YachtPhotos).Include(y => y.YachtLayoutPhotos)
                     .FirstOrDefault(y => y.YachtName == yachtName &&
                         (string.IsNullOrEmpty(modelNumber) || y.ModelNumber == modelNumber));
 

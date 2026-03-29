@@ -108,8 +108,13 @@
 <div class="box6">
 <p>Layout & deck plan</p>
 <ul>
-<li><img src="@Url.Content("~/img/yachts/deckplan01.jpg")" alt="" /></li>
-<li><img src="@Url.Content("~/img/yachts/deckplan01.jpg")" alt="" /></li>
+@{
+    var layoutPhotos = Model.YachtLayoutPhotos?.OrderBy(p => p.SortOrder).ToList() ?? new List<TayanaYachtMVC.Models.Domain.YachtLayoutPhoto>();
+}
+@foreach (var photo in layoutPhotos)
+{
+    <li><img src="@Url.Content("~/" + photo.LayoutImgUrl)" alt="" /></li>
+}
 </ul>
 </div>
 
