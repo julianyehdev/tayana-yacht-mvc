@@ -304,6 +304,9 @@ body {
 	width: 99px;
 	overflow: hidden;
 }
+.bannerimg img {
+	border: 0;
+}
 .bannerimg_p  {
 	float: left;
 	margin-top: 9px;
