@@ -81,7 +81,7 @@
 @foreach (var y in allYachts)
 {
     var displayName = string.IsNullOrEmpty(y.ModelNumber) ? y.YachtName : $"{y.YachtName} {y.ModelNumber}";
-    <li><a href="@Url.Action("Overview", "Yacht", new { id = y.YachtName })">@displayName</a></li>
+    <li><a href="@Url.Action("Overview", "Yacht", new { yachtName = y.YachtName, modelNumber = y.ModelNumber })">@displayName</a></li>
 }
 </ul>
 </div>

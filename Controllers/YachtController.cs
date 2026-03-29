@@ -15,12 +15,13 @@ namespace TayanaYachtMVC.Controllers
         }
 
         // GET: Yacht
-        public ActionResult Overview(string id)
+        public ActionResult Overview(string yachtName, string modelNumber = null)
         {
-            // id = "Tayana 58" or "Tayana 78" or "Tayana 84"
-            var yacht = string.IsNullOrEmpty(id)
+            var yacht = string.IsNullOrEmpty(yachtName)
                 ? _context.Yachts.Include(y => y.YachtPhotos).FirstOrDefault()
-                : _context.Yachts.Include(y => y.YachtPhotos).FirstOrDefault(y => y.YachtName == id);
+                : _context.Yachts.Include(y => y.YachtPhotos)
+                    .FirstOrDefault(y => y.YachtName == yachtName &&
+                        (string.IsNullOrEmpty(modelNumber) || y.ModelNumber == modelNumber));
 
             if (yacht == null)
                 return HttpNotFound();
