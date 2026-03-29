@@ -196,6 +196,10 @@
     <Compile Include="Migrations\202603290552404_AddDealerNameField.Designer.cs">
       <DependentUpon>202603290552404_AddDealerNameField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603290846147_AddRegionSortOrder.cs" />
+    <Compile Include="Migrations\202603290846147_AddRegionSortOrder.Designer.cs">
+      <DependentUpon>202603290846147_AddRegionSortOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -2125,6 +2129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603290552404_AddDealerNameField.resx">
       <DependentUpon>202603290552404_AddDealerNameField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603290846147_AddRegionSortOrder.resx">
+      <DependentUpon>202603290846147_AddRegionSortOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

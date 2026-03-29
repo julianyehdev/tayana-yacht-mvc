@@ -25,6 +25,9 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "地區名稱")]
         public string RegionName { get; set; }
 
+        [Display(Name = "排序")]
+        public int SortOrder { get; set; }
+
         [Display(Name = "建立日期")]
         public DateTime CreateDate { get; set; }
     }
