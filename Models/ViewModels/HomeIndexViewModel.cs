@@ -6,6 +6,7 @@ namespace TayanaYachtMVC.Models.ViewModels
     {
         public int YachtID { get; set; }
         public string YachtName { get; set; }
+        public string ModelNumber { get; set; }
         public bool IsLatest { get; set; }
         public string FirstPhotoUrl { get; set; }
     }

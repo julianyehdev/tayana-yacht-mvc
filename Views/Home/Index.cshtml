@@ -38,7 +38,7 @@
 <!--小圖結束-->
 
 <!--文字開始-->
-<div class="wordtitle">TAYANA <span>@(firstYacht != null ? firstYacht.YachtName : "")</span><br />
+<div class="wordtitle">TAYANA <span>@(firstYacht != null ? firstYacht.ModelNumber : "")</span><br />
 <p>SPECIFICATION SHEET</p></div>
 <!--文字結束-->
 
@@ -132,7 +132,7 @@ $(document).ready(function () {
             var yacht = yachtData[idx];
 
             // 更新船名
-            $('.wordtitle').html('TAYANA <span>' + yacht.YachtName + '</span><br /><p>SPECIFICATION SHEET</p>');
+            $('.wordtitle').html('TAYANA <span>' + (yacht.ModelNumber || yacht.YachtName) + '</span><br /><p>SPECIFICATION SHEET</p>');
 
             // 更新 NEW 徽章
             if (yacht.IsLatest) {

@@ -200,6 +200,10 @@
     <Compile Include="Migrations\202603290846147_AddRegionSortOrder.Designer.cs">
       <DependentUpon>202603290846147_AddRegionSortOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603291407147_AddYachtModelNumber.cs" />
+    <Compile Include="Migrations\202603291407147_AddYachtModelNumber.Designer.cs">
+      <DependentUpon>202603291407147_AddYachtModelNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -3967,6 +3971,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603290846147_AddRegionSortOrder.resx">
       <DependentUpon>202603290846147_AddRegionSortOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603291407147_AddYachtModelNumber.resx">
+      <DependentUpon>202603291407147_AddYachtModelNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

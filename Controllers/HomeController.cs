@@ -20,6 +20,7 @@ namespace TayanaYachtMVC.Controllers
                 {
                     YachtID = y.YachtID,
                     YachtName = y.YachtName,
+                    ModelNumber = y.ModelNumber,
                     IsLatest = y.IsLatest,
                     FirstPhotoUrl = y.YachtPhotos
                         .OrderBy(p => p.SortOrder)
