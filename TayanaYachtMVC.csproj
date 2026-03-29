@@ -143,6 +143,7 @@
     <Compile Include="Areas\Admin\Controllers\NewsArticlesController.cs" />
     <Compile Include="Areas\Admin\Controllers\YachtsController.cs" />
     <Compile Include="Areas\Admin\Models\LoginViewModel.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -3931,6 +3932,7 @@
     <Content Include="Scripts\vendor\jquery\jquery.slim.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_FrontLayout.cshtml" />
+    <Content Include="Views\Company\AboutUs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
