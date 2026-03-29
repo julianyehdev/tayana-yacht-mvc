@@ -1,5 +1,6 @@
 using System.Data.Entity;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using TayanaYachtMVC.Data;
 using TayanaYachtMVC.Models.ViewModels;
@@ -29,7 +30,26 @@ namespace TayanaYachtMVC.Controllers
                 })
                 .ToList();
 
-            var viewModel = new HomeIndexViewModel { Yachts = yachts };
+            var news = _db.NewsArticles
+                .Where(n => n.IsPublished)
+                .OrderByDescending(n => n.IsPinned)
+                .ThenByDescending(n => n.PublishDate)
+                .Take(3)
+                .ToList()
+                .Select(n => new NewsArticleItem
+                {
+                    Title = n.Title,
+                    CoverImageUrl = n.CoverImageUrl,
+                    // 用 Regex 去除所有 HTML 標籤
+                    PlainTextContent = Regex.Replace(n.Content ?? "", "<[^>]+>", "").Trim()
+                })
+                .ToList();
+
+            var viewModel = new HomeIndexViewModel
+            {
+                Yachts = yachts,
+                News = news
+            };
             return View(viewModel);
         }
 

@@ -11,8 +11,17 @@ namespace TayanaYachtMVC.Models.ViewModels
         public string FirstPhotoUrl { get; set; }
     }
 
+    public class NewsArticleItem
+    {
+        public string Title { get; set; }
+        public string CoverImageUrl { get; set; }
+        // 已去除 HTML 標籤的純文字內容
+        public string PlainTextContent { get; set; }
+    }
+
     public class HomeIndexViewModel
     {
         public List<YachtBannerItem> Yachts { get; set; }
+        public List<NewsArticleItem> News { get; set; }
     }
 }

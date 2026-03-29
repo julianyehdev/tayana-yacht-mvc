@@ -203,12 +203,25 @@ body {
 	padding-left: 10px;
 	width: 165px;
 	float: left;
+	overflow: hidden;
+}
+/* 文字超出卡片時截斷 */
+.news02p2 a {
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .news02  span, .news01 span {
 	font-weight: bold;
 	color: #447d90;
 	margin-bottom: 6px;
 	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .footer {
 	clear: both;
