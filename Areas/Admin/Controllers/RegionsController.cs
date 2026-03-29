@@ -56,6 +56,22 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             return Json(new { success = true });
         }
 
+        // POST: /Admin/Regions/SaveCountryOrder
+        // 拖曳排序後儲存國家順序（ids 為新順序的 id 陣列）
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult SaveCountryOrder(int[] ids)
+        {
+            if (ids == null) return Json(new { success = false });
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var country = db.Countries.Find(ids[i]);
+                if (country != null) country.SortOrder = i + 1;
+            }
+            db.SaveChanges();
+            return Json(new { success = true });
+        }
+
         // POST: /Admin/Regions/DeleteCountry
         // 刪除國家（連動刪除旗下所有地區，但若有經銷商則拒絕）
         [HttpPost]
