@@ -92,6 +92,44 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2">附件</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:10px; background:#fff;">
+                    <input type="file" name="attachments" id="attachmentInput" multiple
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
+                           style="display:none;" />
+                    <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('attachmentInput').click()">＋ 新增附件</button>
+                    <small class="text-muted ms-2">支援 PDF, DOC, DOCX, XLS, XLSX, ZIP（單檔限 10MB）</small>
+                    <ul class="list-group mt-2" id="allAttachmentList">
+                        @if (Model.Attachments != null)
+                        {
+                            foreach (var attach in Model.Attachments)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center" style="padding:6px 10px;" id="attach-@attach.Id">
+                                    <a href="@Url.Content(attach.FileUrl)" target="_blank" class="attach-name text-decoration-none">@attach.FileName</a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" style="min-width:52px;"
+                                            onclick="markDeleteAttachment(@attach.Id, this)">刪除</button>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    @if (Model.Attachments == null || !Model.Attachments.Any())
+                    {
+                        <ul id="attachmentPlaceholder" class="list-group mt-2">
+                            <li class="list-group-item text-muted" style="font-size:0.9em;">尚未新增任何附件，可一次選取多個檔案</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul id="attachmentPlaceholder" class="list-group mt-2" style="display:none;">
+                            <li class="list-group-item text-muted" style="font-size:0.9em;">尚未新增任何附件，可一次選取多個檔案</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="儲存" class="btn btn-primary" />
                 @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
@@ -111,6 +149,78 @@
             }
         }
     });
+
+    // ==================== 現有附件刪除 ====================
+    function markDeleteAttachment(id, btn) {
+        const li = document.getElementById('attach-' + id);
+        const existing = document.querySelector('input[name="deleteAttachmentIds"][value="' + id + '"]');
+        if (existing) {
+            // 取消刪除
+            existing.remove();
+            li.style.opacity = '';
+            li.querySelector('.attach-name').style.textDecoration = '';
+            btn.textContent = '刪除';
+            btn.classList.replace('btn-secondary', 'btn-outline-danger');
+        } else {
+            // 標記刪除
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'deleteAttachmentIds';
+            input.value = id;
+            document.querySelector('form').appendChild(input);
+            li.style.opacity = '0.4';
+            li.querySelector('.attach-name').style.textDecoration = 'line-through';
+            btn.textContent = '復原';
+            btn.classList.replace('btn-outline-danger', 'btn-secondary');
+        }
+    }
+
+    // ==================== 附件上傳模組 ====================
+    let attachmentFiles = [];
+
+    document.getElementById('attachmentInput').addEventListener('change', function () {
+        const maxSize = 10 * 1024 * 1024;
+        const newFiles = Array.from(this.files);
+        this.value = '';
+        newFiles.forEach(function (file) {
+            if (file.size > maxSize) {
+                alert(file.name + ' 超過 10MB，已略過。');
+                return;
+            }
+            attachmentFiles.push(file);
+        });
+        renderAttachmentList();
+    });
+
+    function renderAttachmentList() {
+        // 移除舊的 new-file items（保留 existing DB items）
+        document.querySelectorAll('#allAttachmentList .new-file-item').forEach(function (el) { el.remove(); });
+        const list = document.getElementById('allAttachmentList');
+        const placeholder = document.getElementById('attachmentPlaceholder');
+        const hasExisting = document.querySelectorAll('#allAttachmentList li:not(.new-file-item)').length > 0;
+        placeholder.style.display = (attachmentFiles.length === 0 && !hasExisting) ? '' : 'none';
+        attachmentFiles.forEach(function (file, index) {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center new-file-item';
+            li.style.padding = '6px 10px';
+            li.innerHTML = '<span>' + file.name + ' <small class="text-muted">(' + (file.size / 1024).toFixed(1) + ' KB)</small></span>'
+                + '<button type="button" class="btn btn-outline-danger btn-sm" style="min-width:52px;" onclick="removeAttachment(' + index + ')">移除</button>';
+            list.appendChild(li);
+        });
+        syncAttachmentsToInput();
+    }
+
+    function removeAttachment(index) {
+        attachmentFiles.splice(index, 1);
+        renderAttachmentList();
+    }
+
+    function syncAttachmentsToInput() {
+        const input = document.getElementById('attachmentInput');
+        const dt = new DataTransfer();
+        attachmentFiles.forEach(function (f) { dt.items.add(f); });
+        input.files = dt.files;
+    }
 
     document.getElementById('coverImage').addEventListener('change', function (e) {
         const file = e.target.files[0];
