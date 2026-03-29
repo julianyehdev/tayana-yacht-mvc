@@ -1,17 +1,113 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
 }
 
-<!DOCTYPE html>
+<!--遮罩-->
+<div class="bannermasks"><img src="@Url.Content("~/img/banners/banner01_masks.png")" alt="" /></div>
+<!--遮罩結束-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Specification</title>
-</head>
-<body>
-    <div> 
-    </div>
-</body>
-</html>
+<div id="buttom01"><a href="#"><img src="@Url.Content("~/img/icons/buttom01.gif")" alt="next" /></a></div>
+
+<!--小圖開始-->
+<div class="bannerimg">
+<ul>
+<li> <a href="#"><div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></div></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" width="300" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+</ul>
+
+<ul>
+<li> <a class="on" href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <p class="bannerimg_p"><a href="#"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+</ul>
+</div>
+<!--小圖結束-->
+
+<div id="buttom02"> <a href="#"><img src="@Url.Content("~/img/icons/buttom02.gif")" alt="next" /></a></div>
+
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+<ul>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+</ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+<!--------------------------------左邊選單開始---------------------------------------------------->
+<div class="left">
+<div class="left1">
+<p><span>YACHTS</span></p>
+<ul>
+<li><a href="#">Dynasty 72</a></li>
+<li><a href="#">Tayana 64</a></li>
+<li><a href="#">Tayana 58</a></li>
+<li><a href="#">Tayana 55</a></li>
+</ul>
+</div>
+</div>
+<!--------------------------------左邊選單結束---------------------------------------------------->
+
+<!--------------------------------右邊內容開始---------------------------------------------------->
+<div id="crumb"><a href="#">Home</a> >> <a href="#">Yachts</a> >> <a href="#"><span class="on1">Dynasty 72</span></a></div>
+<div class="right">
+<div class="right1">
+  <div class="title"> <span>Dynasty 72</span></div>
+
+<!--次選單-->
+<div class="menu_y">
+<ul>
+<li class="menu_y00">YACHTS</li>
+<li><a class="menu_yli01" href="#">Interior</a></li>
+<li><a class="menu_yli02" href="#">Layout & deck plan</a></li>
+<li><a class="menu_yli03" href="#">Specification</a></li>
+</ul>
+</div>
+<!--次選單結束-->
+
+<div class="box5">
+<h4>DETAIL SPECIFICATION</h4>
+
+<p>HULL STRUCTURE & DECKS</p>
+<ul>
+<li>Yanmar 4LHA-HTP 160HP (or equal)</li>
+<li>White formica counters in hgalley. Teak veneer ctt</li>
+<li>White formica counters in hgalley. Teak veneer c</li>
+<li>White formica counters in hgalley. Teak veneer c</li>
+<li>WTeak veneer ctte table 0005</li>
+<li>WTeak veneer ctte table 0005</li>
+</ul>
+
+<p>HULL STRUCTURE & DECKS</p>
+<ul>
+<li>Yanmar 4LHA-HTP 160HP (or equal)</li>
+<li>White formica counters in hgalley. Teak veneer ctt</li>
+<li>White formica counters in hgalley. Teak veneer c</li>
+<li>White formica counters in hgalley. Teak veneer c</li>
+<li>WTeak veneer ctte table 0005</li>
+<li>WTeak veneer ctte table 0005</li>
+</ul>
+</div>
+
+<p class="topbuttom"><img src="@Url.Content("~/img/icons/top.gif")" alt="top" /></p>
+
+</div>
+</div>
+<!--------------------------------右邊內容結束---------------------------------------------------->
+</div>
