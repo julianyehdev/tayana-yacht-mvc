@@ -1,0 +1,299 @@
+﻿@{
+    ViewBag.Title = "國家與地區管理";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">國家與地區管理</h1>
+</div>
+
+<div class="row">
+    @* 左欄：國家列表 *@
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">國家列表</h6>
+                <button class="btn btn-sm btn-primary" onclick="openCountryModal(0, '', 0)">
+                    <i class="fas fa-plus mr-1"></i> 新增國家
+                </button>
+            </div>
+            <div class="list-group list-group-flush" id="countryList">
+                <div class="p-3 text-center text-muted">載入中...</div>
+            </div>
+        </div>
+    </div>
+
+    @* 右欄：地區列表 *@
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <span id="selectedCountryTitle">請選擇左側國家</span> — 地區列表
+                </h6>
+                <button class="btn btn-sm btn-primary" id="addRegionBtn" style="display:none;"
+                        onclick="openRegionModal(0, '')">
+                    <i class="fas fa-plus mr-1"></i> 新增地區
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="pl-4">地區名稱</th>
+                            <th width="160" class="text-right pr-4">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="regionTableBody">
+                        <tr>
+                            <td colspan="2" class="text-center text-muted p-5">請點選左側國家以查看地區</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Country Modal *@
+<div class="modal fade" id="countryModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="countryModalTitle">新增國家</h6>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="countryId" value="0" />
+                <div class="form-group">
+                    <label>國家名稱 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="countryName" maxlength="100" />
+                </div>
+                <div class="form-group">
+                    <label>排序</label>
+                    <input type="number" class="form-control" id="countrySortOrder" value="0" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="saveCountry()">確認儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Region Modal *@
+<div class="modal fade" id="regionModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="regionModalTitle">新增地區</h6>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="regionId" value="0" />
+                <div class="form-group">
+                    <label>地區名稱 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="regionName" maxlength="100" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="saveRegion()">確認儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Confirm Delete Modal *@
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                <h5>確定要刪除嗎？</h5>
+                <p class="text-muted small" id="confirmMessage"></p>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">執行刪除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Toast 通知 *@
+<div id="toastMsg" style="display:none; position:fixed; top:20px; right:20px; z-index:9999; min-width:220px;"
+     class="alert shadow-lg"></div>
+
+@section scripts {
+<script>
+    var urls = {
+        getCountries:        '@Url.Action("GetCountries", "Regions", new { area = "Admin" })',
+        saveCountry:         '@Url.Action("SaveCountry", "Regions", new { area = "Admin" })',
+        deleteCountry:       '@Url.Action("DeleteCountry", "Regions", new { area = "Admin" })',
+        getRegionsByCountry: '@Url.Action("GetRegionsByCountry", "Regions", new { area = "Admin" })',
+        saveRegion:          '@Url.Action("SaveRegion", "Regions", new { area = "Admin" })',
+        deleteRegion:        '@Url.Action("DeleteRegion", "Regions", new { area = "Admin" })'
+    };
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+    var selectedCountryId = null;
+
+    function showToast(msg, isError) {
+        $('#toastMsg').removeClass('alert-success alert-danger')
+            .addClass(isError ? 'alert-danger' : 'alert-success')
+            .text(msg).fadeIn();
+        setTimeout(function () { $('#toastMsg').fadeOut(); }, 2500);
+    }
+
+    // ===== 國家 =====
+    function loadCountries() {
+        $.get(urls.getCountries, function (data) {
+            var html = '';
+            if (!data || data.length === 0) {
+                html = '<div class="p-3 text-center text-muted">尚無國家資料</div>';
+            } else {
+                $.each(data, function (i, c) {
+                    var isActive = (selectedCountryId === c.Id);
+                    var activeClass = isActive ? 'active' : '';
+                    var mutedClass = isActive ? 'text-white-50' : 'text-muted';
+                    html += '<div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center country-item ' + activeClass + '" '
+                          + 'onclick="selectCountry(' + c.Id + ', \'' + escapeJs(c.CountryName) + '\')">'
+                          + '<span>' + escapeHtml(c.CountryName) + ' <small class="ml-1 ' + mutedClass + '">排序 ' + c.SortOrder + '</small></span>'
+                          + '<div class="btn-group country-actions" onclick="event.stopPropagation()">'
+                          + '<button class="btn btn-sm btn-outline-secondary" onclick="openCountryModal(' + c.Id + ', \'' + escapeJs(c.CountryName) + '\', ' + c.SortOrder + ')"><i class="fas fa-edit"></i></button>'
+                          + '<button class="btn btn-sm btn-outline-danger ml-1" onclick="confirmDelete(\'country\',' + c.Id + ',\'' + escapeJs(c.CountryName) + '\')"><i class="fas fa-trash"></i></button>'
+                          + '</div></div>';
+                });
+            }
+            $('#countryList').html(html);
+        });
+    }
+
+    function selectCountry(id, name) {
+        selectedCountryId = id;
+        $('#selectedCountryTitle').text(name);
+        $('#addRegionBtn').show();
+        loadCountries();
+        loadRegions(id);
+    }
+
+    function openCountryModal(id, name, sortOrder) {
+        $('#countryId').val(id);
+        $('#countryName').val(name);
+        $('#countrySortOrder').val(sortOrder);
+        $('#countryModalTitle').text(id === 0 ? '新增國家' : '編輯國家');
+        $('#countryModal').modal('show');
+    }
+
+    function saveCountry() {
+        var id = parseInt($('#countryId').val());
+        var name = $.trim($('#countryName').val());
+        var sortOrder = parseInt($('#countrySortOrder').val()) || 0;
+        if (!name) { alert('請輸入國家名稱'); return; }
+
+        $.post(urls.saveCountry, {
+            __RequestVerificationToken: token,
+            id: id, countryName: name, sortOrder: sortOrder
+        }, function (res) {
+            if (res.success) {
+                $('#countryModal').modal('hide');
+                showToast('儲存成功');
+                loadCountries();
+            } else {
+                showToast(res.message, true);
+            }
+        });
+    }
+
+    // ===== 地區 =====
+    function loadRegions(countryId) {
+        $.get(urls.getRegionsByCountry, { countryId: countryId }, function (data) {
+            var html = '';
+            if (!data || data.length === 0) {
+                html = '<tr><td colspan="2" class="text-center text-muted p-4">此國家尚無地區資料</td></tr>';
+            } else {
+                $.each(data, function (i, r) {
+                    html += '<tr>'
+                          + '<td class="pl-4">' + escapeHtml(r.RegionName) + '</td>'
+                          + '<td class="text-right pr-4">'
+                          + '<button class="btn btn-sm btn-outline-info mr-1" onclick="openRegionModal(' + r.Id + ',\'' + escapeJs(r.RegionName) + '\')">編輯</button>'
+                          + '<button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(\'region\',' + r.Id + ',\'' + escapeJs(r.RegionName) + '\')">刪除</button>'
+                          + '</td></tr>';
+                });
+            }
+            $('#regionTableBody').html(html);
+        });
+    }
+
+    function openRegionModal(id, name) {
+        $('#regionId').val(id);
+        $('#regionName').val(name);
+        $('#regionModalTitle').text(id === 0 ? '新增地區' : '編輯地區');
+        $('#regionModal').modal('show');
+    }
+
+    function saveRegion() {
+        var id = parseInt($('#regionId').val());
+        var name = $.trim($('#regionName').val());
+        if (!name) { alert('請輸入地區名稱'); return; }
+        if (!selectedCountryId) { alert('請先選擇國家'); return; }
+
+        $.post(urls.saveRegion, {
+            __RequestVerificationToken: token,
+            id: id, countryId: selectedCountryId, regionName: name
+        }, function (res) {
+            if (res.success) {
+                $('#regionModal').modal('hide');
+                showToast('儲存成功');
+                loadRegions(selectedCountryId);
+            } else {
+                showToast(res.message, true);
+            }
+        });
+    }
+
+    // ===== 刪除確認 =====
+    function confirmDelete(type, id, name) {
+        var msg = (type === 'country')
+            ? '刪除國家「' + name + '」將同時刪除旗下所有地區。'
+            : '確定刪除地區「' + name + '」？';
+        $('#confirmMessage').text(msg);
+        $('#confirmDeleteBtn').off('click').on('click', function () {
+            var url = (type === 'country') ? urls.deleteCountry : urls.deleteRegion;
+            $.post(url, { __RequestVerificationToken: token, id: id }, function (res) {
+                $('#confirmModal').modal('hide');
+                if (res.success) {
+                    showToast('刪除成功');
+                    if (type === 'country') {
+                        if (selectedCountryId === id) {
+                            selectedCountryId = null;
+                            $('#selectedCountryTitle').text('請選擇左側國家');
+                            $('#addRegionBtn').hide();
+                            $('#regionTableBody').html('<tr><td colspan="2" class="text-center text-muted p-5">請點選左側國家以查看地區</td></tr>');
+                        }
+                        loadCountries();
+                    } else {
+                        loadRegions(selectedCountryId);
+                    }
+                } else {
+                    showToast(res.message, true);
+                }
+            });
+        });
+        $('#confirmModal').modal('show');
+    }
+
+    function escapeHtml(str) { return $('<div>').text(str).html(); }
+    function escapeJs(str) { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+
+    $(document).ready(function () { loadCountries(); });
+</script>
+
+<style>
+    .country-item { cursor: pointer; }
+    .country-item .country-actions { display: none; }
+    .country-item:hover .country-actions { display: flex; }
+</style>
+}
