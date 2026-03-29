@@ -145,6 +145,7 @@
     <Compile Include="Areas\Admin\Models\LoginViewModel.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\DealerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\YachtController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
@@ -3613,6 +3614,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Content\uploads\dimensions\" />
+    <Folder Include="Views\Dealer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
