@@ -1,0 +1,164 @@
+@model TayanaYachtMVC.Models.Domain.Dealer
+
+@{
+    ViewBag.Title = "新增經銷商";
+}
+
+@using (Html.BeginForm("Create", "Dealers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>新增經銷商</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @* 國家下拉（選國家後 AJAX 載入地區）*@
+        <div class="form-group">
+            <label class="control-label col-md-2">國家</label>
+            <div class="col-md-10">
+                <select id="CountryId" class="form-control">
+                    <option value="">-- 請選擇國家 --</option>
+                    @foreach (var c in (SelectList)ViewBag.Countries)
+                    {
+                        <option value="@c.Value">@c.Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @* 地區下拉（由 AJAX 動態填入）*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.RegionId, "地區", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select name="RegionId" id="RegionId" class="form-control">
+                    <option value="">-- 請先選擇國家 --</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MainImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="mainImage" id="mainImage"
+                           accept=".jpg,.jpeg,.png,.gif,.webp"
+                           style="display:none;" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('mainImage').click()">選擇圖片</button>
+                        </span>
+                        <input type="text" id="mainImageLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
+                    <div id="imagePreviewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
+                        <span id="imagePlaceholder" class="text-muted" style="font-size:0.9em;">尚未選擇圖片</span>
+                        <img id="mainImagePreview" src="#" alt="預覽圖" style="display:none; max-width:100%; max-height:300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DescriptionHtml, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.DescriptionHtml, new { @class = "form-control", rows = 10 })
+                @Html.ValidationMessageFor(model => model.DescriptionHtml, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SortOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SortOrder, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SortOrder, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.CheckBoxFor(model => model.IsPublished, new { @class = "form-check-input" })
+                @Html.LabelFor(model => model.IsPublished, new { @class = "form-check-label" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+                @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
+        </div>
+    </div>
+}
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('DescriptionHtml');
+
+    document.querySelector('form').addEventListener('submit', function () {
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
+            }
+        }
+    });
+
+    // ==================== 國家→地區串聯下拉 ====================
+    document.getElementById('CountryId').addEventListener('change', function () {
+        var countryId = this.value;
+        var regionSelect = document.getElementById('RegionId');
+        regionSelect.innerHTML = '<option value="">-- 載入中... --</option>';
+
+        if (!countryId) {
+            regionSelect.innerHTML = '<option value="">-- 請先選擇國家 --</option>';
+            return;
+        }
+
+        fetch('@Url.Action("GetRegionsByCountry", "Dealers")?countryId=' + countryId)
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                regionSelect.innerHTML = '<option value="">-- 請選擇地區 --</option>';
+                data.forEach(function (r) {
+                    regionSelect.innerHTML += '<option value="' + r.Id + '">' + r.RegionName + '</option>';
+                });
+            });
+    });
+
+    // ==================== 圖片預覽 ====================
+    document.getElementById('mainImage').addEventListener('change', function (e) {
+        var file = e.target.files[0];
+        var preview = document.getElementById('mainImagePreview');
+        var placeholder = document.getElementById('imagePlaceholder');
+        document.getElementById('mainImageLabel').value = file ? file.name : '未選擇任何檔案';
+
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('檔案太大！請選擇小於 5MB 的圖片。');
+                this.value = '';
+                preview.style.display = 'none';
+                placeholder.style.display = 'inline';
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                preview.src = evt.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+            placeholder.style.display = 'inline';
+        }
+    });
+</script>
