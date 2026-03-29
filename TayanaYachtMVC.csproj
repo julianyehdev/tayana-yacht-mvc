@@ -146,6 +146,7 @@
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\YachtController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -3935,6 +3936,9 @@
     <Content Include="Views\Shared\_FrontLayout.cshtml" />
     <Content Include="Views\Company\AboutUs.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Yacht\Overview.cshtml" />
+    <Content Include="Views\Yacht\Layout.cshtml" />
+    <Content Include="Views\Yacht\Specification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
