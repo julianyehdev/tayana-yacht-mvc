@@ -1,0 +1,48 @@
+﻿@model IEnumerable<TayanaYachtMVC.Models.Domain.Dealer>
+
+@{
+    ViewBag.Title = "經銷商列表";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    @Html.ActionLink("新增經銷商", "Create", null, new { @class = "btn btn-primary" })
+
+    @using (Html.BeginForm("Index", "Dealers", FormMethod.Get, new { @class = "d-flex gap-2" }))
+    {
+        <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="搜尋名稱..." />
+        @Html.DropDownList("countryId", (SelectList)ViewBag.Countries, "全部國家", new { @class = "form-select" })
+        <button type="submit" class="btn btn-outline-secondary">搜尋</button>
+        @Html.ActionLink("清空", "Index", null, new { @class = "btn btn-outline-danger" })
+    }
+</div>
+
+<table class="table">
+    <tr>
+        <th>圖片</th>
+        <th>名稱</th>
+        <th>國家</th>
+        <th>地區</th>
+        <th>排序</th>
+        <th>已發布</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.Raw(string.IsNullOrEmpty(item.MainImageUrl)
+                    ? "<span class=\"text-muted\" style=\"font-size:0.85em;\">無圖片</span>"
+                    : string.Format("<img src=\"{0}\" alt=\"\" style=\"width:60px;height:45px;object-fit:cover;border-radius:4px;\"/>", Url.Content(item.MainImageUrl)))
+            </td>
+            <td>@Html.ActionLink(item.Name, "Edit", new { id = item.Id })</td>
+            <td>@(item.Region?.Country?.CountryName ?? "-")</td>
+            <td>@(item.Region?.RegionName ?? "-")</td>
+            <td>@item.SortOrder</td>
+            <td>@Html.DisplayFor(modelItem => item.IsPublished)</td>
+            <td>
+                @Html.ActionLink("編輯", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" })
+                @Html.ActionLink("刪除", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger btn-sm" })
+            </td>
+        </tr>
+    }
+</table>

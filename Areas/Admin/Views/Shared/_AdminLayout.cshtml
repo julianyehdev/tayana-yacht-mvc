@@ -72,6 +72,21 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Dealers Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDealers"
+                   aria-expanded="true" aria-controls="collapseDealers">
+                    <i class="fas fa-fw fa-handshake"></i>
+                    <span>經銷商管理</span>
+                </a>
+                <div id="collapseDealers" class="collapse" aria-labelledby="headingDealers" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("Index", "Dealers", new { area = "Admin" })">經銷商列表</a>
+                        <a class="collapse-item" href="@Url.Action("Index", "Regions", new { area = "Admin" })">國家與地區管理</a>
+                    </div>
+                </div>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -414,6 +429,8 @@
     <!-- Page level custom scripts -->
     <script src="~/Scripts/js/demo/chart-area-demo.js"></script>
     <script src="~/Scripts/js/demo/chart-pie-demo.js"></script>
+
+    @RenderSection("scripts", required: false)
 
 </body>
 
