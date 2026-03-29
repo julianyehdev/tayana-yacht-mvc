@@ -128,7 +128,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            NewsArticle newsArticle = db.NewsArticles.Find(id);
+            NewsArticle newsArticle = db.NewsArticles.Include(n => n.Attachments).FirstOrDefault(n => n.Id == id);
             if (newsArticle == null)
             {
                 return HttpNotFound();
