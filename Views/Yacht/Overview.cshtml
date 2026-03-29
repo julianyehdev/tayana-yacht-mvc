@@ -133,11 +133,10 @@
 <div class="downloads">
 <p><img src="@Url.Content("~/img/icons/downloads.gif")" alt="" /></p>
 <ul>
-<li><a href="#">Downloads 001</a></li>
-<li><a href="#">Downloads 001</a></li>
-<li><a href="#">Downloads 001</a></li>
-<li><a href="#">Downloads 001</a></li>
-<li><a href="#">Downloads 001</a></li>
+@if (!string.IsNullOrEmpty(Model.SpecSheetUrl))
+{
+    <li><a href="@Model.SpecSheetUrl">@Model.SpecSheetFileName</a></li>
+}
 </ul>
 </div>
 <!--下載結束-->
