@@ -100,7 +100,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         {
             var regions = db.Regions
                 .Where(r => r.CountryId == countryId)
-                .OrderBy(r => r.RegionName)
+                .OrderBy(r => r.SortOrder).ThenBy(r => r.RegionName)
                 .Select(r => new { r.Id, r.RegionName })
                 .ToList();
             return Json(regions, JsonRequestBehavior.AllowGet);
@@ -117,7 +117,10 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
 
             if (id == 0)
             {
-                var region = new Region { CountryId = countryId, RegionName = regionName };
+                var maxSort = db.Regions.Any(r => r.CountryId == countryId)
+                    ? db.Regions.Where(r => r.CountryId == countryId).Max(r => r.SortOrder)
+                    : 0;
+                var region = new Region { CountryId = countryId, RegionName = regionName, SortOrder = maxSort + 1 };
                 db.Regions.Add(region);
             }
             else
@@ -127,6 +130,22 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 region.RegionName = regionName;
             }
 
+            db.SaveChanges();
+            return Json(new { success = true });
+        }
+
+        // POST: /Admin/Regions/SaveRegionOrder
+        // 拖曳排序後儲存地區順序
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult SaveRegionOrder(int[] ids)
+        {
+            if (ids == null) return Json(new { success = false });
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var region = db.Regions.Find(ids[i]);
+                if (region != null) region.SortOrder = i + 1;
+            }
             db.SaveChanges();
             return Json(new { success = true });
         }

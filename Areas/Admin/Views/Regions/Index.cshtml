@@ -126,7 +126,8 @@
         saveCountryOrder:    '@Url.Action("SaveCountryOrder", "Regions", new { area = "Admin" })',
         getRegionsByCountry: '@Url.Action("GetRegionsByCountry", "Regions", new { area = "Admin" })',
         saveRegion:          '@Url.Action("SaveRegion", "Regions", new { area = "Admin" })',
-        deleteRegion:        '@Url.Action("DeleteRegion", "Regions", new { area = "Admin" })'
+        deleteRegion:        '@Url.Action("DeleteRegion", "Regions", new { area = "Admin" })',
+        saveRegionOrder:     '@Url.Action("SaveRegionOrder", "Regions", new { area = "Admin" })'
     };
 
     var token = $('input[name="__RequestVerificationToken"]').val();
@@ -228,7 +229,7 @@
                 html = '<tr><td colspan="2" class="text-center text-muted p-4">此國家尚無地區資料</td></tr>';
             } else {
                 $.each(data, function (i, r) {
-                    html += '<tr>'
+                    html += '<tr data-id="' + r.Id + '">'
                           + '<td class="pl-4">' + escapeHtml(r.RegionName) + '</td>'
                           + '<td class="text-right pr-4">'
                           + '<button class="btn btn-sm btn-outline-info mr-1" onclick="openRegionModal(' + r.Id + ',\'' + escapeJs(r.RegionName) + '\')">編輯</button>'
@@ -237,6 +238,28 @@
                 });
             }
             $('#regionTableBody').html(html);
+            initRegionSortable();
+        });
+    }
+
+    function initRegionSortable() {
+        var el = document.getElementById('regionTableBody');
+        if (!el) return;
+        Sortable.create(el, {
+            animation: 150,
+            onEnd: function () {
+                var ids = [];
+                $('#regionTableBody tr[data-id]').each(function () {
+                    ids.push($(this).data('id'));
+                });
+                $.post(urls.saveRegionOrder, {
+                    __RequestVerificationToken: token,
+                    'ids[]': ids
+                }, function (res) {
+                    if (res.success) showToast('排序已更新');
+                    else showToast('排序儲存失敗', true);
+                });
+            }
         });
     }
 
