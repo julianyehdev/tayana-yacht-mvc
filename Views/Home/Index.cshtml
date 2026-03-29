@@ -1,7 +1,10 @@
-﻿@{
+@model TayanaYachtMVC.Models.ViewModels.HomeIndexViewModel
+@{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
     ViewBag.Title = "Tayana Yacht";
     ViewBag.MainCss = "style.css";
+
+    var firstYacht = Model.Yachts.FirstOrDefault();
 }
 
 <!--遮罩-->
@@ -11,33 +14,50 @@
 <!--小圖開始-->
 <div class="bannerimg">
 <ul>
-<li> <a href="#"><div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></div></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" width="300" /></p>
-</a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+@for (int i = 0; i < Model.Yachts.Count; i++)
+{
+    var yacht = Model.Yachts[i];
+    var photoUrl = string.IsNullOrEmpty(yacht.FirstPhotoUrl)
+        ? Url.Content("~/img/yachts/pit003.jpg")
+        : Url.Content("~/" + yacht.FirstPhotoUrl);
+    <li>
+        <a href="#" data-index="@i">
+            @if (i == 0)
+            {
+                <div class="on"><p class="bannerimg_p"><img src="@photoUrl" alt="@yacht.YachtName" /></p></div>
+            }
+            else
+            {
+                <p class="bannerimg_p"><img src="@photoUrl" alt="@yacht.YachtName" /></p>
+            }
+        </a>
+    </li>
+}
 </ul>
 </div>
 <!--小圖結束-->
 
 <!--文字開始-->
-<div class="wordtitle">TAYANA <span>48</span><br />
+<div class="wordtitle">TAYANA <span>@(firstYacht != null ? firstYacht.YachtName : "")</span><br />
 <p>SPECIFICATION SHEET</p></div>
 <!--文字結束-->
 
-<!--新船型開始  54型才出現其於隱藏 -->
-<div class="new"><img src="@Url.Content("~/img/ui/new01.png")" alt="new" /></div>
+<!--新船型 若為最新款才顯示-->
+<div class="new" @(firstYacht != null && firstYacht.IsLatest ? "" : "style=\"display:none\"")>
+    <img src="@Url.Content("~/img/ui/new01.png")" alt="new" />
+</div>
 <!--新船型結束-->
 
 <!--------------------------------換圖開始---------------------------------------------------->
 <div class="banner">
 <ul>
-<li><img src="@Url.Content("~/img/banners/banner003b.jpg")" /></li>
-<li><img src="@Url.Content("~/img/banners/banner002b.jpg")" /></li>
-<li><img src="@Url.Content("~/img/banners/banner003b.jpg")" /></li>
-<li><img src="@Url.Content("~/img/banners/banner002b.jpg")" /></li>
+@foreach (var yacht in Model.Yachts)
+{
+    var photoUrl = string.IsNullOrEmpty(yacht.FirstPhotoUrl)
+        ? Url.Content("~/img/banners/banner003b.jpg")
+        : Url.Content("~/" + yacht.FirstPhotoUrl);
+    <li><img src="@photoUrl" alt="@yacht.YachtName" /></li>
+}
 </ul>
 </div>
 <!--------------------------------換圖結束---------------------------------------------------->
@@ -93,4 +113,54 @@
 <span>TEL：+886(7)641-2721</span> <span>FAX：+886(7)642-3193</span><span><a href="mailto:tayangco@ms15.hinet.net">E-mail：tayangco@ms15.hinet.net</a>.</span></div>
 </div>
 <!--------------------------------落款結束---------------------------------------------------->
+}
+
+@section scripts {
+<script type="text/javascript">
+var yachtData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Yachts));
+
+$(document).ready(function () {
+    var $bannerUl = $('.banner ul');
+    var $thumbs = $('.bannerimg li a');
+
+    $bannerUl.cycle({
+        fx: 'fade',
+        speed: 600,
+        timeout: 4000,
+        before: function (curr, next, opts) {
+            var idx = opts.nextSlide;
+            var yacht = yachtData[idx];
+
+            // 更新船名
+            $('.wordtitle').html('TAYANA <span>' + yacht.YachtName + '</span><br /><p>SPECIFICATION SHEET</p>');
+
+            // 更新 NEW 徽章
+            if (yacht.IsLatest) {
+                $('.new').show();
+            } else {
+                $('.new').hide();
+            }
+
+            // 更新縮圖 active 狀態
+            $thumbs.each(function (i) {
+                var $inner = $(this).children();
+                if (i === idx) {
+                    if (!$(this).find('.on').length) {
+                        $inner.wrapAll('<div class="on"></div>');
+                    }
+                } else {
+                    $(this).find('.on').contents().unwrap();
+                }
+            });
+        }
+    });
+
+    // 點縮圖跳至對應 slide
+    $thumbs.on('click', function (e) {
+        e.preventDefault();
+        var idx = parseInt($(this).data('index'));
+        $bannerUl.cycle(idx);
+    });
+});
+</script>
 }

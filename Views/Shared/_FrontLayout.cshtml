@@ -5,13 +5,6 @@
 <title>@ViewBag.Title — Tayana Yacht</title>
 <script type="text/javascript" src="@Url.Content("~/Scripts/vendor/jquery.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/vendor/jquery.cycle.all.2.74.js")"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('.slideshow').cycle({
-        fx: 'fade'
-    });
-});
-</script>
 <!--[if lt IE 7]>
 <script type="text/javascript" src="@Url.Content("~/Scripts/javascript/iepngfix_tilebg.js")"></script>
 <![endif]-->
@@ -53,5 +46,6 @@ else
 }
 
 </div>
+@RenderSection("scripts", required: false)
 </body>
 </html>
