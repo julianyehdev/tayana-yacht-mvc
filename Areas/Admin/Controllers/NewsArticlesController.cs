@@ -67,7 +67,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
+        public ActionResult Create([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage, IEnumerable<HttpPostedFileBase> attachments)
         {
             if (coverImage != null && coverImage.ContentLength > 0)
             {
@@ -88,6 +88,32 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             {
                 db.NewsArticles.Add(newsArticle);
                 db.SaveChanges();
+
+                // 處理附件上傳
+                if (attachments != null)
+                {
+                    var attachSaveDir = Server.MapPath("~/Content/uploads/news/attachments/");
+                    if (!System.IO.Directory.Exists(attachSaveDir))
+                        System.IO.Directory.CreateDirectory(attachSaveDir);
+
+                    int sortOrder = 0;
+                    foreach (var file in attachments)
+                    {
+                        if (file == null || file.ContentLength == 0) continue;
+                        var ext = System.IO.Path.GetExtension(file.FileName);
+                        var savedName = Guid.NewGuid().ToString() + ext;
+                        file.SaveAs(System.IO.Path.Combine(attachSaveDir, savedName));
+                        db.NewsAttachments.Add(new NewsAttachment
+                        {
+                            NewsArticleId = newsArticle.Id,
+                            FileUrl = "/Content/uploads/news/attachments/" + savedName,
+                            FileName = file.FileName,
+                            SortOrder = sortOrder++
+                        });
+                    }
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -117,7 +143,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage)
+        public ActionResult Edit([Bind(Include = "Id,Title,CoverImageUrl,Content,PublishDate,IsPublished,IsPinned,CategoryId")] NewsArticle newsArticle, HttpPostedFileBase coverImage, int[] deleteAttachmentIds, IEnumerable<HttpPostedFileBase> attachments)
         {
             if (coverImage != null && coverImage.ContentLength > 0)
             {
@@ -146,6 +172,47 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             {
                 db.Entry(newsArticle).State = EntityState.Modified;
                 db.SaveChanges();
+
+                // 刪除勾選的附件
+                if (deleteAttachmentIds != null)
+                {
+                    foreach (var attachId in deleteAttachmentIds)
+                    {
+                        var attach = db.NewsAttachments.Find(attachId);
+                        if (attach == null || attach.NewsArticleId != newsArticle.Id) continue;
+                        var filePath = Server.MapPath("~" + attach.FileUrl);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+                        db.NewsAttachments.Remove(attach);
+                    }
+                    db.SaveChanges();
+                }
+
+                // 新增附件
+                if (attachments != null)
+                {
+                    var attachSaveDir = Server.MapPath("~/Content/uploads/news/attachments/");
+                    if (!System.IO.Directory.Exists(attachSaveDir))
+                        System.IO.Directory.CreateDirectory(attachSaveDir);
+
+                    int sortOrder = db.NewsAttachments.Where(a => a.NewsArticleId == newsArticle.Id).Count();
+                    foreach (var file in attachments)
+                    {
+                        if (file == null || file.ContentLength == 0) continue;
+                        var ext = System.IO.Path.GetExtension(file.FileName);
+                        var savedName = Guid.NewGuid().ToString() + ext;
+                        file.SaveAs(System.IO.Path.Combine(attachSaveDir, savedName));
+                        db.NewsAttachments.Add(new NewsAttachment
+                        {
+                            NewsArticleId = newsArticle.Id,
+                            FileUrl = "/Content/uploads/news/attachments/" + savedName,
+                            FileName = file.FileName,
+                            SortOrder = sortOrder++
+                        });
+                    }
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
             ViewBag.CategoryId = new SelectList(db.NewsCategories, "Id", "Name", newsArticle.CategoryId);
@@ -172,7 +239,24 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            NewsArticle newsArticle = db.NewsArticles.Find(id);
+            NewsArticle newsArticle = db.NewsArticles.Include(n => n.Attachments).FirstOrDefault(n => n.Id == id);
+
+            // 刪除封面圖片
+            if (!string.IsNullOrEmpty(newsArticle.CoverImageUrl))
+            {
+                var coverPath = Server.MapPath("~" + newsArticle.CoverImageUrl);
+                if (System.IO.File.Exists(coverPath))
+                    System.IO.File.Delete(coverPath);
+            }
+
+            // 刪除所有附件實體檔案
+            foreach (var attach in newsArticle.Attachments.ToList())
+            {
+                var filePath = Server.MapPath("~" + attach.FileUrl);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
             db.NewsArticles.Remove(newsArticle);
             db.SaveChanges();
             return RedirectToAction("Index");
