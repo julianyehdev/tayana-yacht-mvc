@@ -82,6 +82,23 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2">附件</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:10px; background:#fff;">
+                    <input type="file" name="attachments" id="attachmentInput" multiple
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
+                           style="display:none;" />
+                    <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('attachmentInput').click()">＋ 新增附件</button>
+                    <small class="text-muted ms-2">支援 PDF, DOC, DOCX, XLS, XLSX, ZIP（單檔限 10MB）</small>
+                    <ul id="attachmentPlaceholder" class="list-group mt-2">
+                        <li class="list-group-item text-muted" style="font-size:0.9em;">尚未新增任何附件，可一次選取多個檔案</li>
+                    </ul>
+                    <ul id="attachmentList" class="list-group mt-2" style="display:none;"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="新增" class="btn btn-primary" />
                 @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
@@ -101,6 +118,49 @@
             }
         }
     });
+
+    // ==================== 附件上傳模組 ====================
+    let attachmentFiles = [];
+
+    document.getElementById('attachmentInput').addEventListener('change', function () {
+        const maxSize = 10 * 1024 * 1024;
+        Array.from(this.files).forEach(function (file) {
+            if (file.size > maxSize) {
+                alert(file.name + ' 超過 10MB，已略過。');
+                return;
+            }
+            attachmentFiles.push(file);
+            renderAttachmentList();
+        });
+        this.value = '';
+    });
+
+    function renderAttachmentList() {
+        const list = document.getElementById('attachmentList');
+        list.innerHTML = '';
+        list.style.display = attachmentFiles.length > 0 ? '' : 'none';
+        document.getElementById('attachmentPlaceholder').style.display = attachmentFiles.length > 0 ? 'none' : '';
+        attachmentFiles.forEach(function (file, index) {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = '<span>' + file.name + ' <small class="text-muted">(' + (file.size / 1024).toFixed(1) + ' KB)</small></span>'
+                + '<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAttachment(' + index + ')">移除</button>';
+            list.appendChild(li);
+        });
+        syncAttachmentsToInput();
+    }
+
+    function removeAttachment(index) {
+        attachmentFiles.splice(index, 1);
+        renderAttachmentList();
+    }
+
+    function syncAttachmentsToInput() {
+        const input = document.getElementById('attachmentInput');
+        const dt = new DataTransfer();
+        attachmentFiles.forEach(function (f) { dt.items.add(f); });
+        input.files = dt.files;
+    }
 
     document.getElementById('coverImage').addEventListener('change', function (e) {
         const file = e.target.files[0];
