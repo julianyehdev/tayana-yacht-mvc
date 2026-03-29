@@ -15,15 +15,22 @@
         @Html.HiddenFor(model => model.YachtID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.YachtName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.YachtName, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.YachtName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.YachtName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.ModelNumber, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.ModelNumber, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ModelNumber, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-12">
                 <label style="font-weight:normal;">
                     是否為最新款 @Html.CheckBoxFor(model => model.IsLatest)
                 </label>
