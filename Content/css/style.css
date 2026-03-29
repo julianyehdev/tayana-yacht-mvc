@@ -7,7 +7,7 @@ img, div, input {
 
 body {
 	margin-top: 0px;
-	background-image: url(../../img/banners/bg1.jpg);
+	/* background-image: url(../../img/banners/bg1.jpg); */ /* 移除最上方藍波導線 */
 	behavior: url("css/csshover.htc");
 	height: 100%;
 	background-repeat: repeat-x;
