@@ -23,11 +23,11 @@
         <a href="#">
             @if (i == 0)
             {
-                <div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" /></p></div>
+                <div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p></div>
             }
             else
             {
-                <p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" /></p>
+                <p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p>
             }
         </a>
     </li>
@@ -40,11 +40,11 @@
     <li>
         @if (i == 0)
         {
-            <a class="on" href="#"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" /></p></a>
+            <a class="on" href="#"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p></a>
         }
         else
         {
-            <p class="bannerimg_p"><a href="#"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" /></a></p>
+            <p class="bannerimg_p"><a href="#"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></a></p>
         }
     </li>
 }
