@@ -7,7 +7,7 @@ img, div, input {
 
 body {
 	margin-top: 0px;
-	background-image: url(../images/bg1.jpg);
+	background-image: url(../../img/banners/bg1.jpg);
 	behavior: url("css/csshover.htc");
 	height: 100%;
 	background-repeat: repeat-x;
@@ -26,7 +26,7 @@ body {
 	float: left;
 	height: 23px;
 	width: 100%;
-	background-image: url(../images/sub_bg.gif);
+	background-image: url(../../img/ui/sub_bg.gif);
 	background-repeat: repeat-x;
 }
 .sub a {
@@ -42,13 +42,13 @@ body {
 	float: right;
 	padding-right: 18px;
 	padding-top: 3px;
-	background-image: url(../images/icon001.gif);
+	background-image: url(../../img/icons/icon001.gif);
 	background-repeat: no-repeat;
 	background-position: 1px 6px;
 	padding-left: 18px;
 }
 .menu {
-	background-image: url(../images/menu.gif);
+	background-image: url(../../img/ui/menu.gif);
 	background-repeat: no-repeat;
 	float: left;
 	height: 71px;
@@ -71,44 +71,44 @@ body {
 }
 
 .menuli01 {
-	background-image: url(../images/menu1_03.gif);
+	background-image: url(../../img/ui/menu1_03.gif);
 	width: 80px;
 	float: left;
 }
 .menuli01:hover {
-	background-image: url(../images/menu2_03.gif);
+	background-image: url(../../img/ui/menu2_03.gif);
 }
 .menuli02 {
-	background-image: url(../images/menu1_04.gif);
+	background-image: url(../../img/ui/menu1_04.gif);
 	width: 79px;
 	float: left;
 }
 .menuli02:hover {
-	background-image: url(../images/menu2_04.gif);
+	background-image: url(../../img/ui/menu2_04.gif);
 }
 .menuli03 {
-	background-image: url(../images/menu1_05.gif);
+	background-image: url(../../img/ui/menu1_05.gif);
 	width: 99px;
 	float: left;
 }
 .menuli03:hover {
-	background-image: url(../images/menu2_05.gif);
+	background-image: url(../../img/ui/menu2_05.gif);
 }
 .menuli04 {
-	background-image: url(../images/menu1_06.gif);
+	background-image: url(../../img/ui/menu1_06.gif);
 	width: 89px;
 	float: left;
 }
 .menuli04:hover {
-	background-image: url(../images/menu2_06.gif);
+	background-image: url(../../img/ui/menu2_06.gif);
 }
 .menuli05 {
-	background-image: url(../images/menu1_07.gif);
+	background-image: url(../../img/ui/menu1_07.gif);
 	width: 95px;
 	float: left;
 }
 .menuli05:hover {
-	background-image: url(../images/menu2_07.gif);
+	background-image: url(../../img/ui/menu2_07.gif);
 }
 .banner {
 	float: left;
@@ -213,7 +213,7 @@ body {
 .footer {
 	clear: both;
 	width: 1002px;
-	background-image: url(../images/footer.jpg);
+	background-image: url(../../img/ui/footer.jpg);
 	background-repeat: no-repeat;
 	height: 71px;
 	background-position: left bottom;
@@ -257,7 +257,7 @@ body {
 	color: #009BB2;
 }
 .footer01 span {
-	background-image: url(../images/icon002.gif);
+	background-image: url(../../img/icons/icon002.gif);
 	background-repeat: no-repeat;
 	background-position: 2px 7px;
 	padding-left: 11px;
@@ -313,7 +313,7 @@ body {
 	overflow: hidden;
 }
 .bannerimg  li  a {
-	background-image: url(../images/changbg1.gif);
+	background-image: url(../../img/ui/changbg1.gif);
 	background-repeat: no-repeat;
 	float: left;
 	width: 103px;
@@ -322,7 +322,7 @@ body {
 	display: block;
 }
 .bannerimg       li       a:hover   {
-	background-image: url(../images/changbg.gif);
+	background-image: url(../../img/ui/changbg.gif);
 	background-repeat: no-repeat;
 	background-position: left bottom;
 	float: left;
@@ -330,7 +330,7 @@ body {
 	width: 103px;
 }
 .on    {
-	background-image: url(../images/changbg.gif);
+	background-image: url(../../img/ui/changbg.gif);
 	background-repeat: no-repeat;
 	background-position: left bottom;
 	width: 103px;
