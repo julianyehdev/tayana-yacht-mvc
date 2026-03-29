@@ -79,8 +79,8 @@
             // Dealers
             context.Dealers.AddOrUpdate(
                 d => d.SortOrder,
-                new Dealer { RegionId = northTaiwan.Id, IsPublished = true, SortOrder = 1 },
-                new Dealer { RegionId = northTaiwan.Id, IsPublished = true, SortOrder = 2 }
+                new Dealer { Name = "大洋遊艇台北", RegionId = northTaiwan.Id, IsPublished = true, SortOrder = 1 },
+                new Dealer { Name = "大洋遊艇高雄", RegionId = northTaiwan.Id, IsPublished = true, SortOrder = 2 }
             );
 
             // AdminUsers

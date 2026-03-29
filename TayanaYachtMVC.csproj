@@ -190,6 +190,10 @@
     <Compile Include="Migrations\202603290000025_AddNewsAttachment.Designer.cs">
       <DependentUpon>202603290000025_AddNewsAttachment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603290552404_AddDealerNameField.cs" />
+    <Compile Include="Migrations\202603290552404_AddDealerNameField.Designer.cs">
+      <DependentUpon>202603290552404_AddDealerNameField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
@@ -2111,6 +2115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603290000025_AddNewsAttachment.resx">
       <DependentUpon>202603290000025_AddNewsAttachment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603290552404_AddDealerNameField.resx">
+      <DependentUpon>202603290552404_AddDealerNameField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
