@@ -3937,8 +3937,8 @@
     <Content Include="Views\Company\AboutUs.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Yacht\Overview.cshtml" />
-    <Content Include="Views\Yacht\Layout.cshtml" />
     <Content Include="Views\Yacht\Specification.cshtml" />
+    <Content Include="Views\Yacht\DeckPlan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
