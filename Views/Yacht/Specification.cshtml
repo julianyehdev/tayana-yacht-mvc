@@ -1,5 +1,8 @@
-﻿@{
+﻿@model TayanaYachtMVC.Models.Domain.Yacht
+
+@{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
+    ViewBag.Title = Model.YachtName + " — Specification";
 }
 
 <!--遮罩-->
@@ -10,104 +13,117 @@
 
 <!--小圖開始-->
 <div class="bannerimg">
+@{
+    var photos = Model.YachtPhotos?.OrderBy(p => p.SortOrder).Take(8).ToList() ?? new List<TayanaYachtMVC.Models.Domain.YachtPhoto>();
+}
 <ul>
-<li> <a href="#"><div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></div></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" width="300" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+@for (int i = 0; i < photos.Count; i++)
+{
+    <li>
+        <a href="#">
+            @if (i == 0)
+            {
+                <div class="on"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p></div>
+            }
+            else
+            {
+                <p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p>
+            }
+        </a>
+    </li>
+}
 </ul>
 
 <ul>
-<li> <a class="on" href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <p class="bannerimg_p"><a href="#"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
-<li> <a href="#"><p class="bannerimg_p"><img src="@Url.Content("~/img/yachts/pit003.jpg")" alt="" /></p></a></li>
+@for (int i = 0; i < photos.Count; i++)
+{
+    <li>
+        @if (i == 0)
+        {
+            <a class="on" href="#"><p class="bannerimg_p"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></p></a>
+        }
+        else
+        {
+            <p class="bannerimg_p"><a href="#"><img src="@Url.Content("~/" + photos[i].PhotoUrl)" alt="" width="99" height="59" /></a></p>
+        }
+    </li>
+}
 </ul>
 </div>
 <!--小圖結束-->
 
-<div id="buttom02"> <a href="#"><img src="@Url.Content("~/img/icons/buttom02.gif")" alt="next" /></a></div>
+<div id="buttom02"><a href="#"><img src="@Url.Content("~/img/icons/buttom02.gif")" alt="next" /></a></div>
 
-<!--------------------------------換圖開始---------------------------------------------------->
+<!--換圖開始-->
 <div class="banner">
 <ul>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
-<li><img src="@Url.Content("~/img/yachts/test002.jpg")" /></li>
+@{
+    var allPhotos = Model.YachtPhotos?.OrderBy(p => p.SortOrder).ToList() ?? new List<TayanaYachtMVC.Models.Domain.YachtPhoto>();
+}
+@foreach (var photo in allPhotos)
+{
+    <li><img src="@Url.Content("~/" + photo.PhotoUrl)" /></li>
+}
 </ul>
 </div>
-<!--------------------------------換圖結束---------------------------------------------------->
+<!--換圖結束-->
 
 <div class="conbg">
-<!--------------------------------左邊選單開始---------------------------------------------------->
+<!--左邊選單開始-->
 <div class="left">
 <div class="left1">
 <p><span>YACHTS</span></p>
 <ul>
-<li><a href="#">Dynasty 72</a></li>
-<li><a href="#">Tayana 64</a></li>
-<li><a href="#">Tayana 58</a></li>
-<li><a href="#">Tayana 55</a></li>
+@{
+    var allYachts = ViewBag.AllYachts as List<TayanaYachtMVC.Models.Domain.Yacht> ?? new List<TayanaYachtMVC.Models.Domain.Yacht>();
+}
+@foreach (var y in allYachts)
+{
+    var displayName = string.IsNullOrEmpty(y.ModelNumber) ? y.YachtName : $"{y.YachtName} {y.ModelNumber}";
+    <li><a href="@Url.Action("Specification", "Yacht", new { yachtName = y.YachtName, modelNumber = y.ModelNumber })">@displayName</a></li>
+}
 </ul>
 </div>
 </div>
-<!--------------------------------左邊選單結束---------------------------------------------------->
+<!--左邊選單結束-->
 
-<!--------------------------------右邊內容開始---------------------------------------------------->
-<div id="crumb"><a href="#">Home</a> >> <a href="#">Yachts</a> >> <a href="#"><span class="on1">Dynasty 72</span></a></div>
+<!--右邊內容開始-->
+<div id="crumb"><a href="@Url.Action("Index", "Home")">Home</a> &gt;&gt; <a href="@Url.Action("Overview", "Yacht")">Yachts</a> &gt;&gt; <a href="#"><span class="on1">@Model.YachtName</span></a></div>
 <div class="right">
 <div class="right1">
-  <div class="title"> <span>Dynasty 72</span></div>
+  <div class="title"><span>@Model.YachtName @Model.ModelNumber</span></div>
 
 <!--次選單-->
 <div class="menu_y">
 <ul>
 <li class="menu_y00">YACHTS</li>
-<li><a class="menu_yli01" href="#">Interior</a></li>
-<li><a class="menu_yli02" href="#">Layout & deck plan</a></li>
-<li><a class="menu_yli03" href="#">Specification</a></li>
+<li><a class="menu_yli01" href="@Url.Action("Overview", "Yacht")">Interior</a></li>
+<li><a class="menu_yli02" href="@Url.Action("DeckPlan", "Yacht")">Layout &amp; deck plan</a></li>
+<li><a class="menu_yli03" href="@Url.Action("Specification", "Yacht")">Specification</a></li>
 </ul>
 </div>
 <!--次選單結束-->
 
 <div class="box5">
 <h4>DETAIL SPECIFICATION</h4>
-
-<p>HULL STRUCTURE & DECKS</p>
-<ul>
-<li>Yanmar 4LHA-HTP 160HP (or equal)</li>
-<li>White formica counters in hgalley. Teak veneer ctt</li>
-<li>White formica counters in hgalley. Teak veneer c</li>
-<li>White formica counters in hgalley. Teak veneer c</li>
-<li>WTeak veneer ctte table 0005</li>
-<li>WTeak veneer ctte table 0005</li>
-</ul>
-
-<p>HULL STRUCTURE & DECKS</p>
-<ul>
-<li>Yanmar 4LHA-HTP 160HP (or equal)</li>
-<li>White formica counters in hgalley. Teak veneer ctt</li>
-<li>White formica counters in hgalley. Teak veneer c</li>
-<li>White formica counters in hgalley. Teak veneer c</li>
-<li>WTeak veneer ctte table 0005</li>
-<li>WTeak veneer ctte table 0005</li>
-</ul>
+@Html.Raw(Model.DetailSpecification)
 </div>
 
 <p class="topbuttom"><img src="@Url.Content("~/img/icons/top.gif")" alt="top" /></p>
 
 </div>
 </div>
-<!--------------------------------右邊內容結束---------------------------------------------------->
+<!--右邊內容結束-->
 </div>
+
+@section scripts {
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.banner ul').cycle({
+        fx: 'fade',
+        speed: 1000,
+        timeout: 4000
+    });
+});
+</script>
+}

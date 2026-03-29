@@ -49,10 +49,19 @@ namespace TayanaYachtMVC.Controllers
 
 
 
-        public ActionResult Specification(string _id)
+        public ActionResult Specification(string yachtName, string modelNumber = null)
         {
-            // _id = "Tayana 58" or "Tayana 78" or "Tayana 84"
-            return View();
+            var yacht = string.IsNullOrEmpty(yachtName)
+                ? _context.Yachts.Include(y => y.YachtPhotos).FirstOrDefault()
+                : _context.Yachts.Include(y => y.YachtPhotos)
+                    .FirstOrDefault(y => y.YachtName == yachtName &&
+                        (string.IsNullOrEmpty(modelNumber) || y.ModelNumber == modelNumber));
+
+            if (yacht == null)
+                return HttpNotFound();
+
+            ViewBag.AllYachts = _context.Yachts.OrderBy(y => y.YachtID).ToList();
+            return View(yacht);
         }
 
     }
