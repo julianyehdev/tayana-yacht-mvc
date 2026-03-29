@@ -186,11 +186,16 @@
     <Compile Include="Migrations\202603281738337_AddNewsCategory.Designer.cs">
       <DependentUpon>202603281738337_AddNewsCategory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603290000025_AddNewsAttachment.cs" />
+    <Compile Include="Migrations\202603290000025_AddNewsAttachment.Designer.cs">
+      <DependentUpon>202603290000025_AddNewsAttachment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Domain\AdminUser.cs" />
     <Compile Include="Models\Domain\Country.cs" />
     <Compile Include="Models\Domain\Dealer.cs" />
     <Compile Include="Models\Domain\NewsArticle.cs" />
+    <Compile Include="Models\Domain\NewsAttachment.cs" />
     <Compile Include="Models\Domain\NewsCategory.cs" />
     <Compile Include="Models\Domain\Region.cs" />
     <Compile Include="Models\Domain\Yacht.cs" />
@@ -2103,6 +2108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202603281738337_AddNewsCategory.resx">
       <DependentUpon>202603281738337_AddNewsCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603290000025_AddNewsAttachment.resx">
+      <DependentUpon>202603290000025_AddNewsAttachment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,5 +38,7 @@ namespace TayanaYachtMVC.Models.Domain
 
         [ForeignKey("CategoryId")]
         public virtual NewsCategory Category { get; set; }
+
+        public virtual ICollection<NewsAttachment> Attachments { get; set; }
     }
 }
