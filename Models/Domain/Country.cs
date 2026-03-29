@@ -17,10 +17,13 @@ namespace TayanaYachtMVC.Models.Domain
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "國家名稱")]
         public string CountryName { get; set; }
 
+        [Display(Name = "排序")]
         public int SortOrder { get; set; }
 
+        [Display(Name = "建立日期")]
         public DateTime CreateDate { get; set; }
     }
 }

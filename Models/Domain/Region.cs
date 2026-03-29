@@ -16,13 +16,16 @@ namespace TayanaYachtMVC.Models.Domain
         public int Id { get; set; }
 
         [ForeignKey("Country")]
+        [Display(Name = "國家")]
         public int CountryId { get; set; }
         public virtual Country Country { get; set; }
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "地區名稱")]
         public string RegionName { get; set; }
 
+        [Display(Name = "建立日期")]
         public DateTime CreateDate { get; set; }
     }
 }
