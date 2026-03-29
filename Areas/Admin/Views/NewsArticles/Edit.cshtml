@@ -1,0 +1,251 @@
+﻿@model TayanaYachtMVC.Models.Domain.NewsArticle
+
+@{
+    ViewBag.Title = "編輯新聞";
+}
+
+@using (Html.BeginForm("Edit", "NewsArticles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>編輯新聞</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, "新聞類別", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId", null, "-- 請選擇類別 --", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CoverImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:16px; background:#fff;">
+                    <input type="file" name="coverImage" id="coverImage"
+                           accept=".jpg,.jpeg,.png,.gif,.webp"
+                           style="display:none;" />
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('coverImage').click()">選擇圖片</button>
+                        </span>
+                        <input type="text" id="coverImageLabel" class="form-control" readonly placeholder="未選擇任何檔案"
+                               style="cursor:default; pointer-events:none;" />
+                    </div>
+                    <small class="text-muted" style="margin-top:4px; display:block;">支援格式：JPG, PNG, GIF, WEBP（限制 5MB）</small>
+                    <div id="coverPreviewContainer" style="margin-top:10px; border:2px dashed #ccc; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; overflow:hidden;">
+                        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                        {
+                            <img id="coverImagePreview" src="@Url.Content(Model.CoverImageUrl)" alt="封面圖片" style="max-width:100%; max-height:300px;" />
+                            <span id="coverPreviewPlaceholder" class="text-muted" style="font-size:0.9em; display:none;">尚未選擇圖片</span>
+                        }
+                        else
+                        {
+                            <span id="coverPreviewPlaceholder" class="text-muted" style="font-size:0.9em;">尚未選擇圖片</span>
+                            <img id="coverImagePreview" src="#" alt="預覽圖" style="display:none; max-width:100%; max-height:300px;" />
+                        }
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.CoverImageUrl)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Content, new { @class = "form-control", rows = 10 })
+                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PublishDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PublishDate, new { htmlAttributes = new { @class = "form-control", placeholder = "yyyy/MM/dd HH:mm（例：2026/01/01，時分不填預設 00:00）" } })
+                @Html.ValidationMessageFor(model => model.PublishDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="form-check form-check-inline me-4">
+                    @Html.CheckBoxFor(model => model.IsPublished, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.IsPublished, new { @class = "form-check-label" })
+                </div>
+                <div class="form-check form-check-inline">
+                    @Html.CheckBoxFor(model => model.IsPinned, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.IsPinned, new { @class = "form-check-label" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">附件</label>
+            <div class="col-md-10">
+                <div style="border:1px solid #d0d0d0; border-radius:6px; padding:10px; background:#fff;">
+                    <input type="file" name="attachments" id="attachmentInput" multiple
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
+                           style="display:none;" />
+                    <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('attachmentInput').click()">＋ 新增附件</button>
+                    <small class="text-muted ms-2">支援 PDF, DOC, DOCX, XLS, XLSX, ZIP（單檔限 10MB）</small>
+                    <ul class="list-group mt-2" id="allAttachmentList">
+                        @if (Model.Attachments != null)
+                        {
+                            foreach (var attach in Model.Attachments)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center" style="padding:6px 10px;" id="attach-@attach.Id">
+                                    <a href="@Url.Content(attach.FileUrl)" target="_blank" class="attach-name text-decoration-none">@attach.FileName</a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" style="min-width:52px;"
+                                            onclick="markDeleteAttachment(@attach.Id, this)">刪除</button>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    @if (Model.Attachments == null || !Model.Attachments.Any())
+                    {
+                        <ul id="attachmentPlaceholder" class="list-group mt-2">
+                            <li class="list-group-item text-muted" style="font-size:0.9em;">尚未新增任何附件，可一次選取多個檔案</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul id="attachmentPlaceholder" class="list-group mt-2" style="display:none;">
+                            <li class="list-group-item text-muted" style="font-size:0.9em;">尚未新增任何附件，可一次選取多個檔案</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+                @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
+        </div>
+    </div>
+}
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Content');
+
+    document.querySelector('form').addEventListener('submit', function () {
+        if (typeof CKEDITOR !== 'undefined') {
+            for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].updateElement();
+            }
+        }
+    });
+
+    // ==================== 現有附件刪除 ====================
+    function markDeleteAttachment(id, btn) {
+        const li = document.getElementById('attach-' + id);
+        const existing = document.querySelector('input[name="deleteAttachmentIds"][value="' + id + '"]');
+        if (existing) {
+            // 取消刪除
+            existing.remove();
+            li.style.opacity = '';
+            li.querySelector('.attach-name').style.textDecoration = '';
+            btn.textContent = '刪除';
+            btn.classList.replace('btn-secondary', 'btn-outline-danger');
+        } else {
+            // 標記刪除
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'deleteAttachmentIds';
+            input.value = id;
+            document.querySelector('form').appendChild(input);
+            li.style.opacity = '0.4';
+            li.querySelector('.attach-name').style.textDecoration = 'line-through';
+            btn.textContent = '復原';
+            btn.classList.replace('btn-outline-danger', 'btn-secondary');
+        }
+    }
+
+    // ==================== 附件上傳模組 ====================
+    let attachmentFiles = [];
+
+    document.getElementById('attachmentInput').addEventListener('change', function () {
+        const maxSize = 10 * 1024 * 1024;
+        const newFiles = Array.from(this.files);
+        this.value = '';
+        newFiles.forEach(function (file) {
+            if (file.size > maxSize) {
+                alert(file.name + ' 超過 10MB，已略過。');
+                return;
+            }
+            attachmentFiles.push(file);
+        });
+        renderAttachmentList();
+    });
+
+    function renderAttachmentList() {
+        // 移除舊的 new-file items（保留 existing DB items）
+        document.querySelectorAll('#allAttachmentList .new-file-item').forEach(function (el) { el.remove(); });
+        const list = document.getElementById('allAttachmentList');
+        const placeholder = document.getElementById('attachmentPlaceholder');
+        const hasExisting = document.querySelectorAll('#allAttachmentList li:not(.new-file-item)').length > 0;
+        placeholder.style.display = (attachmentFiles.length === 0 && !hasExisting) ? '' : 'none';
+        attachmentFiles.forEach(function (file, index) {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center new-file-item';
+            li.style.padding = '6px 10px';
+            li.innerHTML = '<span>' + file.name + ' <small class="text-muted">(' + (file.size / 1024).toFixed(1) + ' KB)</small></span>'
+                + '<button type="button" class="btn btn-outline-danger btn-sm" style="min-width:52px;" onclick="removeAttachment(' + index + ')">移除</button>';
+            list.appendChild(li);
+        });
+        syncAttachmentsToInput();
+    }
+
+    function removeAttachment(index) {
+        attachmentFiles.splice(index, 1);
+        renderAttachmentList();
+    }
+
+    function syncAttachmentsToInput() {
+        const input = document.getElementById('attachmentInput');
+        const dt = new DataTransfer();
+        attachmentFiles.forEach(function (f) { dt.items.add(f); });
+        input.files = dt.files;
+    }
+
+    document.getElementById('coverImage').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const previewImage = document.getElementById('coverImagePreview');
+        const placeholder = document.getElementById('coverPreviewPlaceholder');
+        document.getElementById('coverImageLabel').value = file ? file.name : '未選擇任何檔案';
+
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('檔案太大！請選擇小於 5MB 的圖片。');
+                this.value = '';
+                previewImage.style.display = 'none';
+                placeholder.style.display = 'inline';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                previewImage.src = evt.target.result;
+                previewImage.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.style.display = 'none';
+            placeholder.style.display = 'inline';
+        }
+    });
+</script>
