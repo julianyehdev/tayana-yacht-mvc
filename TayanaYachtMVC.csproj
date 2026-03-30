@@ -150,9 +150,11 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\YachtController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
+    <Compile Include="Filters\AdminAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Migrations\202603201200293_InitialCreate.cs" />
     <Compile Include="Migrations\202603201200293_InitialCreate.Designer.cs">
       <DependentUpon>202603201200293_InitialCreate.cs</DependentUpon>
