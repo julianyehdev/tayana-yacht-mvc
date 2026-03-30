@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using TayanaYachtMVC.Data;
+using TayanaYachtMVC.Models.Domain;
 
 namespace TayanaYachtMVC.Controllers
 {
