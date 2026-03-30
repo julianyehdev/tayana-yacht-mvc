@@ -1,17 +1,144 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
+    ViewBag.Title = "Dealers - Tayana Yacht";
+    ViewBag.MainCss = "homestyle.css";
 }
 
-<!DOCTYPE html>
+<!--遮罩-->
+<div class="bannermasks">
+    <img src="@Url.Content("~/img/dealers/DEALERS.jpg")" alt="Dealers" width="967" height="371" />
+</div>
+<!--遮罩結束-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <div> 
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+    <ul>
+        <li><img src="@Url.Content("~/img/banners/newbanner.jpg")" alt="Tayana Yachts" /></li>
+    </ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+    <!--------------------------------左邊選單開始---------------------------------------------------->
+    <div class="left">
+        <div class="left1">
+            <p><span>DEALERS</span></p>
+            <ul>
+                <li><a href="@Url.Action("Index", "Dealer")">Unites States</a></li>
+                <li><a href="#">Europe</a></li>
+                <li><a href="#">Asia</a></li>
+            </ul>
+        </div>
     </div>
-</body>
-</html>
+    <!--------------------------------左邊選單結束---------------------------------------------------->
+
+    <!--------------------------------右邊選單開始---------------------------------------------------->
+    <div id="crumb">
+        <a href="@Url.Action("Index", "Home")">Home</a> >>
+        <a href="@Url.Action("Index", "Dealer")">Dealers</a> >>
+        <a href="#"><span class="on1">Unites States</span></a>
+    </div>
+
+    <div class="right">
+        <div class="right1">
+            <div class="title"><span>Unites States</span></div>
+
+            <!--------------------------------內容開始---------------------------------------------------->
+            <div class="box2_list">
+                <ul>
+                    <li>
+                        <div class="list02">
+                            <ul>
+                                <li class="list02li">
+                                    <div><p><img src="@Url.Content("~/img/dealers/dealers001.jpg")" /></p></div>
+                                </li>
+                                <li>
+                                    <span>Annapolis</span><br />
+                                    Noyce Yachts<br />
+                                    Contact：Mr. Robert Noyce <br />
+                                    Address：4880 Church Lane Galesville, MD 20765 <br />
+                                    TEL：(410)263-3346 <br />
+                                    E-mail：Robert@noyceyachts.com <br />
+                                    <a href="http://www.noyceyachts.com" target="_blank">www.noyceyachts.com</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="list02">
+                            <ul>
+                                <li class="list02li">
+                                    <div><p><img src="@Url.Content("~/img/dealers/dealers002.jpg")" alt="" /></p></div>
+                                </li>
+                                <li>
+                                    <span>San Francisco</span><br />
+                                    Pacific Yacht Imports<br />
+                                    Contact：Mr. Neil Weinberg<br />
+                                    Address：Grand Marina 2051 Grand Street# 12 Alameda, CA 94501, USA<br />
+                                    TEL：(510)865-2541<br />
+                                    FAX：(510)865-2369<br />
+                                    <a href="http://www.pacificyachtimports.net" target="_blank">www.pacificyachtimports.net</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="list02">
+                            <ul>
+                                <li class="list02li">
+                                    <div><img src="@Url.Content("~/img/dealers/dealers003.jpg")" alt="" /></div>
+                                </li>
+                                <li>
+                                    <span>Seattle</span><br />
+                                    Seattle Yachts<br />
+                                    Contact：Ted Griffin<br />
+                                    Address：Shilshole Bay Marina 7001 Seaview Ave NW, Suite 150 Seattle <br />
+                                    WA 98117<br />
+                                    TEL：(206.789.8044<br />
+                                    FAX：(206.789.3976<br />
+                                    Cell：(206.819.7137<br />
+                                    E-mail：ted@seattleyachts.com<br />
+                                    <a href="http://www.seattleyachts.com" target="_blank">www.seattleyachts.com</a><br />
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="list02">
+                            <ul>
+                                <li class="list02li">
+                                    <div><img src="@Url.Content("~/img/dealers/dealers004.jpg")" alt="" /></div>
+                                </li>
+                                <li>
+                                    <span>Seattle</span><br />
+                                    Seattle Yachts<br />
+                                    Contact：Ted Griffin<br />
+                                    Address：Shilshole Bay Marina 7001 Seaview Ave NW, Suite 150 Seattle <br />
+                                    WA 98117<br />
+                                    TEL：(206.789.8044<br />
+                                    FAX：(206.789.3976<br />
+                                    Cell：(206.819.7137<br />
+                                    E-mail：ted@seattleyachts.com<br />
+                                    <a href="http://www.seattleyachts.com" target="_blank">www.seattleyachts.com</a><br />
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="pagenumber">
+                    | <span>1</span> | <a href="#">2</a> | <a href="#">3</a> | <a href="#">4</a> | <a href="#">5</a> |
+                    <a href="#">Next</a> <a href="#">LastPage</a>
+                </div>
+                <div class="pagenumber1">
+                    Items：<span>89</span> | Pages：<span>1/9</span>
+                </div>
+            </div>
+            <!--------------------------------內容結束---------------------------------------------------->
+        </div>
+    </div>
+    <!--------------------------------右邊選單結束---------------------------------------------------->
+</div>
