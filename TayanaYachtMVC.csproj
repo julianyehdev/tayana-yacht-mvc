@@ -147,6 +147,7 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DealerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\YachtController.cs" />
     <Compile Include="Data\TayanaYachtDBContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -3941,6 +3942,8 @@
     <Content Include="Views\Yacht\Specification.cshtml" />
     <Content Include="Views\Yacht\DeckPlan.cshtml" />
     <Content Include="Views\Dealer\Index.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\Article.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
