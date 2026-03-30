@@ -3614,7 +3614,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Content\uploads\dimensions\" />
-    <Folder Include="Views\Dealer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
@@ -3941,6 +3940,7 @@
     <Content Include="Views\Yacht\Overview.cshtml" />
     <Content Include="Views\Yacht\Specification.cshtml" />
     <Content Include="Views\Yacht\DeckPlan.cshtml" />
+    <Content Include="Views\Dealer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603201200293_InitialCreate.resx">
