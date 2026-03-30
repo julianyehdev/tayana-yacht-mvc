@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<TayanaYachtMVC.Models.Domain.Dealer>
+
+@{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
     ViewBag.Title = "Dealers - Tayana Yacht";
     ViewBag.MainCss = "homestyle.css";
@@ -24,9 +26,13 @@
         <div class="left1">
             <p><span>DEALERS</span></p>
             <ul>
-                <li><a href="@Url.Action("Index", "Dealer")">Unites States</a></li>
-                <li><a href="#">Europe</a></li>
-                <li><a href="#">Asia</a></li>
+                @{
+                    var allCountries = ViewBag.AllCountries as List<TayanaYachtMVC.Models.Domain.Country> ?? new List<TayanaYachtMVC.Models.Domain.Country>();
+                }
+                @foreach (var country in allCountries)
+                {
+                    <li><a href="@Url.Action("Index", "Dealer", new { countryId = country.Id })">@country.CountryName</a></li>
+                }
             </ul>
         </div>
     </div>
@@ -36,97 +42,32 @@
     <div id="crumb">
         <a href="@Url.Action("Index", "Home")">Home</a> >>
         <a href="@Url.Action("Index", "Dealer")">Dealers</a> >>
-        <a href="#"><span class="on1">Unites States</span></a>
+        <a href="#"><span class="on1">@ViewBag.CurrentCountryName</span></a>
     </div>
 
     <div class="right">
         <div class="right1">
-            <div class="title"><span>Unites States</span></div>
+            <div class="title"><span>@ViewBag.CurrentCountryName</span></div>
 
             <!--------------------------------內容開始---------------------------------------------------->
             <div class="box2_list">
                 <ul>
-                    <li>
-                        <div class="list02">
-                            <ul>
-                                <li class="list02li">
-                                    <div><p><img src="@Url.Content("~/img/dealers/dealers001.jpg")" /></p></div>
-                                </li>
-                                <li>
-                                    <span>Annapolis</span><br />
-                                    Noyce Yachts<br />
-                                    Contact：Mr. Robert Noyce <br />
-                                    Address：4880 Church Lane Galesville, MD 20765 <br />
-                                    TEL：(410)263-3346 <br />
-                                    E-mail：Robert@noyceyachts.com <br />
-                                    <a href="http://www.noyceyachts.com" target="_blank">www.noyceyachts.com</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list02">
-                            <ul>
-                                <li class="list02li">
-                                    <div><p><img src="@Url.Content("~/img/dealers/dealers002.jpg")" alt="" /></p></div>
-                                </li>
-                                <li>
-                                    <span>San Francisco</span><br />
-                                    Pacific Yacht Imports<br />
-                                    Contact：Mr. Neil Weinberg<br />
-                                    Address：Grand Marina 2051 Grand Street# 12 Alameda, CA 94501, USA<br />
-                                    TEL：(510)865-2541<br />
-                                    FAX：(510)865-2369<br />
-                                    <a href="http://www.pacificyachtimports.net" target="_blank">www.pacificyachtimports.net</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list02">
-                            <ul>
-                                <li class="list02li">
-                                    <div><img src="@Url.Content("~/img/dealers/dealers003.jpg")" alt="" /></div>
-                                </li>
-                                <li>
-                                    <span>Seattle</span><br />
-                                    Seattle Yachts<br />
-                                    Contact：Ted Griffin<br />
-                                    Address：Shilshole Bay Marina 7001 Seaview Ave NW, Suite 150 Seattle <br />
-                                    WA 98117<br />
-                                    TEL：(206.789.8044<br />
-                                    FAX：(206.789.3976<br />
-                                    Cell：(206.819.7137<br />
-                                    E-mail：ted@seattleyachts.com<br />
-                                    <a href="http://www.seattleyachts.com" target="_blank">www.seattleyachts.com</a><br />
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list02">
-                            <ul>
-                                <li class="list02li">
-                                    <div><img src="@Url.Content("~/img/dealers/dealers004.jpg")" alt="" /></div>
-                                </li>
-                                <li>
-                                    <span>Seattle</span><br />
-                                    Seattle Yachts<br />
-                                    Contact：Ted Griffin<br />
-                                    Address：Shilshole Bay Marina 7001 Seaview Ave NW, Suite 150 Seattle <br />
-                                    WA 98117<br />
-                                    TEL：(206.789.8044<br />
-                                    FAX：(206.789.3976<br />
-                                    Cell：(206.819.7137<br />
-                                    E-mail：ted@seattleyachts.com<br />
-                                    <a href="http://www.seattleyachts.com" target="_blank">www.seattleyachts.com</a><br />
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                    @foreach (var dealer in Model)
+                    {
+                        <li>
+                            <div class="list02">
+                                <ul>
+                                    <li class="list02li">
+                                        <div><p><img src="@Url.Content("~/" + dealer.MainImageUrl)" alt="@dealer.Name" /></p></div>
+                                    </li>
+                                    <li>
+                                        <span>@dealer.Name</span><br />
+                                        @Html.Raw(dealer.DescriptionHtml)
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
                 </ul>
 
                 <div class="pagenumber">
@@ -134,7 +75,7 @@
                     <a href="#">Next</a> <a href="#">LastPage</a>
                 </div>
                 <div class="pagenumber1">
-                    Items：<span>89</span> | Pages：<span>1/9</span>
+                    Items：<span>@Model.Count</span> | Pages：<span>1/1</span>
                 </div>
             </div>
             <!--------------------------------內容結束---------------------------------------------------->
