@@ -1,4 +1,7 @@
-﻿@{
+﻿@model List<NewsArticle>
+@using TayanaYachtMVC.Models.Domain
+
+@{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
     ViewBag.Title = "News & Events";
 }
@@ -41,64 +44,46 @@
             <!--------------------------------內容開始---------------------------------------------------->
             <div class="box2_list">
                 <ul>
-                    <li>
-                        <div class="list01">
-                            <ul>
-                                <li><div><p><img src="@Url.Content("~/img/yachts/pit006.jpg")" alt="" /></p></div></li>
-                                <li><span>2012-01-28</span><br />
-                                    Tayana 58 CE Certificates are availableTayana 58 CE Certificates are availableTayana 58 CE Certificates are availableTayana 58 CE Certificates are availableTayana 58 CE Certificates are available</li>
-                                <li>availableTayana 58 CE Certificates are availableTayana 58 CE Certificates are availableTayana 58 CE Certificates are available</li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list01">
-                            <ul>
-                                <li><div><p><img src="@Url.Content("~/img/yachts/pit007.jpg")" alt="" /></p></div></li>
-                                <li><span>2012-01-28</span><br />
-                                    Tayana 58 CE Certificates are available</li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list01">
-                            <ul>
-                                <li><div><p><img src="@Url.Content("~/img/yachts/pit008.jpg")" alt="" /></p></div></li>
-                                <li><span>2012-01-28</span><br />
-                                    Tayana 58 CE Certificates are available</li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list01">
-                            <ul>
-                                <li><div><p><img src="@Url.Content("~/img/yachts/pit006.jpg")" alt="" /></p></div></li>
-                                <li><span>2012-01-28</span><br />
-                                    Tayana 58 CE Certificates are available</li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="list01">
-                            <ul>
-                                <li><div><p><img src="@Url.Content("~/img/yachts/pit006.jpg")" alt="" /></p></div></li>
-                                <li><span>2012-01-28</span><br />
-                                    Tayana 58 CE Certificates are available</li>
-                            </ul>
-                        </div>
-                    </li>
+                    @foreach (var article in Model)
+                    {
+                        <li>
+                            <div class="list01">
+                                <ul>
+                                    <li><div><p><img src="@Url.Content(string.IsNullOrEmpty(article.CoverImageUrl) ? "~/img/yachts/pit006.jpg" : article.CoverImageUrl)" alt="@article.Title" /></p></div></li>
+                                    <li><span>@article.PublishDate.ToString("yyyy-MM-dd")</span><br />
+                                        @article.Title</li>
+                                    <li>@article.Content</li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
                 </ul>
 
                 <div class="pagenumber">
-                    | <span>1</span> | <a href="#">2</a> | <a href="#">3</a> | <a href="#">4</a> | <a href="#">5</a> |
-                    <a href="#">Next</a> <a href="#">LastPage</a>
+                    |
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <span>@i</span>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "News", new { page = i })">@i</a>
+                        }
+                        <span>|</span>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "News", new { page = ViewBag.CurrentPage + 1 })">Next</a>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "News", new { page = ViewBag.TotalPages })">LastPage</a>
+                    }
                 </div>
                 <div class="pagenumber1">
-                    Items：<span>89</span> | Pages：<span>1/9</span>
+                    Items：<span>@ViewBag.TotalCount</span> | Pages：<span>@ViewBag.CurrentPage/@ViewBag.TotalPages</span>
                 </div>
             </div>
             <!--------------------------------內容結束---------------------------------------------------->
