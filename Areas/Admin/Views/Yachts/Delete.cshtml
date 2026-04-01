@@ -4,44 +4,28 @@
     ViewBag.Title = "刪除遊艇";
 }
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>確定要刪除這艘遊艇嗎？</h3>
 <div>
-    <h4>Yacht</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.YachtName)
-        </dt>
-
-        <dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.YachtName)</strong>
+        </div>
+        <div class="col-md-9">
             @Html.DisplayFor(model => model.YachtName)
-        </dd>
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsLatest)
-        </dt>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.ModelNumber)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.ModelNumber)
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsLatest)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-
-    </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
