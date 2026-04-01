@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using TayanaYachtMVC.Data;
 using TayanaYachtMVC.Models.Domain;
@@ -44,9 +45,31 @@ namespace TayanaYachtMVC.Controllers
             return View(articles);
         }
 
-        public ActionResult Article(string id)
+        public ActionResult Article(int? id)
         {
-            return View();
+            if (!id.HasValue)
+            {
+                // 沒有 id 時，取得第一筆已發布的文章（置頂優先，然後最新）
+                var firstArticle = _context.NewsArticles
+                    .Where(x => x.IsPublished)
+                    .OrderByDescending(x => x.IsPinned)
+                    .ThenByDescending(x => x.PublishDate)
+                    .FirstOrDefault();
+
+                if (firstArticle == null)
+                    return HttpNotFound();
+
+                return RedirectToAction("Article", new { id = firstArticle.Id });
+            }
+
+            var article = _context.NewsArticles
+                .Include(x => x.Attachments)
+                .FirstOrDefault(x => x.Id == id && x.IsPublished);
+
+            if (article == null)
+                return HttpNotFound();
+
+            return View(article);
         }
 
 

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model TayanaYachtMVC.Models.Domain.NewsArticle
+
+@{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
 }
 
@@ -20,40 +22,52 @@
         <div class="left1">
             <p><span>NEWS</span></p>
             <ul>
-                <li><a href="#">News & Events</a></li>
+                <li><a href="@Url.Action("Index", "News")">News & Events</a></li>
             </ul>
         </div>
     </div>
     <!--------------------------------左邊選單結束---------------------------------------------------->
 
     <!--------------------------------右邊內容開始---------------------------------------------------->
-    <div id="crumb"><a href="#">Home</a> >> <a href="#">News</a> >> <a href="#"><span class="on1">News & Events</span></a></div>
+    <div id="crumb">
+        <a href="@Url.Action("Index", "Home")">Home</a> >>
+        <a href="@Url.Action("Index", "News")">News</a> >>
+        <a href="@Url.Action("Article", "News", new { id = Model.Id })"><span class="on1">News & Events</span></a>
+    </div>
     <div class="right">
         <div class="right1">
-            <div class="title"><span>News & Events</span></div>
+            <div class="title"><span>@Model.Title</span></div>
 
             <!--------------------------------內容開始---------------------------------------------------->
             <div class="box3">
-                <h4>The Luxury Tayana 48 Pilothouse Lavish Woodwork Is Among</h4>
-                <p><img src="@Url.Content("~/img/yachts/pit009.jpg")" alt="" /></p>
-                On Display at the Seattle Boats Afloat Show, Lake Union, January 25 - February 3, 2007
-                The luxury Tayana 48 Pilothouse is the perfect boat for the Northwest Cruiser or, for that matter, anywhere in the world. Designed for minimal exterior maintenance, and equipped for maximun creature comforts and ease of sailing. Enjoy aft cockpit sailing with comfortable seating for nice weather cruising or duck inside and sail from the inside steering station when it is gnarly out. Large salon windows with a pair of overhead hatches give the skipper plenty of visibility to see all around as well as up to check sail shape and trim.
+                <h4>@Model.Title</h4>
+                @if (Model.CoverImageUrl != null)
+                {
+                    <p><img src="@Url.Content("~/" + Model.CoverImageUrl)" alt="" /></p>
+                }
+                @Html.StripHtmlTags(Model.Content)
             </div>
 
             <!--下載開始-->
-            <div class="downloads">
-                <p><img src="@Url.Content("~/img/icons/downloads.gif")" alt="" /></p>
-                <ul>
-                    <li><a href="#">Downloads 001</a></li>
-                    <li><a href="#">Downloads 001</a></li>
-                    <li><a href="#">Downloads 001</a></li>
-                    <li><a href="#">Downloads 001</a></li>
-                    <li><a href="#">Downloads 001</a></li>
-                </ul>
-            </div>
+            @if (Model.Attachments != null && Model.Attachments.Count > 0)
+            {
+                <div class="downloads">
+                    <p><img src="@Url.Content("~/img/icons/downloads.gif")" alt="" /></p>
+                    <ul>
+                        @foreach (var attachment in Model.Attachments.OrderBy(x => x.SortOrder))
+                        {
+                            <li><a href="@Url.Content("~/" + attachment.FileUrl)">@attachment.FileName</a></li>
+                        }
+                    </ul>
+                </div>
+            }
             <!--下載結束-->
 
-            <div class="buttom001"><a href="#"><img src="@Url.Content("~/img/icons/back.gif")" alt="" width="55" height="28" /></a></div>
+            <div class="buttom001">
+                <a href="@Url.Action("Index", "News")">
+                    <img src="@Url.Content("~/img/icons/back.gif")" alt="back" width="55" height="28" />
+                </a>
+            </div>
 
             <!--------------------------------內容結束---------------------------------------------------->
         </div>
