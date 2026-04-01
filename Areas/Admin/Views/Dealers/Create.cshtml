@@ -25,11 +25,11 @@
         <div class="form-group">
             <label class="control-label col-md-2">國家</label>
             <div class="col-md-10">
-                <select id="CountryId" class="form-control">
+                <select name="CountryId" id="CountryId" class="form-control">
                     <option value="">-- 請選擇國家 --</option>
                     @foreach (var c in (SelectList)ViewBag.Countries)
                     {
-                        <option value="@c.Value">@c.Text</option>
+                        <option value="@c.Value" @(c.Selected ? "selected" : "")>@c.Text</option>
                     }
                 </select>
             </div>
@@ -39,9 +39,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RegionId, "地區", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select name="RegionId" id="RegionId" class="form-control">
-                    <option value="">-- 請先選擇國家 --</option>
-                </select>
+                @Html.DropDownList("RegionId", (SelectList)ViewBag.RegionId, "-- 請先選擇國家 --", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
             </div>
         </div>
