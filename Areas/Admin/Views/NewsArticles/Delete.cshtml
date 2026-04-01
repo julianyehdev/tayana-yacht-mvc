@@ -6,28 +6,60 @@
 
 <h3>確定要刪除這篇新聞嗎？</h3>
 <div>
-    <h4>新聞資料</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>@Html.DisplayNameFor(model => model.Category.Name)</dt>
-        <dd>@Html.DisplayFor(model => model.Category.Name)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.Category.Name)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.Category.Name)
+        </div>
+    </div>
 
-        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
-        <dd>@Html.DisplayFor(model => model.Title)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.Title)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.Title)
+        </div>
+    </div>
 
-        <dt>@Html.DisplayNameFor(model => model.PublishDate)</dt>
-        <dd>@Html.DisplayFor(model => model.PublishDate)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.PublishDate)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.PublishDate)
+        </div>
+    </div>
 
-        <dt>@Html.DisplayNameFor(model => model.IsPublished)</dt>
-        <dd>@Html.DisplayFor(model => model.IsPublished)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.IsPublished)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.IsPublished)
+        </div>
+    </div>
 
-        <dt>@Html.DisplayNameFor(model => model.IsPinned)</dt>
-        <dd>@Html.DisplayFor(model => model.IsPinned)</dd>
-    </dl>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.IsPinned)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.IsPinned)
+        </div>
+    </div>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
-        <input type="submit" value="確認刪除" class="btn btn-danger" />
-        @Html.ActionLink("取消", "Index", null, new { @class = "btn btn-secondary ms-2" })
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="刪除" class="btn btn-danger" />
+                @Html.ActionLink("回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
+        </div>
     }
 </div>
