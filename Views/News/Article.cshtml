@@ -1,17 +1,62 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
 }
 
-<!DOCTYPE html>
+<!--遮罩-->
+<div class="bannermasks"><img src="@Url.Content("~/img/banners/banner02_masks.png")" alt="" /></div>
+<!--遮罩結束-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Article</title>
-</head>
-<body>
-    <div> 
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+    <ul>
+        <li><img src="@Url.Content("~/img/banners/newbanner.jpg")" alt="Tayana Yachts" /></li>
+    </ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+    <!--------------------------------左邊選單開始---------------------------------------------------->
+    <div class="left">
+        <div class="left1">
+            <p><span>NEWS</span></p>
+            <ul>
+                <li><a href="#">News & Events</a></li>
+            </ul>
+        </div>
     </div>
-</body>
-</html>
+    <!--------------------------------左邊選單結束---------------------------------------------------->
+
+    <!--------------------------------右邊內容開始---------------------------------------------------->
+    <div id="crumb"><a href="#">Home</a> >> <a href="#">News</a> >> <a href="#"><span class="on1">News & Events</span></a></div>
+    <div class="right">
+        <div class="right1">
+            <div class="title"><span>News & Events</span></div>
+
+            <!--------------------------------內容開始---------------------------------------------------->
+            <div class="box3">
+                <h4>The Luxury Tayana 48 Pilothouse Lavish Woodwork Is Among</h4>
+                <p><img src="@Url.Content("~/img/yachts/pit009.jpg")" alt="" /></p>
+                On Display at the Seattle Boats Afloat Show, Lake Union, January 25 - February 3, 2007
+                The luxury Tayana 48 Pilothouse is the perfect boat for the Northwest Cruiser or, for that matter, anywhere in the world. Designed for minimal exterior maintenance, and equipped for maximun creature comforts and ease of sailing. Enjoy aft cockpit sailing with comfortable seating for nice weather cruising or duck inside and sail from the inside steering station when it is gnarly out. Large salon windows with a pair of overhead hatches give the skipper plenty of visibility to see all around as well as up to check sail shape and trim.
+            </div>
+
+            <!--下載開始-->
+            <div class="downloads">
+                <p><img src="@Url.Content("~/img/icons/downloads.gif")" alt="" /></p>
+                <ul>
+                    <li><a href="#">Downloads 001</a></li>
+                    <li><a href="#">Downloads 001</a></li>
+                    <li><a href="#">Downloads 001</a></li>
+                    <li><a href="#">Downloads 001</a></li>
+                    <li><a href="#">Downloads 001</a></li>
+                </ul>
+            </div>
+            <!--下載結束-->
+
+            <div class="buttom001"><a href="#"><img src="@Url.Content("~/img/icons/back.gif")" alt="" width="55" height="28" /></a></div>
+
+            <!--------------------------------內容結束---------------------------------------------------->
+        </div>
+    </div>
+    <!--------------------------------右邊內容結束---------------------------------------------------->
+</div>
