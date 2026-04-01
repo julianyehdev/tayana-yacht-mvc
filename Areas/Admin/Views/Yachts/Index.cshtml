@@ -30,7 +30,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.ActionLink(item.YachtName, "Edit", new { id = item.YachtID })
+            @Html.ActionLink(item.YachtName + (string.IsNullOrEmpty(item.ModelNumber) ? "" : " " + item.ModelNumber), "Edit", new { id = item.YachtID })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.IsLatest)

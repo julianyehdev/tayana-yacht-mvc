@@ -14,6 +14,12 @@ namespace TayanaYachtMVC
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "YachtOverview",
+                url: "{controller}/{action}/{yachtName}/{modelNumber}",
+                defaults: new { controller = "Yacht", action = "Overview", modelNumber = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

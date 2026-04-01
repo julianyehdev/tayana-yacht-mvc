@@ -22,6 +22,10 @@ namespace TayanaYachtMVC.Models.Domain
         [Display(Name = "遊艇名稱")]
         public string YachtName { get; set; }
 
+        [StringLength(20)]
+        [Display(Name = "型號")]
+        public string ModelNumber { get; set; }
+
         [Display(Name = "最新款")]
         public bool IsLatest { get; set; }
 

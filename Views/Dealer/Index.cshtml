@@ -1,0 +1,85 @@
+﻿@model List<TayanaYachtMVC.Models.Domain.Dealer>
+
+@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
+    ViewBag.Title = "Dealers - Tayana Yacht";
+    ViewBag.MainCss = "homestyle.css";
+}
+
+<!--遮罩-->
+<div class="bannermasks">
+    <img src="@Url.Content("~/img/dealers/DEALERS.jpg")" alt="Dealers" width="967" height="371" />
+</div>
+<!--遮罩結束-->
+
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+    <ul>
+        <li><img src="@Url.Content("~/img/banners/newbanner.jpg")" alt="Tayana Yachts" /></li>
+    </ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+    <!--------------------------------左邊選單開始---------------------------------------------------->
+    <div class="left">
+        <div class="left1">
+            <p><span>DEALERS</span></p>
+            <ul>
+                @{
+                    var allCountries = ViewBag.AllCountries as List<TayanaYachtMVC.Models.Domain.Country> ?? new List<TayanaYachtMVC.Models.Domain.Country>();
+                }
+                @foreach (var country in allCountries)
+                {
+                    <li><a href="@Url.Action("Index", "Dealer", new { countryId = country.Id })">@country.CountryName</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <!--------------------------------左邊選單結束---------------------------------------------------->
+
+    <!--------------------------------右邊選單開始---------------------------------------------------->
+    <div id="crumb">
+        <a href="@Url.Action("Index", "Home")">Home</a> >>
+        <a href="@Url.Action("Index", "Dealer")">Dealers</a> >>
+        <a href="#"><span class="on1">@ViewBag.CurrentCountryName</span></a>
+    </div>
+
+    <div class="right">
+        <div class="right1">
+            <div class="title"><span>@ViewBag.CurrentCountryName</span></div>
+
+            <!--------------------------------內容開始---------------------------------------------------->
+            <div class="box2_list">
+                <ul>
+                    @foreach (var dealer in Model)
+                    {
+                        <li>
+                            <div class="list02">
+                                <ul>
+                                    <li class="list02li">
+                                        <div style="width: 170px; height: 170px; overflow: hidden;"><img src="@Url.Content("~/" + dealer.MainImageUrl)" alt="@dealer.Name" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" /></div>
+                                    </li>
+                                    <li>
+                                        <span>@dealer.Name</span><br />
+                                        @Html.Raw(dealer.DescriptionHtml)
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <div class="pagenumber">
+                    | <span>1</span> | <a href="#">2</a> | <a href="#">3</a> | <a href="#">4</a> | <a href="#">5</a> |
+                    <a href="#">Next</a> <a href="#">LastPage</a>
+                </div>
+                <div class="pagenumber1">
+                    Items：<span>@Model.Count</span> | Pages：<span>1/1</span>
+                </div>
+            </div>
+            <!--------------------------------內容結束---------------------------------------------------->
+        </div>
+    </div>
+    <!--------------------------------右邊選單結束---------------------------------------------------->
+</div>

@@ -1,33 +1,174 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@model TayanaYachtMVC.Models.ViewModels.HomeIndexViewModel
+@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
+    ViewBag.Title = "Tayana Yacht";
+    ViewBag.MainCss = "style.css";
+
+    var firstYacht = Model.Yachts.FirstOrDefault();
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<!--遮罩-->
+<div class="bannermasks"><img src="@Url.Content("~/img/banners/banner00_masks.png")" alt="" /></div>
+<!--遮罩結束-->
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
+<!--小圖開始-->
+<div class="bannerimg">
+<ul>
+@for (int i = 0; i < Model.Yachts.Count; i++)
+{
+    var yacht = Model.Yachts[i];
+    var photoUrl = string.IsNullOrEmpty(yacht.FirstPhotoUrl)
+        ? Url.Content("~/img/yachts/pit003.jpg")
+        : Url.Content("~/" + yacht.FirstPhotoUrl);
+    <li>
+        <a href="#" data-index="@i">
+            @if (i == 0)
+            {
+                <div class="on"><p class="bannerimg_p"><img src="@photoUrl" alt="@yacht.YachtName" /></p></div>
+            }
+            else
+            {
+                <p class="bannerimg_p"><img src="@photoUrl" alt="@yacht.YachtName" /></p>
+            }
+        </a>
+    </li>
+}
+</ul>
+</div>
+<!--小圖結束-->
+
+<!--文字開始-->
+<div class="wordtitle">TAYANA <span>@(firstYacht != null ? firstYacht.ModelNumber : "")</span><br />
+<p>SPECIFICATION SHEET</p></div>
+<!--文字結束-->
+
+<!--新船型 若為最新款才顯示-->
+<div class="new" @(firstYacht != null && firstYacht.IsLatest ? "" : "style=\"display:none\"")>
+    <img src="@Url.Content("~/img/ui/new01.png")" alt="new" />
+</div>
+<!--新船型結束-->
+
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+<ul>
+@foreach (var yacht in Model.Yachts)
+{
+    var photoUrl = string.IsNullOrEmpty(yacht.FirstPhotoUrl)
+        ? Url.Content("~/img/banners/banner003b.jpg")
+        : Url.Content("~/" + yacht.FirstPhotoUrl);
+    <li><img src="@photoUrl" alt="@yacht.YachtName" /></li>
+}
+</ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<!--------------------------------最新消息---------------------------------------------------->
+<div class="news">
+<div class="newstitle">
+<p class="newstitlep1"><img src="@Url.Content("~/img/icons/news.gif")" alt="news" /></p><p class="newstitlep2"><a href="#">More>></a></p>
+</div>
+
+<ul>
+@{ int newsIndex = 0; }
+@foreach (var article in Model.News)
+{
+    var imgUrl = string.IsNullOrEmpty(article.CoverImageUrl)
+        ? Url.Content("~/img/yachts/pit003.jpg")
+        : Url.Content("~/" + article.CoverImageUrl);
+
+    // 標題最多 20 字，超過加 ..
+    var titleDisplay = article.Title != null && article.Title.Length > 20
+        ? article.Title.Substring(0, 20) + ".."
+        : article.Title;
+
+    if (newsIndex == 0)
+    {
+    <li style="position:relative;">
+        <div class="newstop"><img src="@Url.Content("~/img/ui/new_top01.png")" alt="" /></div>
+        <div class="news01">
+            <div class="news02p1"><p class="news02p1img"><img src="@imgUrl" alt="@article.Title" style="width:95px;height:95px;object-fit:cover;" /></p></div>
+            <p class="news02p2">
+                <span>@titleDisplay</span>
+                <a href="#">@article.PlainTextContent</a>
             </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-</main>
+        </div>
+    </li>
+    }
+    else
+    {
+    <li>
+        <div class="news02">
+            <div class="news02p1"><p class="news02p1img"><img src="@imgUrl" alt="@article.Title" style="width:95px;height:95px;object-fit:cover;" /></p></div>
+            <p class="news02p2">
+                <span>@titleDisplay</span>
+                <a href="#">@article.PlainTextContent</a>
+            </p>
+        </div>
+    </li>
+    }
+    newsIndex++;
+}
+</ul>
+</div>
+<!--------------------------------最新消息結束---------------------------------------------------->
+
+@section footer {
+<!--------------------------------落款開始---------------------------------------------------->
+<div class="footer">
+<div class="footerp00"><a href="#"><img src="@Url.Content("~/img/ui/tog.jpg")" alt="" /></a>
+  <p class="footerp001">© 1973-2011 Tayana Yachts, Inc. All Rights Reserved</p></div>
+<div class="footer01"><span>No. 60, Hai Chien Road, Chung Men Li, Lin Yuan District, Kaohsiung City, Taiwan, R.O.C.</span><br />
+<span>TEL：+886(7)641-2721</span> <span>FAX：+886(7)642-3193</span><span><a href="mailto:tayangco@ms15.hinet.net">E-mail：tayangco@ms15.hinet.net</a>.</span></div>
+</div>
+<!--------------------------------落款結束---------------------------------------------------->
+}
+
+@section scripts {
+<script type="text/javascript">
+var yachtData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Yachts));
+
+$(document).ready(function () {
+    var $bannerUl = $('.banner ul');
+    var $thumbs = $('.bannerimg li a');
+
+    $bannerUl.cycle({
+        fx: 'fade',
+        speed: 600,
+        timeout: 4000,
+        before: function (curr, next, opts) {
+            var idx = opts.nextSlide;
+            var yacht = yachtData[idx];
+
+            // 更新船名
+            $('.wordtitle').html('TAYANA <span>' + (yacht.ModelNumber || yacht.YachtName) + '</span><br /><p>SPECIFICATION SHEET</p>');
+
+            // 更新 NEW 徽章
+            if (yacht.IsLatest) {
+                $('.new').show();
+            } else {
+                $('.new').hide();
+            }
+
+            // 更新縮圖 active 狀態
+            $thumbs.each(function (i) {
+                var $inner = $(this).children();
+                if (i === idx) {
+                    if (!$(this).find('.on').length) {
+                        $inner.wrapAll('<div class="on"></div>');
+                    }
+                } else {
+                    $(this).find('.on').contents().unwrap();
+                }
+            });
+        }
+    });
+
+    // 點縮圖跳至對應 slide
+    $thumbs.on('click', function (e) {
+        e.preventDefault();
+        var idx = parseInt($(this).data('index'));
+        $bannerUl.cycle(idx);
+    });
+});
+</script>
+}

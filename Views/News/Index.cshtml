@@ -1,0 +1,93 @@
+﻿@model List<NewsArticle>
+@using TayanaYachtMVC.Models.Domain
+
+@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
+    ViewBag.Title = "News & Events";
+}
+
+<!--遮罩-->
+<div class="bannermasks"><img src="@Url.Content("~/img/banners/banner02_masks.png")" alt="News" /></div>
+<!--遮罩結束-->
+
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+    <ul>
+        <li><img src="@Url.Content("~/img/banners/newbanner.jpg")" alt="Tayana Yachts" /></li>
+    </ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+    <!--------------------------------左邊選單開始---------------------------------------------------->
+    <div class="left">
+        <div class="left1">
+            <p><span>NEWS</span></p>
+            <ul>
+                <li><a href="@Url.Action("Index", "News")">News & Events</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--------------------------------左邊選單結束---------------------------------------------------->
+
+    <!--------------------------------右邊選單開始---------------------------------------------------->
+    <div id="crumb">
+        <a href="@Url.Action("Index", "Home")">Home</a> >>
+        <a href="@Url.Action("Index", "News")">News</a> >>
+        <a href="#"><span class="on1">News & Events</span></a>
+    </div>
+
+    <div class="right">
+        <div class="right1">
+            <div class="title"><span>News & Events</span></div>
+
+            <!--------------------------------內容開始---------------------------------------------------->
+            <div class="box2_list">
+                <ul>
+                    @foreach (var article in Model)
+                    {
+                        <li>
+                            <div class="list01">
+                                <ul>
+                                    <li><div><p><img src="@Url.Content(string.IsNullOrEmpty(article.CoverImageUrl) ? "~/img/yachts/pit006.jpg" : article.CoverImageUrl)" alt="@article.Title" /></p></div></li>
+                                    <li><span>@article.PublishDate.ToString("yyyy-MM-dd")</span><br />
+                                        @article.Title</li>
+                                    <li>@Html.StripHtmlTags(article.Content)</li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <div class="pagenumber">
+                    |
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <span>@i</span>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "News", new { page = i })">@i</a>
+                        }
+                        <span>|</span>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "News", new { page = ViewBag.CurrentPage + 1 })">Next</a>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "News", new { page = ViewBag.TotalPages })">LastPage</a>
+                    }
+                </div>
+                <div class="pagenumber1">
+                    Items：<span>@ViewBag.TotalCount</span> | Pages：<span>@ViewBag.CurrentPage/@ViewBag.TotalPages</span>
+                </div>
+            </div>
+            <!--------------------------------內容結束---------------------------------------------------->
+        </div>
+    </div>
+    <!--------------------------------右邊選單結束---------------------------------------------------->
+</div>

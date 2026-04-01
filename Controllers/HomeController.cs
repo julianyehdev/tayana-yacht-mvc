@@ -1,30 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using TayanaYachtMVC.Data;
+using TayanaYachtMVC.Models.ViewModels;
 
 namespace TayanaYachtMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly TayanaYachtDBContext _db = new TayanaYachtDBContext();
+
         public ActionResult Index()
         {
-            return View();
+            var yachts = _db.Yachts
+                .Include(y => y.YachtPhotos)
+                .OrderBy(y => y.YachtID)
+                .ToList()
+                .Select(y => new YachtBannerItem
+                {
+                    YachtID = y.YachtID,
+                    YachtName = y.YachtName,
+                    ModelNumber = y.ModelNumber,
+                    IsLatest = y.IsLatest,
+                    FirstPhotoUrl = y.YachtPhotos
+                        .OrderBy(p => p.SortOrder)
+                        .Select(p => p.PhotoUrl)
+                        .FirstOrDefault()
+                })
+                .ToList();
+
+            var news = _db.NewsArticles
+                .Where(n => n.IsPublished)
+                .OrderByDescending(n => n.IsPinned)
+                .ThenByDescending(n => n.PublishDate)
+                .Take(3)
+                .ToList()
+                .Select(n => new NewsArticleItem
+                {
+                    Title = n.Title,
+                    CoverImageUrl = n.CoverImageUrl,
+                    // 用 Regex 去除所有 HTML 標籤
+                    PlainTextContent = Regex.Replace(n.Content ?? "", "<[^>]+>", "").Trim()
+                })
+                .ToList();
+
+            var viewModel = new HomeIndexViewModel
+            {
+                Yachts = yachts,
+                News = news
+            };
+            return View(viewModel);
         }
 
-        public ActionResult About()
+        protected override void Dispose(bool disposing)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            if (disposing) _db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

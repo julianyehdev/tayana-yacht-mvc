@@ -1,0 +1,76 @@
+@model TayanaYachtMVC.Models.Domain.NewsArticle
+
+@{
+    Layout = "~/Views/Shared/_FrontLayout.cshtml";
+}
+
+<!--遮罩-->
+<div class="bannermasks"><img src="@Url.Content("~/img/banners/banner02_masks.png")" alt="" /></div>
+<!--遮罩結束-->
+
+<!--------------------------------換圖開始---------------------------------------------------->
+<div class="banner">
+    <ul>
+        <li><img src="@Url.Content("~/img/banners/newbanner.jpg")" alt="Tayana Yachts" /></li>
+    </ul>
+</div>
+<!--------------------------------換圖結束---------------------------------------------------->
+
+<div class="conbg">
+    <!--------------------------------左邊選單開始---------------------------------------------------->
+    <div class="left">
+        <div class="left1">
+            <p><span>NEWS</span></p>
+            <ul>
+                <li><a href="@Url.Action("Index", "News")">News & Events</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--------------------------------左邊選單結束---------------------------------------------------->
+
+    <!--------------------------------右邊內容開始---------------------------------------------------->
+    <div id="crumb">
+        <a href="@Url.Action("Index", "Home")">Home</a> >>
+        <a href="@Url.Action("Index", "News")">News</a> >>
+        <a href="@Url.Action("Article", "News", new { id = Model.Id })"><span class="on1">News & Events</span></a>
+    </div>
+    <div class="right">
+        <div class="right1">
+            <div class="title"><span>News & Events</span></div>
+
+            <!--------------------------------內容開始---------------------------------------------------->
+            <div class="box3">
+                <h4>@Model.Title</h4>
+                @if (Model.CoverImageUrl != null)
+                {
+                    <p><img src="@Url.Content("~/" + Model.CoverImageUrl)" alt="" style="max-width: 100%; height: auto;" /></p>
+                }
+                @Html.StripHtmlTags(Model.Content)
+            </div>
+
+            <!--下載開始-->
+            @if (Model.Attachments != null && Model.Attachments.Count > 0)
+            {
+                <div class="downloads">
+                    <p><img src="@Url.Content("~/img/icons/downloads.gif")" alt="" /></p>
+                    <ul>
+                        @foreach (var attachment in Model.Attachments.OrderBy(x => x.SortOrder))
+                        {
+                            <li><a href="@Url.Content("~/" + attachment.FileUrl)">@attachment.FileName</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+            <!--下載結束-->
+
+            <div class="buttom001">
+                <a href="@Url.Action("Index", "News")">
+                    <img src="@Url.Content("~/img/icons/back.gif")" alt="back" width="55" height="28" />
+                </a>
+            </div>
+
+            <!--------------------------------內容結束---------------------------------------------------->
+        </div>
+    </div>
+    <!--------------------------------右邊內容結束---------------------------------------------------->
+</div>
