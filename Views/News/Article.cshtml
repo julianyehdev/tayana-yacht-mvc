@@ -1,4 +1,4 @@
-﻿@model TayanaYachtMVC.Models.Domain.NewsArticle
+@model TayanaYachtMVC.Models.Domain.NewsArticle
 
 @{
     Layout = "~/Views/Shared/_FrontLayout.cshtml";
@@ -43,7 +43,7 @@
                 <h4>@Model.Title</h4>
                 @if (Model.CoverImageUrl != null)
                 {
-                    <p><img src="@Url.Content("~/" + Model.CoverImageUrl)" alt="" /></p>
+                    <p><img src="@Url.Content("~/" + Model.CoverImageUrl)" alt="" style="max-width: 100%; height: auto;" /></p>
                 }
                 @Html.StripHtmlTags(Model.Content)
             </div>
