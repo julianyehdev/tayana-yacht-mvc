@@ -215,15 +215,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="儲存" class="btn btn-primary btn-lg" style="padding-left:40px; padding-right:40px;" />
+                <input type="submit" value="儲存" class="btn btn-primary" />
+                @Html.ActionLink("回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("回列表", "Index")
-</div>
 
 @* SortableJS：讓新上傳預覽列表支援拖曳排序 *@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
