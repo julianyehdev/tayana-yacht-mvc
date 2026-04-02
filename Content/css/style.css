@@ -68,6 +68,9 @@ body {
 .menu a {
 	color: #F6F6F6;
 	text-decoration: none;
+	display: block;
+	height: 71px;
+	line-height: 71px;
 }
 
 .menuli01 {
