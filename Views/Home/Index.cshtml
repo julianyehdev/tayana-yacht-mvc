@@ -21,7 +21,7 @@
         ? Url.Content("~/img/yachts/pit003.jpg")
         : Url.Content("~/" + yacht.FirstPhotoUrl);
     <li>
-        <a href="#" data-index="@i">
+        <a href="@Url.Action("Overview", "Yacht", new { yachtName = yacht.YachtName, modelNumber = yacht.ModelNumber })" data-index="@i">
             @if (i == 0)
             {
                 <div class="on"><p class="bannerimg_p"><img src="@photoUrl" alt="@yacht.YachtName" /></p></div>
@@ -163,9 +163,8 @@ $(document).ready(function () {
         }
     });
 
-    // 點縮圖跳至對應 slide
+    // 點縮圖時不阻止導航，直接跳轉到船隻頁面
     $thumbs.on('click', function (e) {
-        e.preventDefault();
         var idx = parseInt($(this).data('index'));
         $bannerUl.cycle(idx);
     });
