@@ -1911,6 +1911,11 @@
     <Content Include="Areas\Admin\Scripts\vendor\jquery\jquery.min.js" />
     <Content Include="Areas\Admin\Scripts\vendor\jquery\jquery.slim.js" />
     <Content Include="Areas\Admin\Scripts\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="Content\css\csshover.htc" />
+    <Content Include="Content\css\homestyle.css" />
+    <Content Include="Content\css\iepngfix.htc" />
+    <Content Include="Content\css\reset.css" />
+    <Content Include="Content\css\style.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\sb-admin-2.css" />
     <Content Include="Content\sb-admin-2.min.css" />
