@@ -2,6 +2,20 @@
     ViewBag.Title = "Dashboard";
 }
 
+<style>
+    .text-decoration-none {
+        color: inherit !important;
+    }
+    .text-decoration-none:hover .card {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transition: all 0.2s ease-in-out;
+    }
+    .text-decoration-none .card {
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 </div>
@@ -9,52 +23,58 @@
 <div class="row">
     <!-- Yachts -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Yachts</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.YachtCount</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-ship fa-2x text-gray-300"></i>
+        <a href="@Url.Action("Index", "Yachts")" class="text-decoration-none">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Yachts</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.YachtCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-ship fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- News -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">News</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.NewsCount</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+        <a href="@Url.Action("Index", "NewsArticles")" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">News</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.NewsCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Dealers -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Dealers</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.DealerCount</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-handshake fa-2x text-gray-300"></i>
+        <a href="@Url.Action("Index", "Dealers")" class="text-decoration-none">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Dealers</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.DealerCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-handshake fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>

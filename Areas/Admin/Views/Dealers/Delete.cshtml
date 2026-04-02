@@ -4,38 +4,77 @@
     ViewBag.Title = "刪除經銷商";
 }
 
-<h4>確定要刪除此經銷商？</h4>
-<hr />
+<h3>確定要刪除此經銷商？</h3>
+<div>
+    <hr />
 
-<dl class="dl-horizontal">
-    <dt>@Html.DisplayNameFor(model => model.Name)</dt>
-    <dd>@Html.DisplayFor(model => model.Name)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+    </div>
 
-    <dt>國家</dt>
-    <dd>@(Model.Region?.Country?.CountryName ?? "-")</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>國家</strong>
+        </div>
+        <div class="col-md-9">
+            @(Model.Region?.Country?.CountryName ?? "-")
+        </div>
+    </div>
 
-    <dt>地區</dt>
-    <dd>@(Model.Region?.RegionName ?? "-")</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>地區</strong>
+        </div>
+        <div class="col-md-9">
+            @(Model.Region?.RegionName ?? "-")
+        </div>
+    </div>
 
-    <dt>@Html.DisplayNameFor(model => model.IsPublished)</dt>
-    <dd>@Html.DisplayFor(model => model.IsPublished)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.IsPublished)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.IsPublished)
+        </div>
+    </div>
 
-    <dt>@Html.DisplayNameFor(model => model.SortOrder)</dt>
-    <dd>@Html.DisplayFor(model => model.SortOrder)</dd>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.SortOrder)</strong>
+        </div>
+        <div class="col-md-9">
+            @Html.DisplayFor(model => model.SortOrder)
+        </div>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.MainImageUrl))
     {
-        <dt>@Html.DisplayNameFor(model => model.MainImageUrl)</dt>
-        <dd>
-            <img src="@Url.Content(Model.MainImageUrl)" alt="@Model.Name" style="max-width:200px; max-height:150px; object-fit:cover; border-radius:4px;" />
-            <br /><small class="text-muted">刪除後圖片實體檔案將一併移除</small>
-        </dd>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <strong>@Html.DisplayNameFor(model => model.MainImageUrl)</strong>
+            </div>
+            <div class="col-md-9">
+                <img src="@Url.Content(Model.MainImageUrl)" alt="@Model.Name" style="max-width:200px; max-height:150px; object-fit:cover; border-radius:4px;" />
+                <br /><small class="text-muted">刪除後圖片實體檔案將一併移除</small>
+            </div>
+        </div>
     }
-</dl>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <input type="submit" value="確認刪除" class="btn btn-danger" />
-    @Html.ActionLink("取消", "Index", null, new { @class = "btn btn-secondary ms-2" })
-}
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="刪除" class="btn btn-danger" />
+                @Html.ActionLink("回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
+            </div>
+        </div>
+    }
+</div>

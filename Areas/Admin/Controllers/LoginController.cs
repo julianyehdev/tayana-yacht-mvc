@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TayanaYachtMVC.Areas.Admin.Models;
 using TayanaYachtMVC.Data;
 
@@ -45,10 +47,12 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 return View(model);
             }
 
-            // 登入成功：寫入 Session
+            // 登入成功：寫入 Session 和 Forms Authentication Cookie
             Session["AdminUserId"] = user.Id;
             Session["AdminUsername"] = user.Username;
             Session["AdminDisplayName"] = user.DisplayName;
+
+            FormsAuthentication.SetAuthCookie(user.Username, false);
 
             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         }
@@ -58,6 +62,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         public ActionResult Logout()
         {
             Session.Clear();
+            FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Login", new { area = "Admin" });
         }
 

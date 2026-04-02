@@ -9,6 +9,7 @@ using TayanaYachtMVC.Models.Domain;
 
 namespace TayanaYachtMVC.Areas.Admin.Controllers
 {
+    [Authorize]
     public class DealersController : Controller
     {
         private TayanaYachtDBContext db = new TayanaYachtDBContext();
@@ -41,6 +42,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         public ActionResult Create()
         {
             ViewBag.Countries = new SelectList(db.Countries.OrderBy(c => c.SortOrder), "Id", "CountryName");
+            ViewBag.RegionId = new SelectList(Enumerable.Empty<Region>(), "Id", "RegionName");
             return View();
         }
 
@@ -49,7 +51,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)] // 允許 CKEditor 的 HTML 內容
-        public ActionResult Create([Bind(Include = "Id,Name,RegionId,MainImageUrl,DescriptionHtml,IsPublished,SortOrder")] Dealer dealer, HttpPostedFileBase mainImage)
+        public ActionResult Create([Bind(Include = "Id,Name,RegionId,MainImageUrl,DescriptionHtml,IsPublished,SortOrder")] Dealer dealer, HttpPostedFileBase mainImage, int? countryId)
         {
             // 處理圖片上傳
             if (mainImage != null && mainImage.ContentLength > 0)
@@ -74,9 +76,8 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            // 驗證失敗時重新載入國家 + 地區下拉
-            var selectedRegion = db.Regions.Find(dealer.RegionId);
-            int selectedCountryId = selectedRegion?.CountryId ?? 0;
+            // 驗證失敗時重新載入國家 + 地區下拉（使用 POST 回傳的 countryId 保留選擇）
+            int selectedCountryId = countryId ?? 0;
             ViewBag.Countries = new SelectList(db.Countries.OrderBy(c => c.SortOrder), "Id", "CountryName", selectedCountryId);
             ViewBag.RegionId = new SelectList(db.Regions.Where(r => r.CountryId == selectedCountryId), "Id", "RegionName", dealer.RegionId);
             return View(dealer);
@@ -106,7 +107,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "Id,Name,RegionId,MainImageUrl,DescriptionHtml,IsPublished,SortOrder,CreateDate")] Dealer dealer, HttpPostedFileBase mainImage)
+        public ActionResult Edit([Bind(Include = "Id,Name,RegionId,MainImageUrl,DescriptionHtml,IsPublished,SortOrder,CreateDate")] Dealer dealer, HttpPostedFileBase mainImage, int? countryId)
         {
             if (mainImage != null && mainImage.ContentLength > 0)
             {
@@ -138,8 +139,7 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            var selectedRegion = db.Regions.Find(dealer.RegionId);
-            int selectedCountryId = selectedRegion?.CountryId ?? 0;
+            int selectedCountryId = countryId ?? 0;
             ViewBag.Countries = new SelectList(db.Countries.OrderBy(c => c.SortOrder), "Id", "CountryName", selectedCountryId);
             ViewBag.RegionId = new SelectList(db.Regions.Where(r => r.CountryId == selectedCountryId), "Id", "RegionName", dealer.RegionId);
             return View(dealer);

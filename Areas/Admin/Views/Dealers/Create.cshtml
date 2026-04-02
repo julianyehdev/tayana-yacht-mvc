@@ -1,4 +1,4 @@
-@model TayanaYachtMVC.Models.Domain.Dealer
+﻿@model TayanaYachtMVC.Models.Domain.Dealer
 
 @{
     ViewBag.Title = "新增經銷商";
@@ -25,11 +25,11 @@
         <div class="form-group">
             <label class="control-label col-md-2">國家</label>
             <div class="col-md-10">
-                <select id="CountryId" class="form-control">
+                <select name="CountryId" id="CountryId" class="form-control">
                     <option value="">-- 請選擇國家 --</option>
                     @foreach (var c in (SelectList)ViewBag.Countries)
                     {
-                        <option value="@c.Value">@c.Text</option>
+                        <option value="@c.Value" @(c.Selected ? "selected" : "")>@c.Text</option>
                     }
                 </select>
             </div>
@@ -39,9 +39,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RegionId, "地區", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select name="RegionId" id="RegionId" class="form-control">
-                    <option value="">-- 請先選擇國家 --</option>
-                </select>
+                @Html.DropDownList("RegionId", (SelectList)ViewBag.RegionId, "-- 請先選擇國家 --", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -94,7 +92,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="儲存" class="btn btn-primary" />
+                <input type="submit" value="新增經銷商" class="btn btn-primary" />
                 @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
@@ -135,8 +133,10 @@
     });
 
     // ==================== 圖片預覽 ====================
-    document.getElementById('mainImage').addEventListener('change', function (e) {
-        var file = e.target.files[0];
+    var imageInput = document.getElementById('mainImage');
+    var previewContainer = document.getElementById('imagePreviewContainer');
+
+    function handleImageFile(file) {
         var preview = document.getElementById('mainImagePreview');
         var placeholder = document.getElementById('imagePlaceholder');
         document.getElementById('mainImageLabel').value = file ? file.name : '未選擇任何檔案';
@@ -144,7 +144,7 @@
         if (file) {
             if (file.size > 5 * 1024 * 1024) {
                 alert('檔案太大！請選擇小於 5MB 的圖片。');
-                this.value = '';
+                imageInput.value = '';
                 preview.style.display = 'none';
                 placeholder.style.display = 'inline';
                 return;
@@ -159,6 +159,46 @@
         } else {
             preview.style.display = 'none';
             placeholder.style.display = 'inline';
+        }
+    }
+
+    imageInput.addEventListener('change', function (e) {
+        handleImageFile(e.target.files[0]);
+    });
+
+    // ==================== 拖曳上傳 ====================
+    previewContainer.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        previewContainer.style.backgroundColor = '#e3f2fd';
+        previewContainer.style.borderColor = '#2196F3';
+    });
+
+    previewContainer.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        previewContainer.style.backgroundColor = '#f9f9f9';
+        previewContainer.style.borderColor = '#ccc';
+    });
+
+    previewContainer.addEventListener('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        previewContainer.style.backgroundColor = '#f9f9f9';
+        previewContainer.style.borderColor = '#ccc';
+
+        var files = e.dataTransfer.files;
+        if (files.length > 0) {
+            var file = files[0];
+            // 檢查是否為圖片
+            if (!file.type.match('image.*')) {
+                alert('請拖曳圖片檔案！');
+                return;
+            }
+            // 更新 input 的 files 並觸發 change 事件
+            imageInput.files = files;
+            var event = new Event('change', { bubbles: true });
+            imageInput.dispatchEvent(event);
         }
     });
 </script>

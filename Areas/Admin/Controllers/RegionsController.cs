@@ -5,6 +5,7 @@ using TayanaYachtMVC.Models.Domain;
 
 namespace TayanaYachtMVC.Areas.Admin.Controllers
 {
+    [Authorize]
     public class RegionsController : Controller
     {
         private TayanaYachtDBContext db = new TayanaYachtDBContext();

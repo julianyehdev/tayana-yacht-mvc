@@ -9,22 +9,27 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
+        <h4>新增遊艇</h4>
+        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @* ① 基本資料 *@
         <h5 style="border-left:4px solid #337ab7; padding-left:10px; margin:24px 0 16px; font-weight:bold; color:#333;">① 基本資料</h5>
 
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-6">
-                    @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.YachtName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.YachtName, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-6">
-                    @Html.LabelFor(model => model.ModelNumber, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ModelNumber, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ModelNumber, "", new { @class = "text-danger" })
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.YachtName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.YachtName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YachtName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.ModelNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ModelNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ModelNumber, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,19 +174,16 @@
             </div>
         </div>
 
-        <hr style="margin:32px 0;" />
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="新增遊艇" class="btn btn-primary btn-lg" style="padding-left:40px; padding-right:40px;" />
+                <input type="submit" value="新增遊艇" class="btn btn-primary" />
+                @Html.ActionLink("返回列表", "Index", null, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("回列表", "Index")
-</div>
+
 
 @* SortableJS：讓相簿預覽列表支援拖曳排序 *@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>

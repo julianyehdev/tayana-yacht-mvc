@@ -17,6 +17,8 @@ namespace TayanaYachtMVC.Models.Domain
         [StringLength(500)]
         public string LayoutImgUrl { get; set; }
 
+        [Display(Name = "排序")]
+        [Range(0, int.MaxValue, ErrorMessage = "排序必須大於等於 0")]
         public int SortOrder { get; set; }
     }
 }
