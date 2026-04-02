@@ -7,6 +7,7 @@ using TayanaYachtMVC.Data;
 
 namespace TayanaYachtMVC.Areas.Admin.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly TayanaYachtDBContext _db = new TayanaYachtDBContext();

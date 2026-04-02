@@ -9,6 +9,7 @@ using TayanaYachtMVC.Models.Domain;
 
 namespace TayanaYachtMVC.Areas.Admin.Controllers
 {
+    [Authorize]
     public class DealersController : Controller
     {
         private TayanaYachtDBContext db = new TayanaYachtDBContext();
