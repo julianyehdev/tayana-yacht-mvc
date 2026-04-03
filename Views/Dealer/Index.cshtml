@@ -71,11 +71,30 @@
                 </ul>
 
                 <div class="pagenumber">
-                    | <span>1</span> | <a href="#">2</a> | <a href="#">3</a> | <a href="#">4</a> | <a href="#">5</a> |
-                    <a href="#">Next</a> <a href="#">LastPage</a>
+                    |
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <span>@i</span>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "Dealer", new { countryId = ViewBag.CountryId, page = i })">@i</a>
+                        }
+                        <span>|</span>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "Dealer", new { countryId = ViewBag.CountryId, page = ViewBag.CurrentPage + 1 })">Next</a>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a href="@Url.Action("Index", "Dealer", new { countryId = ViewBag.CountryId, page = ViewBag.TotalPages })">LastPage</a>
+                    }
                 </div>
                 <div class="pagenumber1">
-                    Items：<span>@Model.Count</span> | Pages：<span>1/1</span>
+                    Items：<span>@ViewBag.TotalCount</span> | Pages：<span>@ViewBag.CurrentPage/@ViewBag.TotalPages</span>
                 </div>
             </div>
             <!--------------------------------內容結束---------------------------------------------------->
