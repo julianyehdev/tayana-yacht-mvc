@@ -37,23 +37,24 @@
             <!--------------------------------內容開始---------------------------------------------------->
             <div class="from01"><p> Please Enter your contact information<span class="span01">*Required</span>
             </p><br />
+              <form method="POST" action="@Url.Action("Submit", "Contact")" id="contactForm">
               <table>
                 <tr>
                   <td class="from01td01">Name :</td>
-                  <td><span>*</span><input type="text" name="textfield" id="textfield" /> </td>
+                  <td><span>*</span><input type="text" name="Name" id="textfield" /> </td>
                 </tr>
                 <tr>
                   <td class="from01td01">Email :</td>
-                  <td><span>*</span><input type="text" name="textfield2" id="textfield2" /></td>
+                  <td><span>*</span><input type="text" name="Email" id="textfield2" /></td>
                 </tr>
                 <tr>
                   <td class="from01td01">Phone :</td>
-                  <td><span>*</span><input type="text" name="textfield3" id="textfield3" /></td>
+                  <td><span>*</span><input type="text" name="Phone" id="textfield3" /></td>
                 </tr>
                 <tr>
                   <td class="from01td01">Country :</td>
                   <td><span>*</span>
-                    <select name="select" id="select">
+                    <select name="CountryId" id="select">
                       <option value="">-- Select a Country --</option>
                       @{
                         var countries = ViewBag.Countries as List<TayanaYachtMVC.Models.Domain.Country> ?? new List<TayanaYachtMVC.Models.Domain.Country>();
@@ -69,7 +70,7 @@
                 </tr>
                 <tr>
                   <td class="from01td01">&nbsp;</td>
-                  <td><select name="select2" id="select2">
+                  <td><select name="YachtId" id="select2">
                     <option value="">-- Select a Yacht --</option>
                     @{
                       var yachts = ViewBag.Yachts as List<TayanaYachtMVC.Models.Domain.Yacht> ?? new List<TayanaYachtMVC.Models.Domain.Yacht>();
@@ -82,13 +83,14 @@
                 </tr>
                 <tr>
                   <td class="from01td01">Comments:</td>
-                  <td><textarea name="textarea" id="textarea" cols="45" rows="5"></textarea></td>
+                  <td><textarea name="Comments" id="textarea" cols="45" rows="5"></textarea></td>
                 </tr>
                 <tr>
                   <td class="from01td01">&nbsp;</td>
-                  <td class="f_right"><a href="#"><img src="@Url.Content("~/img/icons/buttom03.gif")" alt="submit" width="59" height="25" /></a></td>
+                  <td class="f_right"><button type="submit" style="border: none; background: none; cursor: pointer; padding: 0;"><img src="@Url.Content("~/img/icons/buttom03.gif")" alt="submit" width="59" height="25" /></button></td>
                 </tr>
               </table>
+              </form>
             </div>
 
             <div class="box1">
