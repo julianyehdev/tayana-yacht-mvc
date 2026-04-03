@@ -15,7 +15,7 @@ namespace TayanaYachtMVC
 
             routes.MapRoute(
                 name: "YachtOverview",
-                url: "{controller}/{action}/{yachtName}/{modelNumber}",
+                url: "Yacht/{action}/{yachtName}/{modelNumber}",
                 defaults: new { controller = "Yacht", action = "Overview", modelNumber = UrlParameter.Optional }
             );
 
