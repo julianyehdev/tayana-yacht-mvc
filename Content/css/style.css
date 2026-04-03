@@ -9,7 +9,7 @@ input {
 
 body {
 	margin-top: 0px;
-	background-image: url(../../img/banners/bg1.jpg);
+
 	behavior: url("css/csshover.htc");
 	height: 100%;
 	background-repeat: repeat-x;
