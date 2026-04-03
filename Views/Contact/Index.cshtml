@@ -54,7 +54,14 @@
                   <td class="from01td01">Country :</td>
                   <td><span>*</span>
                     <select name="select" id="select">
-                      <option>Annapolis</option>
+                      <option value="">-- Select a Country --</option>
+                      @{
+                        var countries = ViewBag.Countries as List<TayanaYachtMVC.Models.Domain.Country> ?? new List<TayanaYachtMVC.Models.Domain.Country>();
+                      }
+                      @foreach (var country in countries)
+                      {
+                        <option value="@country.Id">@country.CountryName</option>
+                      }
                     </select></td>
                 </tr>
                 <tr>
@@ -63,7 +70,14 @@
                 <tr>
                   <td class="from01td01">&nbsp;</td>
                   <td><select name="select2" id="select2">
-                    <option>Dynasty 72 </option>
+                    <option value="">-- Select a Yacht --</option>
+                    @{
+                      var yachts = ViewBag.Yachts as List<TayanaYachtMVC.Models.Domain.Yacht> ?? new List<TayanaYachtMVC.Models.Domain.Yacht>();
+                    }
+                    @foreach (var yacht in yachts)
+                    {
+                      <option value="@yacht.YachtID">@yacht.YachtName @yacht.ModelNumber</option>
+                    }
                   </select></td>
                 </tr>
                 <tr>
