@@ -375,3 +375,6 @@ Content/uploads/
 
 # 參考用 HTML 範本（不納入版控）
 reference/
+
+# Web config (local settings, connection strings)
+Web.config
