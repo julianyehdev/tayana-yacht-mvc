@@ -414,7 +414,7 @@ body {
 }
 
 .list01  li {
-	display: inline;
+	display: block;
 }
 .list02 li {
 	float: left;
