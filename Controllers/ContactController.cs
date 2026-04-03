@@ -178,7 +178,7 @@ namespace TayanaYachtMVC.Controllers
         地址：NO.60 Haichien Rd. Chungmen Village Linyuan Kaohsiung Hsien 832 Taiwan R.O.C<br/>
         電話：+886(7)641 2422<br/>
         傳真：+886(7)642 3193<br/>
-        郵箱：info@tayanaworld.com
+        郵箱：9ulianye@gmail.com
     </p>
 </body>
 </html>";
