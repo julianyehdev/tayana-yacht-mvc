@@ -109,7 +109,7 @@
 @Html.Raw(Model.DetailSpecification)
 </div>
 
-<p class="topbuttom"><img src="@Url.Content("~/img/icons/top.gif")" alt="top" /></p>
+<p class="topbuttom" style="cursor: pointer;"><img src="@Url.Content("~/img/icons/top.gif")" alt="top" /></p>
 
 </div>
 </div>
@@ -123,6 +123,10 @@ $(document).ready(function() {
         fx: 'fade',
         speed: 1000,
         timeout: 4000
+    });
+
+    $('.topbuttom').click(function() {
+        $('html, body').animate({ scrollTop: 0 }, 'smooth');
     });
 });
 </script>
