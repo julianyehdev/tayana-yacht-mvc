@@ -46,13 +46,18 @@
                 <ul>
                     @foreach (var article in Model)
                     {
+                        var strippedContent = Html.StripHtmlTags(article.Content);
+                        var contentDisplay = strippedContent != null && strippedContent.Length > 140
+                            ? strippedContent.Substring(0, 140) + ".."
+                            : strippedContent;
+
                         <li>
                             <div class="list01">
                                 <ul>
                                     <li><div><p><img src="@Url.Content(string.IsNullOrEmpty(article.CoverImageUrl) ? "~/img/yachts/pit006.jpg" : article.CoverImageUrl)" alt="@article.Title" /></p></div></li>
                                     <li><span>@article.PublishDate.ToString("yyyy-MM-dd")</span></li>
                                     <li><a href="@Url.Action("Detail", "News", new { id = article.Id })">@article.Title</a></li>
-                                    <li>@Html.StripHtmlTags(article.Content)</li>
+                                    <li>@contentDisplay</li>
                                 </ul>
                             </div>
                         </li>
