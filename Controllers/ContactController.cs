@@ -54,7 +54,8 @@ namespace TayanaYachtMVC.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "寄信時發生錯誤，請稍後再試。");
+                    ModelState.AddModelError("", $"寄信失敗：{ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"[Contact Email Error] {ex}");
                 }
             }
 
@@ -76,7 +77,7 @@ namespace TayanaYachtMVC.Controllers
             string smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
             int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
             string smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
-            string smtpPass = ConfigurationManager.AppSettings["SmtpPass"];
+            string smtpPass = ConfigurationManager.AppSettings["SmtpPass"].Replace(" ", "");
             string adminEmail = ConfigurationManager.AppSettings["ToEmail"];
 
             using (var smtp = new SmtpClient(smtpHost, smtpPort))
@@ -103,7 +104,7 @@ namespace TayanaYachtMVC.Controllers
             string smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
             int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
             string smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
-            string smtpPass = ConfigurationManager.AppSettings["SmtpPass"];
+            string smtpPass = ConfigurationManager.AppSettings["SmtpPass"].Replace(" ", "");
 
             using (var smtp = new SmtpClient(smtpHost, smtpPort))
             {
