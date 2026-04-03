@@ -405,6 +405,13 @@ body {
 	padding-bottom: 20px;
 	padding-top: 15px;
 }
+.list01 a {
+	color: #34a9d4;
+	text-decoration: none;
+}
+.list01 a:hover {
+	text-decoration: underline;
+}
 .list02 a {
 	color: #34a9d4;
 	text-decoration: none;
