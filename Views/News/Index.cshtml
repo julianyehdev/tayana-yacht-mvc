@@ -56,7 +56,7 @@
                                 <ul>
                                     <li><div><p><img src="@Url.Content(string.IsNullOrEmpty(article.CoverImageUrl) ? "~/img/yachts/pit006.jpg" : article.CoverImageUrl)" alt="@article.Title" /></p></div></li>
                                     <li><span>@article.PublishDate.ToString("yyyy-MM-dd")</span></li>
-                                    <li><a href="@Url.Action("Detail", "News", new { id = article.Id })">@article.Title</a></li>
+                                    <li><a href="@Url.Action("Article", "News", new { id = article.Id })">@article.Title</a></li>
                                     <li>@contentDisplay</li>
                                 </ul>
                             </div>
