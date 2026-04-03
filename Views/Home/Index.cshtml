@@ -81,6 +81,8 @@
         ? article.Title.Substring(0, 20) + ".."
         : article.Title;
 
+    var articleId = article.Id;
+
     if (newsIndex == 0)
     {
     <li style="position:relative;">
@@ -89,7 +91,7 @@
             <div class="news02p1"><p class="news02p1img"><img src="@imgUrl" alt="@article.Title" style="width:95px;height:95px;object-fit:cover;" /></p></div>
             <p class="news02p2">
                 <span>@titleDisplay</span>
-                <a href="#">@article.PlainTextContent</a>
+                <a href="@Url.Action("Article", "News", new { id = articleId })">@article.PlainTextContent</a>
             </p>
         </div>
     </li>
@@ -101,7 +103,7 @@
             <div class="news02p1"><p class="news02p1img"><img src="@imgUrl" alt="@article.Title" style="width:95px;height:95px;object-fit:cover;" /></p></div>
             <p class="news02p2">
                 <span>@titleDisplay</span>
-                <a href="#">@article.PlainTextContent</a>
+                <a href="@Url.Action("Article", "News", new { id = articleId })">@article.PlainTextContent</a>
             </p>
         </div>
     </li>

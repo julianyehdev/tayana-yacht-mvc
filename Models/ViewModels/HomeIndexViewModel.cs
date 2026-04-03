@@ -13,6 +13,7 @@ namespace TayanaYachtMVC.Models.ViewModels
 
     public class NewsArticleItem
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string CoverImageUrl { get; set; }
         // 已去除 HTML 標籤的純文字內容

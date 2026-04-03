@@ -38,6 +38,7 @@ namespace TayanaYachtMVC.Controllers
                 .ToList()
                 .Select(n => new NewsArticleItem
                 {
+                    Id = n.Id,
                     Title = n.Title,
                     CoverImageUrl = n.CoverImageUrl,
                     // 用 Regex 去除所有 HTML 標籤
