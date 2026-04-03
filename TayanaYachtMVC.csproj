@@ -223,6 +223,7 @@
     <Compile Include="Models\Domain\YachtDocument.cs" />
     <Compile Include="Models\Domain\YachtLayoutPhoto.cs" />
     <Compile Include="Models\Domain\YachtPhoto.cs" />
+    <Compile Include="Models\ViewModels\ContactViewModel.cs" />
     <Compile Include="Models\ViewModels\HomeIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

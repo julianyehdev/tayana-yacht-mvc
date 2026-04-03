@@ -38,6 +38,7 @@
             <div class="from01"><p> Please Enter your contact information<span class="span01">*Required</span>
             </p><br />
               <form method="POST" action="@Url.Action("Submit", "Contact")" id="contactForm">
+              @Html.AntiForgeryToken()
               <table>
                 <tr>
                   <td class="from01td01">Name :</td>
