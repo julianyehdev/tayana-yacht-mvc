@@ -22,12 +22,9 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             if (Session["AdminUserId"] != null)
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 
-            // 清除可能殘留的 FormsAuthentication cookie，確保登入頁以未認證身份加載
+            // 清除舊的 FormsAuthentication Cookie，確保 Token 生成時用戶是未認證狀態
             if (Request.IsAuthenticated)
-            {
                 FormsAuthentication.SignOut();
-                Session.Clear();
-            }
 
             return View();
         }
@@ -50,6 +47,12 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
 
             if (user == null)
             {
+                // 登入失敗，清除任何殘留認證
+                if (Request.IsAuthenticated)
+                {
+                    FormsAuthentication.SignOut();
+                    Session.Clear();
+                }
                 ModelState.AddModelError("", "帳號或密碼錯誤");
                 return View(model);
             }
