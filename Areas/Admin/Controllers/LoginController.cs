@@ -18,13 +18,17 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            // 禁止瀏覽器緩存登入頁，確保按上一頁時重新發 GET 請求
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+
             // 若已登入，直接跳到後台首頁
             if (Session["AdminUserId"] != null)
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 
-            // 清除舊的 FormsAuthentication Cookie，確保 Token 生成時用戶是未認證狀態
-            if (Request.IsAuthenticated)
-                FormsAuthentication.SignOut();
+            // 確保登入頁完全未認證狀態，清除所有認證 + Session
+            FormsAuthentication.SignOut();
+            Session.Clear();
 
             return View();
         }
@@ -48,11 +52,8 @@ namespace TayanaYachtMVC.Areas.Admin.Controllers
             if (user == null)
             {
                 // 登入失敗，清除任何殘留認證
-                if (Request.IsAuthenticated)
-                {
-                    FormsAuthentication.SignOut();
-                    Session.Clear();
-                }
+                FormsAuthentication.SignOut();
+                Session.Clear();
                 ModelState.AddModelError("", "帳號或密碼錯誤");
                 return View(model);
             }
