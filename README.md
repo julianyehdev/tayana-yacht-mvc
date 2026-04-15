@@ -30,8 +30,7 @@
 **自動郵件**：聯繫表單寄信給管理員 & HTML 回信給客戶
 
 ### 自動郵件流程
-[![SMTP Demo](docs/img/smtp-preview.png)](docs/img/smtp-demo.gif)
-> 點擊圖片查看完整動圖展示](docs/img/smtp-demo.gif)
+![SMTP 郵件系統展示](https://github.com/user-attachments/assets/79bb3c14-8934-41fa-bfe3-820880a6c180)
 
 ## 架構亮點
 
